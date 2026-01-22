@@ -1,0 +1,296 @@
+"use client";
+
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+
+interface BookingModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    tourName?: string;
+    basePrice?: string;
+}
+
+const hotels = [
+    { id: "standard", name: "Seaside Resort", price: 0, image: "/santorini.png" },
+    { id: "suite", name: "Luxury Suite +₹15,000", price: 15000, image: "/hero.png" },
+    { id: "villa", name: "Private Villa +₹30,000", price: 30000, image: "/swiss-alps.png" },
+];
+
+const activities = [
+    { id: "dinner", name: "Candlelit Dinner", price: 5000 },
+    { id: "tour", name: "Guided Local Tour", price: 3000 },
+    { id: "spa", name: "Couples Spa Day", price: 10000 },
+];
+
+const steps = ["Dates", "Hotel", "Activities", "Overview"];
+
+export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dreams", basePrice = "₹12,999" }: BookingModalProps) {
+    const [currentStep, setCurrentStep] = useState(0);
+    const [loading, setLoading] = useState(false);
+    const [isConfirmed, setIsConfirmed] = useState(false);
+
+    const [form, setForm] = useState({
+        date: "",
+        guests: 2,
+        hotel: "standard",
+        selectedActivities: [] as string[],
+    });
+
+    const numericBasePrice = parseInt(basePrice.replace(/[^0-9]/g, "")) || 1299;
+
+    const toggleActivity = (id: string) => {
+        setForm(prev => {
+            const newActivities = prev.selectedActivities.includes(id)
+                ? prev.selectedActivities.filter(a => a !== id)
+                : [...prev.selectedActivities, id];
+            return { ...prev, selectedActivities: newActivities };
+        });
+    };
+
+    const calculateTotal = () => {
+        let total = numericBasePrice * form.guests;
+        const hotelPrice = hotels.find(h => h.id === form.hotel)?.price || 0;
+        total += hotelPrice;
+
+        form.selectedActivities.forEach(actId => {
+            const act = activities.find(a => a.id === actId);
+            if (act) total += act.price * form.guests; // Per person or flat? Let's say per person
+        });
+
+        return total;
+    };
+
+    const handleNext = () => {
+        if (currentStep < steps.length - 1) {
+            setCurrentStep(c => c + 1);
+        } else {
+            setLoading(true);
+            setTimeout(() => {
+                setLoading(false);
+                setIsConfirmed(true);
+            }, 2000);
+        }
+    };
+
+    const handleBack = () => {
+        if (currentStep > 0) setCurrentStep(c => c - 1);
+    };
+
+    if (!isOpen) return null;
+
+    if (isConfirmed) {
+        return (
+            <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+                <motion.div
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="bg-slate-800 border border-white/10 p-8 rounded-3xl max-w-md w-full text-center"
+                >
+                    <div className="w-20 h-20 bg-primary/20 text-primary rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <h2 className="text-3xl font-bold text-white mb-2">Bon Voyage!</h2>
+                    <p className="text-slate-400 mb-8">
+                        Your package for <strong>{tourName}</strong> has been booked. Check your email for the itinerary.
+                    </p>
+                    <button onClick={onClose} className="btn btn-primary w-full">Close</button>
+                </motion.div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+            <motion.div
+                layoutId="modal"
+                className="bg-slate-900 border border-white/10 w-full max-w-4xl h-[90vh] md:h-[600px] rounded-3xl overflow-hidden flex flex-col md:flex-row shadow-2xl"
+            >
+                {/* Visual Side (Image) - Hidden on mobile */}
+                <div className="hidden md:block w-1/3 relative bg-slate-800">
+                    <Image
+                        src="/santorini.png"
+                        alt="Destination"
+                        fill
+                        className="object-cover opacity-60 mix-blend-overlay"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent" />
+                    <div className="absolute bottom-8 left-8 text-white">
+                        <p className="text-primary text-sm font-bold tracking-widest uppercase mb-1">Building Trip</p>
+                        <h3 className="text-2xl font-bold">{tourName}</h3>
+                        <p className="text-slate-400 text-sm mt-2">Step {currentStep + 1} of {steps.length}</p>
+                    </div>
+                </div>
+
+                {/* Form Side */}
+                <div className="flex-1 flex flex-col relative">
+                    {/* Header */}
+                    <div className="p-6 border-b border-white/5 flex justify-between items-center bg-slate-900/50 z-10">
+                        <div className="flex gap-2">
+                            {steps.map((s, i) => (
+                                <div key={i} className={`h-1 w-8 rounded-full transition-colors ${i <= currentStep ? "bg-primary" : "bg-slate-700"}`} />
+                            ))}
+                        </div>
+                        <button onClick={onClose} className="text-slate-500 hover:text-white">&times;</button>
+                    </div>
+
+                    {/* Content Area */}
+                    <div className="flex-1 p-8 overflow-y-auto relative">
+                        <AnimatePresence mode="wait">
+                            {currentStep === 0 && (
+                                <motion.div
+                                    key="step0"
+                                    initial={{ x: 20, opacity: 0 }}
+                                    animate={{ x: 0, opacity: 1 }}
+                                    exit={{ x: -20, opacity: 0 }}
+                                    className="space-y-6"
+                                >
+                                    <h2 className="text-2xl font-bold text-white">When are you going?</h2>
+                                    <div className="space-y-4">
+                                        <label className="block">
+                                            <span className="text-slate-400 text-sm mb-2 block">Travel Dates</span>
+                                            <input
+                                                type="date"
+                                                value={form.date}
+                                                onChange={(e) => setForm({ ...form, date: e.target.value })}
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-primary [color-scheme:dark]"
+                                            />
+                                        </label>
+                                        <label className="block">
+                                            <span className="text-slate-400 text-sm mb-2 block">Travelers</span>
+                                            <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-xl p-2 w-max">
+                                                <button
+                                                    onClick={() => setForm({ ...form, guests: Math.max(1, form.guests - 1) })}
+                                                    className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-lg text-white"
+                                                >-</button>
+                                                <span className="text-white font-bold w-4 text-center">{form.guests}</span>
+                                                <button
+                                                    onClick={() => setForm({ ...form, guests: form.guests + 1 })}
+                                                    className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-lg text-white"
+                                                >+</button>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </motion.div>
+                            )}
+
+                            {currentStep === 1 && (
+                                <motion.div
+                                    key="step1"
+                                    initial={{ x: 20, opacity: 0 }}
+                                    animate={{ x: 0, opacity: 1 }}
+                                    exit={{ x: -20, opacity: 0 }}
+                                    className="space-y-6"
+                                >
+                                    <h2 className="text-2xl font-bold text-white">Choose Your Stay</h2>
+                                    <div className="grid grid-cols-1 gap-4">
+                                        {hotels.map((hotel) => (
+                                            <div
+                                                key={hotel.id}
+                                                onClick={() => setForm({ ...form, hotel: hotel.id })}
+                                                className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all ${form.hotel === hotel.id ? "bg-primary/20 border-primary" : "bg-white/5 border-white/10 hover:bg-white/10"}`}
+                                            >
+                                                <div className="relative w-24 h-16 rounded-lg overflow-hidden shrink-0">
+                                                    <Image src={hotel.image} alt={hotel.name} fill className="object-cover" />
+                                                </div>
+                                                <div>
+                                                    <h3 className="font-bold text-white">{hotel.name}</h3>
+                                                    <p className="text-xs text-slate-400">Included in package</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </motion.div>
+                            )}
+
+                            {currentStep === 2 && (
+                                <motion.div
+                                    key="step2"
+                                    initial={{ x: 20, opacity: 0 }}
+                                    animate={{ x: 0, opacity: 1 }}
+                                    exit={{ x: -20, opacity: 0 }}
+                                    className="space-y-6"
+                                >
+                                    <h2 className="text-2xl font-bold text-white">Add Experiences</h2>
+                                    <div className="space-y-3">
+                                        {activities.map((activity) => (
+                                            <label
+                                                key={activity.id}
+                                                className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all ${form.selectedActivities.includes(activity.id) ? "bg-primary/10 border-primary" : "bg-white/5 border-white/10"}`}
+                                            >
+                                                <div className="flex items-center gap-3">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={form.selectedActivities.includes(activity.id)}
+                                                        onChange={() => toggleActivity(activity.id)}
+                                                        className="w-5 h-5 rounded border-slate-600 bg-transparent text-primary focus:ring-primary"
+                                                    />
+                                                    <span className="text-white font-medium">{activity.name}</span>
+                                                </div>
+                                                <span className="text-primary font-bold">+₹{activity.price.toLocaleString()}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </motion.div>
+                            )}
+
+                            {currentStep === 3 && (
+                                <motion.div
+                                    key="step3"
+                                    initial={{ x: 20, opacity: 0 }}
+                                    animate={{ x: 0, opacity: 1 }}
+                                    exit={{ x: -20, opacity: 0 }}
+                                    className="space-y-6"
+                                >
+                                    <h2 className="text-2xl font-bold text-white">Summary</h2>
+                                    <div className="bg-white/5 rounded-xl p-6 border border-white/10 space-y-4">
+                                        <div className="flex justify-between text-slate-400">
+                                            <span>Base Package ({form.guests}x)</span>
+                                            <span>₹{(numericBasePrice * form.guests).toLocaleString()}</span>
+                                        </div>
+                                        {hotels.find(h => h.id === form.hotel)?.price! > 0 && (
+                                            <div className="flex justify-between text-slate-400">
+                                                <span>Hotel Upgrade</span>
+                                                <span>+₹{hotels.find(h => h.id === form.hotel)?.price.toLocaleString()}</span>
+                                            </div>
+                                        )}
+                                        {form.selectedActivities.length > 0 && (
+                                            <div className="flex justify-between text-slate-400">
+                                                <span>Activities</span>
+                                                <span>+₹{form.selectedActivities.reduce((acc, curr) => acc + (activities.find(a => a.id === curr)?.price || 0) * form.guests, 0).toLocaleString()}</span>
+                                            </div>
+                                        )}
+                                        <div className="h-px bg-white/10 my-2" />
+                                        <div className="flex justify-between text-white text-xl font-bold">
+                                            <span>Total</span>
+                                            <span>₹{calculateTotal().toLocaleString()}</span>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+
+                    {/* Footer */}
+                    <div className="p-6 border-t border-white/5 flex justify-between bg-slate-900 z-10">
+                        <button
+                            onClick={handleBack}
+                            disabled={currentStep === 0}
+                            className={`text-slate-400 hover:text-white font-medium px-4 py-2 ${currentStep === 0 ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+                        >
+                            Back
+                        </button>
+                        <button
+                            onClick={handleNext}
+                            className="bg-primary hover:bg-sky-600 text-white font-bold px-8 py-3 rounded-xl transition-all shadow-lg shadow-primary/25"
+                        >
+                            {currentStep === steps.length - 1 ? (loading ? "Booking..." : "Confirm & Pay") : "Next Step"}
+                        </button>
+                    </div>
+                </div>
+            </motion.div>
+        </div>
+    );
+}
