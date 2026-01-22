@@ -15,8 +15,9 @@ const config: Config = {
                 "background-alt": "#1e293b", // Slate 800
             },
             fontFamily: {
-                heading: ["var(--font-heading)", "sans-serif"],
-                body: ["var(--font-body)", "sans-serif"],
+                sans: ["var(--font-inter)", "sans-serif"],
+                mono: ["var(--font-mono)", "monospace"],
+                heading: ["var(--font-inter)", "sans-serif"],
             }
         },
     },

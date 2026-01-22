@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@studio-freight/react-lenis": "^0.0.47",
+    "date-fns": "^4.1.0",
     "framer-motion": "^11.0.0",
     "gsap": "^3.12.5",
     "leaflet": "^1.9.4",
@@ -25,6 +26,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "autoprefixer": "^10.4.17",
     "eslint": "^9",
     "eslint-config-next": "^14.0.0",
     "postcss": "^8",
