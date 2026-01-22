@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "postinstall": "npm rebuild"
+    "lint": "eslint"
   },
   "dependencies": {
     "@studio-freight/react-lenis": "^0.0.47",
