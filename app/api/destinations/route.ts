@@ -8,18 +8,25 @@ export async function GET() {
         const destinations = await Destination.find({});
         return NextResponse.json(destinations);
     } catch (error) {
+        console.error('Failed to fetch destinations:', error);
         return NextResponse.json({ error: 'Failed to fetch destinations' }, { status: 500 });
     }
 }
 
 export async function POST(request: Request) {
     try {
-        const body = await request.json();
         await connectToDatabase();
+        const body = await request.json();
 
-        const newDestination = await Destination.create(body);
-        return NextResponse.json(newDestination, { status: 201 });
+        // Basic validation
+        if (!body.id || !body.name) {
+            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+        }
+
+        const destination = await Destination.create(body);
+        return NextResponse.json(destination, { status: 201 });
     } catch (error) {
+        console.error('Failed to create destination:', error);
         return NextResponse.json({ error: 'Failed to create destination' }, { status: 500 });
     }
 }
