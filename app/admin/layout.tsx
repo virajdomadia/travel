@@ -11,6 +11,7 @@ export default function AdminLayout({
     children: React.ReactNode;
 }) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const pathname = usePathname();
 
@@ -21,16 +22,27 @@ export default function AdminLayout({
         }
     }, []);
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Dummy password for demo
-        if (password === 'admin123') {
-            localStorage.setItem('admin_auth', 'true');
-            setIsAuthenticated(true);
-        } else {
-            alert('Invalid password');
+        try {
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password }),
+            });
+
+            if (res.ok) {
+                localStorage.setItem('admin_auth', 'true');
+                setIsAuthenticated(true);
+            } else {
+                alert('Invalid credentials');
+            }
+        } catch (error) {
+            console.error('Login error', error);
+            alert('Login failed');
         }
     };
+
 
     const handleLogout = () => {
         localStorage.removeItem('admin_auth');
@@ -43,6 +55,16 @@ export default function AdminLayout({
                 <div className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
                     <h1 className="text-2xl font-bold mb-6 text-center">Admin Access</h1>
                     <form onSubmit={handleLogin} className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium mb-2 text-gray-300">Username</label>
+                            <input
+                                type="text"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                className="w-full bg-white/5 border border-white/10 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-500"
+                                placeholder="Enter admin username"
+                            />
+                        </div>
                         <div>
                             <label className="block text-sm font-medium mb-2 text-gray-300">Password</label>
                             <input
