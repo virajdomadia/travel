@@ -115,9 +115,11 @@ export default function AIPlanner() {
                                     </div>
                                 </div>
                             ) : (
-                                <ReactMarkdown className="prose prose-invert prose-sm">
-                                    {msg.content}
-                                </ReactMarkdown>
+                                <div className="prose prose-invert prose-sm">
+                                    <ReactMarkdown>
+                                        {msg.content}
+                                    </ReactMarkdown>
+                                </div>
                             )}
                         </div>
                     </motion.div>
