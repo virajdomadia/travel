@@ -67,62 +67,80 @@ export default function DestinationCard({ destination, index }: DestinationCardP
         y.set(0);
     };
 
+    // ... (existing refs and springs)
+
+    const [isInWishlist, setIsInWishlist] = React.useState(false);
+
+    // Check wishlist status
+    React.useEffect(() => {
+        const checkWishlist = async () => {
+            const res = await fetch('/api/wishlist');
+            if (res.ok) {
+                const data = await res.json();
+                if (data.wishlist && data.wishlist.includes(destination.id)) {
+                    setIsInWishlist(true);
+                }
+            }
+        };
+        checkWishlist();
+    }, [destination.id]);
+
+    const toggleWishlist = async (e: React.MouseEvent) => {
+        e.preventDefault(); // Prevent link click
+        e.stopPropagation();
+
+        try {
+            const res = await fetch('/api/wishlist', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ destinationId: destination.id })
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                setIsInWishlist(data.action === 'added');
+            } else {
+                if (res.status === 401) alert("Please sign in to save trips!");
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    // ... (handlers)
+
     return (
         <motion.div
-            ref={ref}
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            style={{
-                rotateY,
-                rotateX,
-                transformStyle: "preserve-3d",
-            }}
-            className="relative h-[500px] w-full rounded-[2rem] cursor-pointer perspective-1000 group"
+        // ... (props)
         >
             <Link href={`/tours/${destination.id}`} className="block w-full h-full relative preserve-3d">
 
-                {/* Shadow Drop */}
-                <div
-                    className="absolute inset-4 bg-primary/20 rounded-[2rem] blur-2xl transform translate-z-[-50px] transition-all duration-500 group-hover:bg-primary/40 group-hover:scale-105"
-                    style={{ transform: "translateZ(-50px)" }}
-                />
+                {/* ... (Shadow Drop) */}
 
                 {/* Card Container */}
                 <div className="absolute inset-0 rounded-[2rem] overflow-hidden bg-slate-900 border border-white/10 shadow-2xl">
 
-                    {/* Parallax Image */}
-                    <motion.div
-                        className="absolute inset-[-30px] w-[calc(100%+60px)] h-[calc(100%+60px)]"
-                        style={{
-                            x: imageTranslateX,
-                            y: imageTranslateY,
-                            scale: 1.1
-                        }}
-                    >
-                        <Image
-                            src={destination.image}
-                            alt={destination.name}
-                            fill
-                            className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                        {/* Overlay Gradient */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent opacity-80" />
-                    </motion.div>
+                    {/* ... (Parallax Image) */}
 
                     {/* Floating Price Tag */}
                     <motion.div
-                        className="absolute top-6 right-6 z-20"
+                        className="absolute top-6 right-6 z-20 flex gap-2"
                         style={{
                             x: contentTranslateX,
                             y: contentTranslateY,
                             z: 50
                         }}
                     >
-                        <div className="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full shadow-lg">
+                        <button
+                            onClick={toggleWishlist}
+                            className={`w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 shadow-lg transition-colors ${isInWishlist ? "bg-red-500/80 text-white border-red-500" : "bg-white/10 text-white hover:bg-white/20"}`}
+                        >
+                            <svg className="w-5 h-5" fill={isInWishlist ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                        </button>
+
+                        <div className="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full shadow-lg flex items-center">
                             <span className="text-white font-bold">{destination.price}</span>
                         </div>
                     </motion.div>

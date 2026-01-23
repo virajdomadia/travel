@@ -20,6 +20,10 @@ const UserSchema = new mongoose.Schema({
         enum: ['admin', 'editor', 'user'],
         default: 'user',
     },
+    wishlist: {
+        type: [String], // Array of Destination IDs
+        default: [],
+    },
 }, { timestamps: true });
 
 export default mongoose.models.User || mongoose.model('User', UserSchema);
