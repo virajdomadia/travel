@@ -5,35 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 
-const deals = [
-    {
-        id: "deal-1",
-        title: "Kerala Monsoon Magic",
-        originalPrice: 55000,
-        discountedPrice: 35000,
-        image: "/hero.png",
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 2).toISOString(), // 2 days from now
-        features: ["Houseboat Stay", "Ayurvedic Spa", "All Meals"]
-    },
-    {
-        id: "deal-2",
-        title: "Royal Rajasthan Week",
-        originalPrice: 85000,
-        discountedPrice: 65000,
-        image: "/santorini.png", // Placeholder
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 12).toISOString(), // 12 hours from now
-        features: ["Palace Hotel", "Private Guide", "Desert Safari"]
-    },
-    {
-        id: "deal-3",
-        title: "Andaman Scuba Special",
-        originalPrice: 90000,
-        discountedPrice: 72000,
-        image: "/swiss-alps.png", // Placeholder
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 5).toISOString(), // 5 days from now
-        features: ["PADI Certification", "Beach Villa", "Ferry Transfers"]
-    }
-];
+
+// Removed hardcoded deals
+
 
 function Countdown({ targetDate }: { targetDate: string }) {
     const [timeLeft, setTimeLeft] = useState("");
@@ -65,6 +39,29 @@ function Countdown({ targetDate }: { targetDate: string }) {
 }
 
 export default function Deals() {
+    const [deals, setDeals] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchDeals = async () => {
+            try {
+                const response = await fetch('/api/deals');
+                const data = await response.json();
+                setDeals(data);
+            } catch (error) {
+                console.error('Error fetching deals:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchDeals();
+    }, []);
+
+    if (loading) {
+        return <div className="min-h-screen pt-32 text-center text-white">Loading offers...</div>;
+    }
+
     return (
         <div className="min-h-screen pt-32 pb-20 px-8 max-w-7xl mx-auto">
             <div className="text-center mb-16">
@@ -101,7 +98,7 @@ export default function Deals() {
                             </div>
 
                             <ul className="space-y-2 mb-8">
-                                {deal.features.map((feature, i) => (
+                                {deal.features.map((feature: string, i: number) => (
                                     <li key={i} className="flex items-center gap-2 text-slate-300 text-sm">
                                         <span className="text-primary">✓</span> {feature}
                                     </li>

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Plus, LogOut } from 'lucide-react';
+import { LayoutDashboard, Plus, LogOut, Tag, Calendar } from 'lucide-react';
 
 export default function AdminLayout({
     children,
@@ -90,6 +90,20 @@ export default function AdminLayout({
                     >
                         <Plus size={20} />
                         Add Destination
+                    </Link>
+                    <Link
+                        href="/admin/deals"
+                        className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${pathname.startsWith('/admin/deals') ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                    >
+                        <Tag size={20} />
+                        Deals
+                    </Link>
+                    <Link
+                        href="/admin/bookings"
+                        className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${pathname === '/admin/bookings' ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                    >
+                        <Calendar size={20} />
+                        Bookings
                     </Link>
                 </nav>
 

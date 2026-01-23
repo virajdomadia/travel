@@ -2,6 +2,18 @@ import { NextResponse } from 'next/server';
 import connectToDatabase from '@/app/lib/db';
 import Booking from '@/app/lib/models/Booking';
 
+export async function GET() {
+    try {
+        await connectToDatabase();
+        const bookings = await Booking.find({}).sort({ createdAt: -1 });
+        return NextResponse.json(bookings);
+    } catch (error) {
+        console.error('Failed to fetch bookings:', error);
+        return NextResponse.json({ error: 'Failed to fetch bookings' }, { status: 500 });
+    }
+}
+
+
 export async function POST(request: Request) {
     try {
         const body = await request.json();
