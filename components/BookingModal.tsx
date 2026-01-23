@@ -38,6 +38,7 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
     const [bookingData, setBookingData] = useState<any>(null);
 
     const [form, setForm] = useState({
+        destination: tourName, // Initialize with prop
         date: initialDate,
         guests: initialGuests,
         hotel: "standard",
@@ -305,7 +306,7 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
                     </div>
 
                     {/* Content Area */}
-                    <div className="flex-1 p-8 overflow-y-auto relative">
+                    <div className="flex-1 p-8 overflow-y-auto max-h-[calc(90vh-140px)] md:max-h-[calc(600px-140px)] relative scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
                         <AnimatePresence mode="wait">
                             {currentStep === 0 && (
                                 <motion.div
@@ -317,6 +318,16 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
                                 >
                                     <h2 className="text-2xl font-bold text-white">When are you going?</h2>
                                     <div className="space-y-4">
+                                        <label className="block">
+                                            <span className="text-slate-400 text-sm mb-2 block">Destination</span>
+                                            <input
+                                                type="text"
+                                                value={form.destination || tourName}
+                                                onChange={(e) => setForm({ ...form, destination: e.target.value })}
+                                                placeholder="Where to?"
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-primary placeholder:text-slate-600"
+                                            />
+                                        </label>
                                         <label className="block">
                                             <span className="text-slate-400 text-sm mb-2 block">Travel Dates</span>
                                             <input
