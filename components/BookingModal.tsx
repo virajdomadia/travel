@@ -50,16 +50,26 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
 
     const numericBasePrice = parseInt(basePrice.replace(/[^0-9]/g, "")) || 1299;
 
-    // Reset form when modal opens with new props
+    // Reset form when modal opens with new props & Lock Scroll
     useEffect(() => {
         if (isOpen) {
+            document.body.style.overflow = 'hidden';
             setForm(prev => ({
                 ...prev,
+                destination: tourName || prev.destination,
                 date: initialDate || prev.date,
                 guests: initialGuests || prev.guests
             }));
+        } else {
+            document.body.style.overflow = 'unset';
+            // Optional: Reset step when closed
+            // setCurrentStep(0);
         }
-    }, [isOpen, initialDate, initialGuests]);
+
+        return () => {
+            document.body.style.overflow = 'unset';
+        }
+    }, [isOpen, initialDate, initialGuests, tourName]);
 
     const toggleActivity = (id: string) => {
         setForm(prev => {
@@ -322,7 +332,7 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
                                             <span className="text-slate-400 text-sm mb-2 block">Destination</span>
                                             <input
                                                 type="text"
-                                                value={form.destination || tourName}
+                                                value={form.destination}
                                                 onChange={(e) => setForm({ ...form, destination: e.target.value })}
                                                 placeholder="Where to?"
                                                 className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-primary placeholder:text-slate-600"
