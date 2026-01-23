@@ -1,51 +1,38 @@
+
 "use client";
 
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
-
-interface Preferences {
-    travelStyle: string; // 'adventure', 'relax', 'culture', 'luxury'
-    companions: string;  // 'solo', 'couple', 'family', 'group'
-    budget: string;      // 'budget', 'premium', 'ultra-luxury'
-}
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface PersonalizationContextType {
-    preferences: Preferences | null;
-    setPreferences: (prefs: Preferences) => void;
-    hasSetPreferences: boolean;
+    lastCategory: string | null;
+    trackView: (category: string) => void;
+    preferences: any; // Add preferences
 }
 
-const PersonalizationContext = createContext<PersonalizationContextType | undefined>(undefined);
+const PersonalizationContext = createContext<PersonalizationContextType>({
+    lastCategory: null,
+    trackView: () => { },
+    preferences: null,
+});
 
-export function PersonalizationProvider({ children }: { children: ReactNode }) {
-    const [preferences, setPreferencesState] = useState<Preferences | null>(null);
-    const [hasSetPreferences, setHasSetPreferences] = useState(false);
+export const PersonalizationProvider = ({ children }: { children: React.ReactNode }) => {
+    const [lastCategory, setLastCategory] = useState<string | null>(null);
 
     useEffect(() => {
-        // Load preferences from local storage if available
-        const saved = localStorage.getItem("travel_preferences");
-        if (saved) {
-            setPreferencesState(JSON.parse(saved));
-            setHasSetPreferences(true);
-        }
+        const stored = localStorage.getItem("last_viewed_category");
+        if (stored) setLastCategory(stored);
     }, []);
 
-    const setPreferences = (prefs: Preferences) => {
-        setPreferencesState(prefs);
-        setHasSetPreferences(true);
-        localStorage.setItem("travel_preferences", JSON.stringify(prefs));
+    const trackView = (category: string) => {
+        setLastCategory(category);
+        localStorage.setItem("last_viewed_category", category);
     };
 
     return (
-        <PersonalizationContext.Provider value={{ preferences, setPreferences, hasSetPreferences }}>
+        <PersonalizationContext.Provider value={{ lastCategory, trackView, preferences: null }}>
             {children}
         </PersonalizationContext.Provider>
     );
-}
+};
 
-export function usePersonalization() {
-    const context = useContext(PersonalizationContext);
-    if (!context) {
-        throw new Error("usePersonalization must be used within a PersonalizationProvider");
-    }
-    return context;
-}
+export const usePersonalization = () => useContext(PersonalizationContext);

@@ -4,17 +4,23 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import { destinations } from "../../lib/data";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BookingModal from "@/components/BookingModal";
 import ReviewsSection from "@/components/ReviewsSection";
-
-
+import { usePersonalization } from "@/context/PersonalizationContext";
 
 export default function TourDetails() {
     const params = useParams();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { trackView } = usePersonalization(); // Use hook
 
     const tour = destinations.find(d => d.id === params?.id) || null;
+
+    useEffect(() => {
+        if (tour) {
+            trackView(tour.category);
+        }
+    }, [tour, trackView]);
 
     if (!tour) {
         return <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>;

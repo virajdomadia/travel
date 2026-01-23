@@ -6,6 +6,7 @@ import HomeMap from "@/components/HomeMap";
 import SmartSearch from "@/components/SmartSearch";
 import PreferencesModal from "@/components/PreferencesModal";
 import BookingModal from "@/components/BookingModal";
+import RecommendedSection from "@/components/RecommendedSection"; // Item 7
 import { usePersonalization } from "@/context/PersonalizationContext";
 import { useEffect, useState, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -194,6 +195,9 @@ export default function Home() {
           </div>
         </div>
       </Section>
+
+      {/* Recommended for User */}
+      <RecommendedSection />
 
       {/* 3. EXPERIENCES: The Journey */}
       <Section className="bg-slate-950">
