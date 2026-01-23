@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
@@ -9,6 +9,8 @@ interface BookingModalProps {
     onClose: () => void;
     tourName?: string;
     basePrice?: string;
+    initialDate?: string;
+    initialGuests?: number;
 }
 
 const hotels = [
@@ -25,14 +27,14 @@ const activities = [
 
 const steps = ["Dates", "Hotel", "Activities", "Overview"];
 
-export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dreams", basePrice = "₹12,999" }: BookingModalProps) {
+export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dreams", basePrice = "₹12,999", initialDate = "", initialGuests = 2 }: BookingModalProps) {
     const [currentStep, setCurrentStep] = useState(0);
     const [loading, setLoading] = useState(false);
     const [isConfirmed, setIsConfirmed] = useState(false);
 
     const [form, setForm] = useState({
-        date: "",
-        guests: 2,
+        date: initialDate,
+        guests: initialGuests,
         hotel: "standard",
         selectedActivities: [] as string[],
         fullName: "",
@@ -41,6 +43,17 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
     });
 
     const numericBasePrice = parseInt(basePrice.replace(/[^0-9]/g, "")) || 1299;
+
+    // Reset form when modal opens with new props
+    useEffect(() => {
+        if (isOpen) {
+            setForm(prev => ({
+                ...prev,
+                date: initialDate || prev.date,
+                guests: initialGuests || prev.guests
+            }));
+        }
+    }, [isOpen, initialDate, initialGuests]);
 
     const toggleActivity = (id: string) => {
         setForm(prev => {

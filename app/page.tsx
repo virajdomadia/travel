@@ -35,6 +35,11 @@ export default function Home() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
+  // Itinerary Builder State
+  const [itineraryDestination, setItineraryDestination] = useState("Kerala, India");
+  const [itineraryDate, setItineraryDate] = useState("");
+  const [itineraryGuests, setItineraryGuests] = useState(2);
+
   useEffect(() => {
     // Fetch destinations from API
     fetch('/api/destinations')
@@ -84,7 +89,9 @@ export default function Home() {
       <BookingModal
         isOpen={isBookingOpen}
         onClose={() => setIsBookingOpen(false)}
-        tourName="Kerala Dreams"
+        tourName={itineraryDestination}
+        initialDate={itineraryDate}
+        initialGuests={itineraryGuests}
         basePrice="₹45,000"
       />
       <JourneyProgress />
@@ -242,22 +249,54 @@ export default function Home() {
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50" />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-              <div className="bg-white/5 p-4 rounded-xl border border-white/10 text-left hover:bg-white/10 transition-colors cursor-pointer">
-                <span className="text-xs text-slate-500 uppercase tracking-wider block mb-1">Destination</span>
-                <div className="font-bold text-white text-lg">Kerala, India</div>
+              {/* Destination Input */}
+              <div className="bg-white/5 p-4 rounded-xl border border-white/10 text-left hover:bg-white/10 transition-colors">
+                <label className="text-xs text-slate-500 uppercase tracking-wider block mb-1">Destination</label>
+                <select
+                  value={itineraryDestination}
+                  onChange={(e) => setItineraryDestination(e.target.value)}
+                  className="w-full bg-transparent text-white font-bold text-lg focus:outline-none border-none p-0 cursor-pointer [&>option]:bg-slate-800"
+                >
+                  <option value="Kerala, India">Kerala, India</option>
+                  {destinations.map(d => (
+                    <option key={d.id} value={d.name}>{d.name}</option>
+                  ))}
+                  <option value="Goa, India">Goa, India</option>
+                  <option value="Jaipur, Rajasthan">Jaipur, Rajasthan</option>
+                  <option value="Ladakh, India">Ladakh, India</option>
+                </select>
               </div>
-              <div className="bg-white/5 p-4 rounded-xl border border-white/10 text-left hover:bg-white/10 transition-colors cursor-pointer">
-                <span className="text-xs text-slate-500 uppercase tracking-wider block mb-1">Dates</span>
-                <div className="font-bold text-white text-lg">Nov 12 - Nov 19</div>
+
+              {/* Date Input */}
+              <div className="bg-white/5 p-4 rounded-xl border border-white/10 text-left hover:bg-white/10 transition-colors relative">
+                <label className="text-xs text-slate-500 uppercase tracking-wider block mb-1">Start Date</label>
+                <input
+                  type="date"
+                  value={itineraryDate}
+                  onChange={(e) => setItineraryDate(e.target.value)}
+                  className="w-full bg-transparent text-white font-bold text-lg focus:outline-none border-none p-0 [color-scheme:dark]"
+                />
               </div>
-              <div className="bg-white/5 p-4 rounded-xl border border-white/10 text-left hover:bg-white/10 transition-colors cursor-pointer">
-                <span className="text-xs text-slate-500 uppercase tracking-wider block mb-1">Travelers</span>
-                <div className="font-bold text-white text-lg">2 Adults</div>
+
+              {/* Travelers Input */}
+              <div className="bg-white/5 p-4 rounded-xl border border-white/10 text-left hover:bg-white/10 transition-colors">
+                <label className="text-xs text-slate-500 uppercase tracking-wider block mb-1">Travelers</label>
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={() => setItineraryGuests(Math.max(1, itineraryGuests - 1))}
+                    className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 text-white"
+                  >-</button>
+                  <span className="font-bold text-white text-lg">{itineraryGuests} Adults</span>
+                  <button
+                    onClick={() => setItineraryGuests(itineraryGuests + 1)}
+                    className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 text-white"
+                  >+</button>
+                </div>
               </div>
             </div>
 
             <div className="relative h-96 bg-slate-900 rounded-2xl border border-white/10 overflow-hidden mb-8 z-0">
-              <HomeMap />
+              <HomeMap selectedDestination={itineraryDestination} />
             </div>
 
             <button

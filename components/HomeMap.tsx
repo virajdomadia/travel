@@ -11,6 +11,6 @@ const Map = dynamic(() => import("./Map"), {
     )
 });
 
-export default function HomeMap() {
-    return <Map />;
+export default function HomeMap({ selectedDestination }: { selectedDestination?: string }) {
+    return <Map selectedDestination={selectedDestination} />;
 }

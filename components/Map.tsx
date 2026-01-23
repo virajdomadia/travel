@@ -1,6 +1,6 @@
 "use client";
 
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { destinations } from "@/app/lib/data";
 import L from "leaflet";
@@ -18,7 +18,22 @@ const icon = L.icon({
     shadowSize: [41, 41],
 });
 
-export default function Map() {
+function MapController({ selectedName }: { selectedName?: string }) {
+    const map = useMap();
+
+    useEffect(() => {
+        if (selectedName) {
+            const dest = destinations.find(d => d.name === selectedName);
+            if (dest) {
+                map.flyTo([dest.lat, dest.lng], 6, { duration: 2 });
+            }
+        }
+    }, [selectedName, map]);
+
+    return null;
+}
+
+export default function Map({ selectedDestination }: { selectedDestination?: string }) {
     return (
         <MapContainer
             center={[20, 0] as [number, number]}
@@ -27,6 +42,7 @@ export default function Map() {
             scrollWheelZoom={false}
             style={{ height: "100%", width: "100%", background: "#0f172a" }}
         >
+            <MapController selectedName={selectedDestination} />
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
                 url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
