@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import AuthModal from "./AuthModal";
 
 
@@ -68,8 +69,19 @@ export default function Navbar() {
             />
             <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-slate-900/80 backdrop-blur-md py-4 border-b border-white/5" : "bg-transparent py-6"}`}>
                 <div className="max-w-7xl mx-auto px-8 flex items-center justify-between">
-                    <Link href="/" className="text-2xl font-bold font-heading text-white flex items-center gap-2 z-50 relative">
-                        <span className="text-primary">7</span>Fold Wonders
+                    <Link href="/" className="flex items-center gap-4 z-50 relative group">
+                        <div className="relative w-10 h-10 transition-transform duration-300 group-hover:scale-110">
+                            <Image
+                                src="/favicon.png"
+                                alt="7 Fold Wonders"
+                                fill
+                                className="object-contain drop-shadow-lg"
+                                priority
+                            />
+                        </div>
+                        <span className="text-xl font-bold tracking-widest text-white uppercase font-heading drop-shadow-md">
+                            7 Fold Wonders
+                        </span>
                     </Link>
 
                     {/* Desktop Nav */}

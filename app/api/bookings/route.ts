@@ -2,23 +2,31 @@ import { NextResponse } from 'next/server';
 import connectToDatabase from '@/app/lib/db';
 import Booking from '@/app/lib/models/Booking';
 import { sendBookingConfirmationEmail } from '@/app/lib/email';
+import { getSession } from '@/app/lib/auth';
 import { URL } from 'url';
 
 export async function GET(request: Request) {
     try {
         await connectToDatabase();
+        const session = await getSession();
+        if (!session) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const { searchParams } = new URL(request.url);
-        const username = searchParams.get('username');
-        const isAdmin = searchParams.get('admin') === 'true'; // Simple check for now
+        const isAdminRequest = searchParams.get('admin') === 'true';
 
         let query = {};
-        if (isAdmin) {
-            query = {}; // No filter, return all
-        } else if (username) {
-            query = { userId: username };
+
+        if (isAdminRequest) {
+            // Verify admin role
+            if ((session as any).role !== 'admin') {
+                return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+            }
+            query = {}; // Admin sees all matches
         } else {
-            // Return nothing if no user specified and not admin
-            return NextResponse.json([]);
+            // Regular users can ONLY see their own bookings
+            query = { userId: (session as any).username };
         }
 
         const bookings = await Booking.find(query).sort({ createdAt: -1 });
@@ -35,9 +43,13 @@ export async function POST(request: Request) {
         const body = await request.json();
         await connectToDatabase();
 
+        const session = await getSession();
+
         // Ensure status is pending initially
+        // If user is logged in, force the userId to match the session to prevent spoofing
         const bookingData = {
             ...body,
+            userId: session ? (session as any).username : body.userId, // Trust session over body if logged in
             status: 'pending'
         };
 

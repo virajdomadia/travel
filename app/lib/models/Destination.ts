@@ -46,6 +46,19 @@ const DestinationSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    amenities: {
+        type: [String],
+        default: [],
+    },
+    hotelType: {
+        type: String,
+        enum: ['Luxury', 'Boutique', 'Resort', 'Homestay'],
+        default: 'Luxury',
+    },
+    stops: {
+        type: String,
+        default: 'Non-stop',
+    },
 }, { timestamps: true });
 
 export default mongoose.models.Destination || mongoose.model('Destination', DestinationSchema);

@@ -2,17 +2,28 @@
 "use client";
 
 import { usePersonalization } from "@/context/PersonalizationContext";
-import { destinations } from "@/app/lib/data";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
 export default function RecommendedSection() {
     const { lastCategory } = usePersonalization();
+    const [recommendations, setRecommendations] = useState<any[]>([]);
 
-    if (!lastCategory) return null;
+    useEffect(() => {
+        if (!lastCategory) return;
 
-    const recommendations = destinations.filter(d => d.category === lastCategory).slice(0, 3);
+        fetch('/api/destinations')
+            .then(res => res.json())
+            .then(data => {
+                const filtered = data.filter((d: any) => d.category === lastCategory).slice(0, 3);
+                setRecommendations(filtered);
+            })
+            .catch(err => console.error(err));
+    }, [lastCategory]);
+
+    if (!lastCategory || recommendations.length === 0) return null;
 
     if (recommendations.length === 0) return null;
 

@@ -31,6 +31,7 @@ export default function Footer() {
                             <li><Link href="/contact" className="text-slate-400 text-sm hover:text-primary transition-colors">Contact Us</Link></li>
                             <li><Link href="/privacy" className="text-slate-400 text-sm hover:text-primary transition-colors">Privacy Policy</Link></li>
                             <li><Link href="/terms" className="text-slate-400 text-sm hover:text-primary transition-colors">Terms of Service</Link></li>
+                            <li><Link href="/cancellation" className="text-slate-400 text-sm hover:text-primary transition-colors">Cancellation Policy</Link></li>
                         </ul>
                     </div>
 

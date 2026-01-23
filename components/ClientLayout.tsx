@@ -5,6 +5,7 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import SmoothScroll from "./SmoothScroll";
 import PageTransition from "./PageTransition";
+import InitialLoader from "./InitialLoader";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -12,6 +13,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
     return (
         <>
+            <InitialLoader />
             {!isAdmin && <Navbar />}
             <SmoothScroll>
                 <PageTransition>

@@ -60,7 +60,12 @@ export default function AdminDashboard() {
                         <h1 className="text-4xl font-bold text-white mb-2">Operations Center</h1>
                         <p className="text-slate-400">Real-time metrics and booking oversight.</p>
                     </div>
-                    <button onClick={fetchStats} className="btn bg-white/10 text-white">Refresh Data</button>
+                    <div className="flex gap-4">
+                        <a href="/admin/create" className="btn bg-primary text-white hover:bg-sky-600 transition-colors flex items-center gap-2 px-4 py-2 rounded-lg font-bold">
+                            <span className="text-xl">+</span> Add Listing
+                        </a>
+                        <button onClick={fetchStats} className="btn bg-white/10 text-white">Refresh Data</button>
+                    </div>
                 </div>
 
                 {/* KPI Cards */}
@@ -111,8 +116,8 @@ export default function AdminDashboard() {
                                             <td className="p-3">₹{booking.totalAmount?.toLocaleString()}</td>
                                             <td className="p-3 px-2">
                                                 <span className={`px-2 py-1 rounded text-xs font-bold uppercase ${booking.status === 'confirmed' ? 'bg-emerald-500/10 text-emerald-400' :
-                                                        booking.status === 'cancelled' ? 'bg-red-500/10 text-red-500' :
-                                                            'bg-amber-500/10 text-amber-500'
+                                                    booking.status === 'cancelled' ? 'bg-red-500/10 text-red-500' :
+                                                        'bg-amber-500/10 text-amber-500'
                                                     }`}>
                                                     {booking.status}
                                                 </span>

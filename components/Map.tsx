@@ -2,10 +2,9 @@
 
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { destinations } from "@/app/lib/data";
+import { useState, useEffect } from "react";
 import L from "leaflet";
 import Link from "next/link";
-import { useEffect } from "react";
 
 // Fix for default marker icon broken in React-Leaflet
 const icon = L.icon({
@@ -18,7 +17,7 @@ const icon = L.icon({
     shadowSize: [41, 41],
 });
 
-function MapController({ selectedName }: { selectedName?: string }) {
+function MapController({ selectedName, destinations }: { selectedName?: string, destinations: any[] }) {
     const map = useMap();
 
     useEffect(() => {
@@ -28,12 +27,21 @@ function MapController({ selectedName }: { selectedName?: string }) {
                 map.flyTo([dest.lat, dest.lng], 6, { duration: 2 });
             }
         }
-    }, [selectedName, map]);
+    }, [selectedName, map, destinations]);
 
     return null;
 }
 
 export default function Map({ selectedDestination }: { selectedDestination?: string }) {
+    const [destinations, setDestinations] = useState<any[]>([]);
+
+    useEffect(() => {
+        fetch('/api/destinations')
+            .then(res => res.json())
+            .then(data => setDestinations(data))
+            .catch(err => console.error(err));
+    }, []);
+
     return (
         <MapContainer
             center={[20, 0] as [number, number]}
@@ -42,7 +50,7 @@ export default function Map({ selectedDestination }: { selectedDestination?: str
             scrollWheelZoom={false}
             style={{ height: "100%", width: "100%", background: "#0f172a" }}
         >
-            <MapController selectedName={selectedDestination} />
+            <MapController selectedName={selectedDestination} destinations={destinations} />
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
                 url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"

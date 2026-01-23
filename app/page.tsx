@@ -6,7 +6,8 @@ import HomeMap from "@/components/HomeMap";
 import SmartSearch from "@/components/SmartSearch";
 import PreferencesModal from "@/components/PreferencesModal";
 import BookingModal from "@/components/BookingModal";
-import RecommendedSection from "@/components/RecommendedSection"; // Item 7
+import RecommendedTours from "@/components/RecommendedTours";
+import PersonalizedDeals from "@/components/PersonalizedDeals";
 import { usePersonalization } from "@/context/PersonalizationContext";
 import { useEffect, useState, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -175,6 +176,9 @@ export default function Home() {
         </motion.div>
       </section>
 
+      {/* Personalized Deals Banner */}
+      <PersonalizedDeals />
+
       {/* 2. DESTINATIONS: The First Stop */}
       <Section className="z-10 bg-slate-900">
         <div className="max-w-7xl mx-auto px-8 w-full">
@@ -197,7 +201,7 @@ export default function Home() {
       </Section>
 
       {/* Recommended for User */}
-      <RecommendedSection />
+      <RecommendedTours />
 
       {/* 3. EXPERIENCES: The Journey */}
       <Section className="bg-slate-950">

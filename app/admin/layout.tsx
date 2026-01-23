@@ -16,11 +16,23 @@ export default function AdminLayout({
     const pathname = usePathname();
 
     useEffect(() => {
-        const auth = localStorage.getItem('admin_auth');
-        if (auth === 'true') {
-            setIsAuthenticated(true);
-        }
+        checkAuth();
     }, []);
+
+    const checkAuth = async () => {
+        try {
+            const res = await fetch('/api/auth/me');
+            const data = await res.json();
+            if (data.user && data.user.role === 'admin') {
+                setIsAuthenticated(true);
+                setUsername(data.user.username);
+            } else {
+                setIsAuthenticated(false);
+            }
+        } catch (error) {
+            setIsAuthenticated(false);
+        }
+    };
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -32,8 +44,8 @@ export default function AdminLayout({
             });
 
             if (res.ok) {
-                localStorage.setItem('admin_auth', 'true');
-                setIsAuthenticated(true);
+                // Cookie is set by server
+                checkAuth();
             } else {
                 alert('Invalid credentials');
             }
@@ -44,9 +56,11 @@ export default function AdminLayout({
     };
 
 
-    const handleLogout = () => {
-        localStorage.removeItem('admin_auth');
+    const handleLogout = async () => {
+        await fetch('/api/auth/logout', { method: 'POST' });
         setIsAuthenticated(false);
+        setUsername('');
+        setPassword('');
     };
 
     if (!isAuthenticated) {
