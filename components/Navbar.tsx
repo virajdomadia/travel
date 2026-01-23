@@ -105,6 +105,7 @@ export default function Navbar() {
                                 <div className="absolute right-0 top-full mt-2 w-48 bg-slate-900 border border-white/10 rounded-xl shadow-xl overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0">
                                     <Link href="/profile" className="block px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">My Profile</Link>
                                     <Link href="/bookings" className="block px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">My Bookings</Link>
+                                    <Link href="/wishlist" className="block px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">My Wishlist ❤️</Link>
                                     <button onClick={logout} className="block w-full text-left px-4 py-3 text-sm text-red-400 hover:text-red-300 hover:bg-white/5 transition-colors">Sign Out</button>
                                 </div>
                             </div>
