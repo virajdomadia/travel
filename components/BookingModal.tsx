@@ -93,43 +93,106 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
 
             setLoading(true);
             try {
-                // Get userId from session
-                const sessionRes = await fetch('/api/auth/me');
-                const sessionData = await sessionRes.json();
-                const userId = sessionData.user ? sessionData.user.username : null;
-
                 const totalAmount = calculateTotal();
 
-                const response = await fetch('/api/bookings', {
+                // 1. Create Order on Server
+                const orderRes = await fetch('/api/payments/create-order', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        tourName,
-                        basePrice,
-                        fullName: form.fullName,
-                        email: form.email,
-                        phone: form.phone,
-                        travelers: form.guests,
-                        date: form.date,
-                        totalAmount,
-                        userId
-                    }),
+                    body: JSON.stringify({ amount: totalAmount })
                 });
 
-                const data = await response.json();
+                const order = await orderRes.json();
 
-                if (response.ok) {
-                    setBookingData(data.booking);
-                    setIsConfirmed(true);
-                } else {
-                    alert("Failed to create booking. Please try again.");
+                if (order.error) {
+                    alert('Payment initialization failed');
+                    setLoading(false);
+                    return;
                 }
+
+                // 2. Open Razorpay
+                const options = {
+                    key: "rzp_test_YourKeyHere", // In real app, from env
+                    amount: order.amount,
+                    currency: order.currency,
+                    name: "7 Fold Wonders",
+                    description: `Booking for ${tourName}`,
+                    image: "/logo.png", // Add logo if available
+                    order_id: order.id,
+                    handler: async function (response: any) {
+                        // Payment Success - Now Create Booking
+                        await createBooking(response.razorpay_payment_id, response.razorpay_order_id, response.razorpay_signature);
+                    },
+                    prefill: {
+                        name: form.fullName,
+                        email: form.email,
+                        contact: form.phone
+                    },
+                    theme: {
+                        color: "#0ea5e9"
+                    }
+                };
+
+                const rzp1 = new (window as any).Razorpay(options);
+                rzp1.on('payment.failed', function (response: any) {
+                    alert("Payment Failed: " + response.error.description);
+                    setLoading(false);
+                });
+                rzp1.open();
+
             } catch (error) {
                 console.error(error);
                 alert("An error occurred.");
-            } finally {
                 setLoading(false);
             }
+        }
+    };
+
+    const createBooking = async (paymentId: string, orderId: string, signature: string) => {
+        try {
+            // Get userId from session
+            const sessionRes = await fetch('/api/auth/me');
+            const sessionData = await sessionRes.json();
+            const userId = sessionData.user ? sessionData.user.username : null;
+
+            const totalAmount = calculateTotal();
+
+            const response = await fetch('/api/bookings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    tourName,
+                    basePrice,
+                    fullName: form.fullName,
+                    email: form.email,
+                    phone: form.phone,
+                    travelers: form.guests,
+                    date: form.date,
+                    totalAmount,
+                    userId,
+                    paymentInfo: {
+                        paymentId,
+                        orderId,
+                        signature,
+                        status: 'captured'
+                    },
+                    status: 'confirmed' // Auto-confirm after payment
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setBookingData(data.booking);
+                setIsConfirmed(true);
+            } else {
+                alert("Booking creation failed after payment. Please contact support.");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Booking error.");
+        } finally {
+            setLoading(false);
         }
     };
 
