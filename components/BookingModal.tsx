@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import shortid from 'shortid';
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { createPortal } from "react-dom";
 
 interface BookingModalProps {
     isOpen: boolean;
@@ -226,46 +227,51 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
         if (currentStep > 0) setCurrentStep(c => c - 1);
     };
 
-    if (!isOpen) return null;
+    const [mounted, setMounted] = useState(false);
 
-    if (isConfirmed && bookingData) {
-        return (
-            <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
-                <motion.div
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="bg-slate-800 border border-white/10 p-8 rounded-3xl max-w-md w-full text-center"
-                >
-                    <div className="w-20 h-20 bg-primary/20 text-primary rounded-full flex items-center justify-center mx-auto mb-6">
-                        <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                        </svg>
-                    </div>
-                    <h2 className="text-3xl font-bold text-white mb-2">Bon Voyage!</h2>
-                    <p className="text-slate-400 mb-4">
-                        Your package for <strong>{tourName}</strong> has been booked.
-                    </p>
-                    <div className="bg-emerald-500/10 text-emerald-400 p-3 rounded-xl text-sm mb-6">
-                        ✓ Confirmation email sent to {form.email}
-                    </div>
+    useEffect(() => {
+        setMounted(true);
+        return () => setMounted(false);
+    }, []);
 
-                    <div className="space-y-3">
-                        <button
-                            onClick={() => generateItineraryPDF(bookingData)}
-                            className="btn bg-white text-slate-900 hover:bg-slate-200 w-full flex items-center justify-center gap-2"
-                        >
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                            Download Itinerary
-                        </button>
-                        <button onClick={onClose} className="btn btn-primary w-full">Close</button>
-                    </div>
-                </motion.div>
-            </div>
-        );
-    }
+    // ... (existing logic) ...
 
-    return (
-        <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    if (!isOpen || !mounted) return null;
+
+    const modalContent = isConfirmed && bookingData ? (
+        <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+            <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="bg-slate-800 border border-white/10 p-8 rounded-3xl max-w-md w-full text-center"
+            >
+                <div className="w-20 h-20 bg-primary/20 text-primary rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <h2 className="text-3xl font-bold text-white mb-2">Bon Voyage!</h2>
+                <p className="text-slate-400 mb-4">
+                    Your package for <strong>{tourName}</strong> has been booked.
+                </p>
+                <div className="bg-emerald-500/10 text-emerald-400 p-3 rounded-xl text-sm mb-6">
+                    ✓ Confirmation email sent to {form.email}
+                </div>
+
+                <div className="space-y-3">
+                    <button
+                        onClick={() => generateItineraryPDF(bookingData)}
+                        className="btn bg-white text-slate-900 hover:bg-slate-200 w-full flex items-center justify-center gap-2"
+                    >
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                        Download Itinerary
+                    </button>
+                    <button onClick={onClose} className="btn btn-primary w-full">Close</button>
+                </div>
+            </motion.div>
+        </div>
+    ) : (
+        <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[100] flex items-center justify-center p-4">
             <motion.div
                 layoutId="modal"
                 className="bg-slate-900 border border-white/10 w-full max-w-4xl h-[90vh] md:h-[600px] rounded-3xl overflow-hidden flex flex-col md:flex-row shadow-2xl"
@@ -508,4 +514,6 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
             </motion.div>
         </div>
     );
+
+    return createPortal(modalContent, document.body);
 }
