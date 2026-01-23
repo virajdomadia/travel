@@ -334,13 +334,21 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
                                     <div className="space-y-4">
                                         <label className="block">
                                             <span className="text-slate-400 text-sm mb-2 block">Destination</span>
-                                            <input
-                                                type="text"
+                                            <select
                                                 value={form.destination}
                                                 onChange={(e) => setForm({ ...form, destination: e.target.value })}
-                                                placeholder="Where to?"
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-primary placeholder:text-slate-600"
-                                            />
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-primary cursor-pointer [&>option]:bg-slate-800"
+                                            >
+                                                <option value="Kerala, India">Kerala, India</option>
+                                                <option value="Goa, India">Goa, India</option>
+                                                <option value="Jaipur, Rajasthan">Jaipur, Rajasthan</option>
+                                                <option value="Ladakh, India">Ladakh, India</option>
+                                                <option value="Santorini, Greece">Santorini, Greece</option>
+                                                <option value="Kyoto, Japan">Kyoto, Japan</option>
+                                                <option value="Swiss Alps">Swiss Alps</option>
+                                                <option value="Bali, Indonesia">Bali, Indonesia</option>
+                                                <option value={tourName}>{tourName} (Selected)</option>
+                                            </select>
                                         </label>
                                         <label className="block">
                                             <span className="text-slate-400 text-sm mb-2 block">Travel Dates</span>
