@@ -15,17 +15,18 @@ export default function Navbar() {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
 
     useEffect(() => {
-        const checkAuth = () => {
-            const session = localStorage.getItem("user_session");
-            if (session) {
-                setUser(JSON.parse(session));
-            } else {
+        const checkAuth = async () => {
+            try {
+                const res = await fetch('/api/auth/me');
+                const data = await res.json();
+                setUser(data.user);
+            } catch (err) {
                 setUser(null);
             }
         };
 
         checkAuth();
-        window.addEventListener("storage", checkAuth);
+        window.addEventListener("auth-change", checkAuth);
 
         const handleScroll = () => {
             setScrolled(window.scrollY > 50);
@@ -34,14 +35,15 @@ export default function Navbar() {
         window.addEventListener("scroll", handleScroll);
         return () => {
             window.removeEventListener("scroll", handleScroll);
-            window.removeEventListener("storage", checkAuth);
+            window.removeEventListener("auth-change", checkAuth);
         };
     }, []);
 
-    const logout = () => {
-        localStorage.removeItem("user_session");
+    const logout = async () => {
+        await fetch('/api/auth/logout', { method: 'POST' });
         setUser(null);
-        window.dispatchEvent(new Event("storage"));
+        window.dispatchEvent(new Event("auth-change"));
+        window.location.href = "/";
     };
 
     const openAuth = (mode: "login" | "signup") => {

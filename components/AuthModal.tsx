@@ -45,12 +45,10 @@ export default function AuthModal({ isOpen, onClose, initialMode = "login" }: Au
             }
 
             if (mode === "login") {
-                localStorage.setItem("user_session", JSON.stringify({
-                    username: data.username,
-                    isLoggedIn: true
-                }));
-                // Dispatch event for Navbar to update
-                window.dispatchEvent(new Event("storage"));
+                // Check if user object exists and has username
+                if (data.user && data.user.username) {
+                    window.dispatchEvent(new Event("auth-change"));
+                }
             }
 
             setIsLoading(false);

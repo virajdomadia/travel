@@ -1,6 +1,10 @@
 import mongoose from 'mongoose';
 
 const BookingSchema = new mongoose.Schema({
+    userId: {
+        type: String,
+        required: false,
+    },
     tourName: {
         type: String,
         required: true,
@@ -8,6 +12,10 @@ const BookingSchema = new mongoose.Schema({
     basePrice: {
         type: String,
         required: true,
+    },
+    totalAmount: {
+        type: Number,
+        required: false,
     },
     fullName: {
         type: String,

@@ -27,10 +27,13 @@ const activities = [
 
 const steps = ["Dates", "Hotel", "Activities", "Overview"];
 
+import { generateItineraryPDF } from "@/utils/pdfGenerator";
+
 export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dreams", basePrice = "₹12,999", initialDate = "", initialGuests = 2 }: BookingModalProps) {
     const [currentStep, setCurrentStep] = useState(0);
     const [loading, setLoading] = useState(false);
     const [isConfirmed, setIsConfirmed] = useState(false);
+    const [bookingData, setBookingData] = useState<any>(null);
 
     const [form, setForm] = useState({
         date: initialDate,
@@ -77,6 +80,8 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
         return total;
     };
 
+    // ... (existing logic) ...
+
     const handleNext = async () => {
         if (currentStep < steps.length - 1) {
             setCurrentStep(c => c + 1);
@@ -88,6 +93,13 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
 
             setLoading(true);
             try {
+                // Get userId from session
+                const sessionRes = await fetch('/api/auth/me');
+                const sessionData = await sessionRes.json();
+                const userId = sessionData.user ? sessionData.user.username : null;
+
+                const totalAmount = calculateTotal();
+
                 const response = await fetch('/api/bookings', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -99,10 +111,15 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
                         phone: form.phone,
                         travelers: form.guests,
                         date: form.date,
+                        totalAmount,
+                        userId
                     }),
                 });
 
+                const data = await response.json();
+
                 if (response.ok) {
+                    setBookingData(data.booking);
                     setIsConfirmed(true);
                 } else {
                     alert("Failed to create booking. Please try again.");
@@ -120,9 +137,7 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
         if (currentStep > 0) setCurrentStep(c => c - 1);
     };
 
-    if (!isOpen) return null;
-
-    if (isConfirmed) {
+    if (isConfirmed && bookingData) {
         return (
             <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
                 <motion.div
@@ -136,10 +151,23 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
                         </svg>
                     </div>
                     <h2 className="text-3xl font-bold text-white mb-2">Bon Voyage!</h2>
-                    <p className="text-slate-400 mb-8">
-                        Your package for <strong>{tourName}</strong> has been booked. Check your email for the itinerary.
+                    <p className="text-slate-400 mb-4">
+                        Your package for <strong>{tourName}</strong> has been booked.
                     </p>
-                    <button onClick={onClose} className="btn btn-primary w-full">Close</button>
+                    <div className="bg-emerald-500/10 text-emerald-400 p-3 rounded-xl text-sm mb-6">
+                        ✓ Confirmation email sent to {form.email}
+                    </div>
+
+                    <div className="space-y-3">
+                        <button
+                            onClick={() => generateItineraryPDF(bookingData)}
+                            className="btn bg-white text-slate-900 hover:bg-slate-200 w-full flex items-center justify-center gap-2"
+                        >
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                            Download Itinerary
+                        </button>
+                        <button onClick={onClose} className="btn btn-primary w-full">Close</button>
+                    </div>
                 </motion.div>
             </div>
         );
