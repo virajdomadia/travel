@@ -32,6 +32,7 @@ export default function Home() {
   const { preferences } = usePersonalization();
   const [sortedDestinations, setSortedDestinations] = useState(destinations);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
   useEffect(() => {
     if (preferences) {
@@ -63,7 +64,10 @@ export default function Home() {
 
   return (
     <main ref={containerRef} className="bg-slate-900 overflow-hidden relative selection:bg-primary selection:text-white">
-      <PreferencesModal />
+      <PreferencesModal
+        isOpen={isPreferencesOpen}
+        onClose={() => setIsPreferencesOpen(false)}
+      />
       <BookingModal
         isOpen={isBookingOpen}
         onClose={() => setIsBookingOpen(false)}
@@ -121,12 +125,27 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 1 }}
-            className="text-white/80 text-xl max-w-xl mx-auto mb-12"
+            className="text-white/80 text-xl max-w-xl mx-auto mb-8"
           >
             {preferences
               ? `We've designed a ${preferences.budget} ${preferences.travelStyle} experience for your ${preferences.companions} trip.`
               : "Curated expeditions to the world's most untamed corners."}
           </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2, duration: 1 }}
+            className="flex justify-center gap-4 mb-12"
+          >
+            <button
+              onClick={() => setIsPreferencesOpen(true)}
+              className="px-8 py-3 rounded-full border border-white/20 hover:bg-white/10 backdrop-blur-sm transition-all text-white font-medium flex items-center gap-2 group"
+            >
+              <span>Customize Experience</span>
+              <span className="group-hover:rotate-12 transition-transform duration-300">✨</span>
+            </button>
+          </motion.div>
         </motion.div>
 
         {/* Scroll Hint */}

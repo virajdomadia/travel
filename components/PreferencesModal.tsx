@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePersonalization } from "@/context/PersonalizationContext";
 
@@ -36,13 +36,24 @@ const questions = [
     }
 ];
 
-export default function PreferencesModal() {
-    const { hasSetPreferences, setPreferences } = usePersonalization();
-    const [isOpen, setIsOpen] = useState(true);
+interface PreferencesModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+}
+
+export default function PreferencesModal({ isOpen, onClose }: PreferencesModalProps) {
+    const { setPreferences } = usePersonalization();
     const [step, setStep] = useState(0);
     const [selections, setSelections] = useState<any>({});
 
-    if (!isOpen || hasSetPreferences && step === 0) return null;
+    useEffect(() => {
+        if (isOpen) {
+            setStep(0);
+            setSelections({});
+        }
+    }, [isOpen]);
+
+    if (!isOpen) return null;
 
     const handleSelect = (key: string, value: string) => {
         const newSelections = { ...selections, [key]: value };
@@ -53,7 +64,7 @@ export default function PreferencesModal() {
         } else {
             setTimeout(() => {
                 setPreferences(newSelections);
-                setIsOpen(false);
+                onClose();
             }, 300);
         }
     };
@@ -104,7 +115,7 @@ export default function PreferencesModal() {
 
                 <div className="mt-8 text-center">
                     <button
-                        onClick={() => setIsOpen(false)}
+                        onClick={onClose}
                         className="text-slate-500 text-sm hover:text-white underline"
                     >
                         Skip Personalization
