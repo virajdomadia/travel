@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import SmoothScroll from "@/components/SmoothScroll";
+import ClientLayout from "@/components/ClientLayout";
 import { PersonalizationProvider } from "@/context/PersonalizationContext";
 
 const inter = Inter({
@@ -30,11 +28,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans`}>
         <PersonalizationProvider>
-          <Navbar />
-          <SmoothScroll>
+          <ClientLayout>
             {children}
-          </SmoothScroll>
-          <Footer />
+          </ClientLayout>
         </PersonalizationProvider>
       </body>
     </html>
