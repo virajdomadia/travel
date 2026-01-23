@@ -11,14 +11,38 @@ export default function Navbar() {
     const [isAuthOpen, setIsAuthOpen] = useState(false);
     const [authMode, setAuthMode] = useState<"login" | "signup">("login");
 
+    const [user, setUser] = useState<{ username: string } | null>(null);
+    const [userMenuOpen, setUserMenuOpen] = useState(false);
+
     useEffect(() => {
+        const checkAuth = () => {
+            const session = localStorage.getItem("user_session");
+            if (session) {
+                setUser(JSON.parse(session));
+            } else {
+                setUser(null);
+            }
+        };
+
+        checkAuth();
+        window.addEventListener("storage", checkAuth);
+
         const handleScroll = () => {
             setScrolled(window.scrollY > 50);
         };
 
         window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+            window.removeEventListener("storage", checkAuth);
+        };
     }, []);
+
+    const logout = () => {
+        localStorage.removeItem("user_session");
+        setUser(null);
+        window.dispatchEvent(new Event("storage"));
+    };
 
     const openAuth = (mode: "login" | "signup") => {
         setAuthMode(mode);
@@ -66,19 +90,39 @@ export default function Navbar() {
                             </svg>
                         </button>
 
-                        <button
-                            onClick={() => openAuth("login")}
-                            className="text-white/80 hover:text-white text-sm font-bold hidden md:block px-4"
-                        >
-                            Sign In
-                        </button>
+                        {user ? (
+                            <div className="relative hidden md:block group">
+                                <button className="flex items-center gap-2 text-white/80 hover:text-white font-medium">
+                                    <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold uppercase">
+                                        {user.username.charAt(0)}
+                                    </div>
+                                    <span className="max-w-[100px] truncate">{user.username}</span>
+                                    <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                </button>
 
-                        <button
-                            onClick={() => openAuth("signup")}
-                            className="btn btn-primary hidden md:block"
-                        >
-                            Join Free
-                        </button>
+                                <div className="absolute right-0 top-full mt-2 w-48 bg-slate-900 border border-white/10 rounded-xl shadow-xl overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0">
+                                    <Link href="/profile" className="block px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">My Profile</Link>
+                                    <Link href="/bookings" className="block px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">My Bookings</Link>
+                                    <button onClick={logout} className="block w-full text-left px-4 py-3 text-sm text-red-400 hover:text-red-300 hover:bg-white/5 transition-colors">Sign Out</button>
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                <button
+                                    onClick={() => openAuth("login")}
+                                    className="text-white/80 hover:text-white text-sm font-bold hidden md:block px-4"
+                                >
+                                    Sign In
+                                </button>
+
+                                <button
+                                    onClick={() => openAuth("signup")}
+                                    className="btn btn-primary hidden md:block"
+                                >
+                                    Join Free
+                                </button>
+                            </>
+                        )}
 
                         {/* Mobile Menu Toggle */}
                         <button
@@ -108,18 +152,33 @@ export default function Navbar() {
                             </Link>
                         ))}
                         <div className="flex flex-col gap-4 w-full px-12 mt-4">
-                            <button
-                                onClick={() => openAuth("signup")}
-                                className="btn btn-primary w-full"
-                            >
-                                Join Club
-                            </button>
-                            <button
-                                onClick={() => openAuth("login")}
-                                className="text-white/60 font-medium py-2"
-                            >
-                                Already a member? Sign In
-                            </button>
+                            {user ? (
+                                <>
+                                    <div className="flex items-center gap-3 text-white mb-4 justify-center">
+                                        <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold uppercase text-lg">
+                                            {user.username.charAt(0)}
+                                        </div>
+                                        <span className="font-bold text-lg">{user.username}</span>
+                                    </div>
+                                    <Link href="/profile" className="btn bg-white/10 w-full text-center">My Profile</Link>
+                                    <button onClick={logout} className="btn bg-red-500/10 text-red-400 w-full">Sign Out</button>
+                                </>
+                            ) : (
+                                <>
+                                    <button
+                                        onClick={() => openAuth("signup")}
+                                        className="btn btn-primary w-full"
+                                    >
+                                        Join Club
+                                    </button>
+                                    <button
+                                        onClick={() => openAuth("login")}
+                                        className="text-white/60 font-medium py-2"
+                                    >
+                                        Already a member? Sign In
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </div>
                 )}

@@ -14,17 +14,60 @@ export default function AuthModal({ isOpen, onClose, initialMode = "login" }: Au
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
 
+    const [form, setForm] = useState({
+        username: "",
+        email: "",
+        password: ""
+    });
+    const [error, setError] = useState("");
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        setIsLoading(false);
-        setIsSuccess(true);
-        setTimeout(() => {
-            setIsSuccess(false);
-            onClose();
-        }, 2000);
+        setError("");
+
+        try {
+            const url = mode === "login" ? "/api/auth/login" : "/api/auth/signup";
+            const body = mode === "login"
+                ? { username: form.email, password: form.password } // Allow email as username
+                : { username: form.username, email: form.email, password: form.password };
+
+            const res = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || "Authentication failed");
+            }
+
+            if (mode === "login") {
+                localStorage.setItem("user_session", JSON.stringify({
+                    username: data.username,
+                    isLoggedIn: true
+                }));
+                // Dispatch event for Navbar to update
+                window.dispatchEvent(new Event("storage"));
+            }
+
+            setIsLoading(false);
+            setIsSuccess(true);
+            setTimeout(() => {
+                setIsSuccess(false);
+                onClose();
+                if (mode === "signup") {
+                    setMode("login"); // Switch to login after signup, or auto-login?
+                    // For now, let's auto-login or ask to login.
+                    // The original code reset logic is fine.
+                }
+            }, 2000);
+        } catch (err: any) {
+            setIsLoading(false);
+            setError(err.message);
+        }
     };
 
     if (!isOpen) return null;
@@ -86,22 +129,32 @@ export default function AuthModal({ isOpen, onClose, initialMode = "login" }: Au
                                     </p>
                                 </div>
 
+                                {error && (
+                                    <div className="bg-red-500/10 border border-red-500/50 text-red-200 p-3 rounded-xl text-sm text-center">
+                                        {error}
+                                    </div>
+                                )}
+
                                 <form onSubmit={handleSubmit} className="space-y-5">
                                     {mode === "signup" && (
                                         <div className="space-y-2">
                                             <input
                                                 type="text"
-                                                placeholder="Full Name"
+                                                placeholder="Username"
                                                 required
+                                                value={form.username}
+                                                onChange={(e) => setForm({ ...form, username: e.target.value })}
                                                 className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:outline-none focus:border-primary focus:bg-white/10 transition-all placeholder:text-slate-600"
                                             />
                                         </div>
                                     )}
                                     <div className="space-y-2">
                                         <input
-                                            type="email"
-                                            placeholder="Email Address"
+                                            type="text"
+                                            placeholder={mode === "login" ? "Username or Email" : "Email Address"}
                                             required
+                                            value={form.email}
+                                            onChange={(e) => setForm({ ...form, email: e.target.value })}
                                             className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:outline-none focus:border-primary focus:bg-white/10 transition-all placeholder:text-slate-600"
                                         />
                                     </div>
@@ -110,6 +163,8 @@ export default function AuthModal({ isOpen, onClose, initialMode = "login" }: Au
                                             type="password"
                                             placeholder="Password"
                                             required
+                                            value={form.password}
+                                            onChange={(e) => setForm({ ...form, password: e.target.value })}
                                             className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:outline-none focus:border-primary focus:bg-white/10 transition-all placeholder:text-slate-600"
                                         />
                                     </div>

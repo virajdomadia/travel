@@ -8,7 +8,10 @@ export async function POST(request: Request) {
         await connectToDatabase();
         const { username, password } = await request.json();
 
-        const user = await User.findOne({ username });
+        // Allow login with username or email
+        const user = await User.findOne({
+            $or: [{ username }, { email: username }]
+        });
 
         if (!user) {
             return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
