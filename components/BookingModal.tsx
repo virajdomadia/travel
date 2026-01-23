@@ -67,8 +67,24 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
         });
     };
 
+    const getDynamicPriceModifier = (dateString: string) => {
+        if (!dateString) return 0;
+        const date = new Date(dateString);
+        const day = date.getDay();
+        // Friday (5), Saturday (6), Sunday (0) -> +2000 increase
+        if (day === 0 || day === 6 || day === 5) {
+            return 2000;
+        }
+        return 0;
+    };
+
     const calculateTotal = () => {
         let total = numericBasePrice * form.guests;
+
+        // Add dynamic pricing
+        const seasonalSurge = getDynamicPriceModifier(form.date);
+        total += (seasonalSurge * form.guests);
+
         const hotelPrice = hotels.find(h => h.id === form.hotel)?.price || 0;
         total += hotelPrice;
 
@@ -431,6 +447,12 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
                                             <span>Base Package ({form.guests}x)</span>
                                             <span>₹{(numericBasePrice * form.guests).toLocaleString()}</span>
                                         </div>
+                                        {getDynamicPriceModifier(form.date) > 0 && (
+                                            <div className="flex justify-between text-amber-400">
+                                                <span>Weekend Surge</span>
+                                                <span>+₹{(getDynamicPriceModifier(form.date) * form.guests).toLocaleString()}</span>
+                                            </div>
+                                        )}
                                         {hotels.find(h => h.id === form.hotel)?.price! > 0 && (
                                             <div className="flex justify-between text-slate-400">
                                                 <span>Hotel Upgrade</span>
