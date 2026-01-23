@@ -6,6 +6,7 @@ import { destinations } from "../../lib/data";
 import Link from "next/link";
 import { useState } from "react";
 import BookingModal from "@/components/BookingModal";
+import ReviewsSection from "@/components/ReviewsSection";
 
 
 
@@ -67,6 +68,9 @@ export default function TourDetails() {
                     <Link href="/destinations" className="text-primary hover:underline flex items-center gap-2 font-medium">
                         &larr; Back to Destinations
                     </Link>
+
+                    {/* Reviews */}
+                    <ReviewsSection destinationId={tour.id} />
                 </div>
 
                 {/* Sidebar Booking Card */}

@@ -133,6 +133,14 @@ export default function BookingsPage() {
                                     >
                                         Download PDF
                                     </button>
+                                    {booking.status !== 'cancelled' && (
+                                        <button
+                                            onClick={() => alert("Cancellation request sent! Support will contact you shortly.")}
+                                            className="btn bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 w-full whitespace-nowrap"
+                                        >
+                                            Cancel Trip
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         ))}

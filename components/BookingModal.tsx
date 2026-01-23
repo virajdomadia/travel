@@ -417,6 +417,16 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
                                     </div>
 
                                     <div className="bg-white/5 rounded-xl p-6 border border-white/10 space-y-4">
+                                        {/* Promo Code Input */}
+                                        <div className="flex gap-2">
+                                            <input
+                                                type="text"
+                                                placeholder="Promo Code"
+                                                className="bg-slate-900 border border-white/10 rounded-lg px-3 py-2 text-white w-full text-sm"
+                                            />
+                                            <button className="btn bg-white/10 text-white text-sm px-4">Apply</button>
+                                        </div>
+
                                         <div className="flex justify-between text-slate-400">
                                             <span>Base Package ({form.guests}x)</span>
                                             <span>₹{(numericBasePrice * form.guests).toLocaleString()}</span>
