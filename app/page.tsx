@@ -350,7 +350,10 @@ export default function Home() {
           <h2 className="text-5xl md:text-8xl font-bold text-white mb-8 tracking-tighter">
             Your Story <br /> <span className="text-primary">Awaits</span>
           </h2>
-          <button className="group relative px-12 py-6 bg-white text-slate-900 font-bold rounded-full overflow-hidden text-xl hover:scale-105 transition-transform duration-300">
+          <button
+            onClick={() => setIsBookingOpen(true)}
+            className="group relative px-12 py-6 bg-white text-slate-900 font-bold rounded-full overflow-hidden text-xl hover:scale-105 transition-transform duration-300"
+          >
             <span className="relative z-10 flex items-center gap-3">
               Book Your Journey
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
