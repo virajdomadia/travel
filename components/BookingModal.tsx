@@ -285,12 +285,16 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
         <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[100] flex items-center justify-center p-4">
             <motion.div
                 layoutId="modal"
-                className="bg-slate-900 border border-white/10 w-full max-w-4xl h-[90vh] md:h-[600px] rounded-3xl overflow-hidden flex flex-col md:flex-row shadow-2xl"
+                className="bg-slate-900 border border-white/10 w-full max-w-5xl h-[95vh] md:h-[800px] rounded-3xl overflow-hidden flex flex-col md:flex-row shadow-2xl"
             >
                 {/* Visual Side (Image) - Hidden on mobile */}
                 <div className="hidden md:block w-1/3 relative bg-slate-800">
                     <Image
-                        src="/santorini.png"
+                        src={
+                            tourName.toLowerCase().includes("swiss") || tourName.toLowerCase().includes("ladakh") ? "/swiss-alps.png" :
+                                tourName.toLowerCase().includes("kyoto") || tourName.toLowerCase().includes("japan") ? "/kyoto.png" :
+                                    "/santorini.png"
+                        }
                         alt="Destination"
                         fill
                         className="object-cover opacity-60 mix-blend-overlay"
@@ -316,7 +320,7 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
                     </div>
 
                     {/* Content Area */}
-                    <div className="flex-1 p-8 overflow-y-auto max-h-[calc(90vh-140px)] md:max-h-[calc(600px-140px)] relative scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
+                    <div className="flex-1 p-8 overflow-y-auto max-h-[calc(95vh-140px)] md:max-h-[calc(800px-140px)] relative scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
                         <AnimatePresence mode="wait">
                             {currentStep === 0 && (
                                 <motion.div
