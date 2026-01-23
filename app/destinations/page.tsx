@@ -6,23 +6,21 @@ import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from 'next/dynamic';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
 
-// Fix for Leaflet Default Icon in Next.js
-const fixLeafletIcon = () => {
+// Dynamic import for Map to avoid SSR issues
+const MapContainer = dynamic(async () => {
+    const L = await import('leaflet');
+    const mod = await import('react-leaflet');
+
+    // Fix for Leaflet Default Icon in Next.js
     // @ts-ignore
-    delete L.Icon.Default.prototype._getIconUrl;
-    L.Icon.Default.mergeOptions({
+    delete L.default.Icon.Default.prototype._getIconUrl;
+    L.default.Icon.Default.mergeOptions({
         iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
         iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
         shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
     });
-};
 
-// Dynamic import for Map to avoid SSR issues
-const MapContainer = dynamic(async () => {
-    const mod = await import('react-leaflet');
-    fixLeafletIcon();
     return mod.MapContainer;
 }, { ssr: false });
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
