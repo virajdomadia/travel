@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { Suspense } from 'react';
 
-export default function LoginPage() {
+function LoginContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [formData, setFormData] = useState({
@@ -42,14 +43,11 @@ export default function LoginPage() {
             if (!res.ok) {
                 setError(data.error || 'Login failed');
             } else {
-                // Simple client-side session management
                 localStorage.setItem('user_session', JSON.stringify({
                     username: data.username,
                     isLoggedIn: true
                 }));
-                // Dispatch event for other components to update
                 window.dispatchEvent(new Event('storage'));
-
                 router.push('/');
             }
         } catch (err) {
@@ -61,7 +59,6 @@ export default function LoginPage() {
 
     return (
         <div className="min-h-screen pt-24 pb-12 flex flex-col items-center justify-center relative overflow-hidden bg-slate-900">
-            {/* Background Elements */}
             <div className="absolute inset-0 z-0">
                 <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px]" />
                 <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-teal-500/10 rounded-full blur-[120px]" />
@@ -135,3 +132,12 @@ export default function LoginPage() {
         </div>
     );
 }
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-slate-900 flex items-center justify-center text-white">Loading...</div>}>
+            <LoginContent />
+        </Suspense>
+    );
+}
+
