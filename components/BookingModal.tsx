@@ -149,6 +149,15 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
                     }
                 };
 
+                // 2. Open Razorpay (Simulated for Demo if keys are placeholders)
+                if (!options.key || options.key === "rzp_test_YourKeyHere") {
+                    console.log("Demo Mode: Simulating Payment Success...");
+                    setTimeout(async () => {
+                        await createBooking(`pay_${shortid.generate()}`, order.id, "simulated_signature");
+                    }, 1500);
+                    return;
+                }
+
                 const rzp1 = new (window as any).Razorpay(options);
                 rzp1.on('payment.failed', function (response: any) {
                     alert("Payment Failed: " + response.error.description);
@@ -215,6 +224,8 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
     const handleBack = () => {
         if (currentStep > 0) setCurrentStep(c => c - 1);
     };
+
+    if (!isOpen) return null;
 
     if (isConfirmed && bookingData) {
         return (

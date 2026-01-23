@@ -111,7 +111,15 @@ export default function DestinationCard({ destination, index }: DestinationCardP
 
     return (
         <motion.div
-        // ... (props)
+            ref={ref}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{
+                rotateX,
+                rotateY,
+                transformStyle: "preserve-3d",
+            }}
+            className="group relative h-[400px] w-full cursor-pointer perspective-1000"
         >
             <Link href={`/tours/${destination.id}`} className="block w-full h-full relative preserve-3d">
 
@@ -120,7 +128,24 @@ export default function DestinationCard({ destination, index }: DestinationCardP
                 {/* Card Container */}
                 <div className="absolute inset-0 rounded-[2rem] overflow-hidden bg-slate-900 border border-white/10 shadow-2xl">
 
-                    {/* ... (Parallax Image) */}
+                    {/* Parallax Image */}
+                    <div className="absolute inset-0 z-0 overflow-hidden">
+                        <motion.div
+                            className="absolute inset-[-25px] w-[calc(100%+50px)] h-[calc(100%+50px)]"
+                            style={{
+                                x: imageTranslateX,
+                                y: imageTranslateY,
+                            }}
+                        >
+                            <Image
+                                src={destination.image}
+                                alt={destination.name}
+                                fill
+                                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent" />
+                        </motion.div>
+                    </div>
 
                     {/* Floating Price Tag */}
                     <motion.div
