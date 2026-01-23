@@ -3,6 +3,7 @@
 import JourneyProgress from "@/components/JourneyProgress";
 import DestinationCard from "@/components/DestinationCard";
 import HomeMap from "@/components/HomeMap";
+import SmartSearch from "@/components/SmartSearch";
 import PreferencesModal from "@/components/PreferencesModal";
 import BookingModal from "@/components/BookingModal";
 import { usePersonalization } from "@/context/PersonalizationContext";
@@ -148,15 +149,9 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2, duration: 1 }}
-            className="flex justify-center gap-4 mb-12"
+            className="mb-12 w-full px-4"
           >
-            <button
-              onClick={() => setIsPreferencesOpen(true)}
-              className="px-8 py-3 rounded-full border border-white/20 hover:bg-white/10 backdrop-blur-sm transition-all text-white font-medium flex items-center gap-2 group"
-            >
-              <span>Customize Experience</span>
-              <span className="group-hover:rotate-12 transition-transform duration-300">✨</span>
-            </button>
+            <SmartSearch />
           </motion.div>
         </motion.div>
 
