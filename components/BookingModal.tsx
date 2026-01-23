@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import shortid from 'shortid';
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
