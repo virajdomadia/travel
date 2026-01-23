@@ -1,6 +1,5 @@
 "use client";
 
-import { destinations } from "./lib/data";
 import JourneyProgress from "@/components/JourneyProgress";
 import DestinationCard from "@/components/DestinationCard";
 import HomeMap from "@/components/HomeMap";
@@ -30,21 +29,34 @@ export default function Home() {
   const containerRef = useRef(null);
   const { scrollY } = useScroll();
   const { preferences } = usePersonalization();
-  const [sortedDestinations, setSortedDestinations] = useState(destinations);
+  const [destinations, setDestinations] = useState<any[]>([]);
+  const [sortedDestinations, setSortedDestinations] = useState<any[]>([]);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
   useEffect(() => {
-    if (preferences) {
+    // Fetch destinations from API
+    fetch('/api/destinations')
+      .then(res => res.json())
+      .then(data => {
+        setDestinations(data);
+        setSortedDestinations(data);
+      })
+      .catch(err => console.error(err));
+  }, []);
+
+  useEffect(() => {
+    if (destinations.length > 0) {
       const sorted = [...destinations].sort((a, b) => {
         // Prioritize destinations that match the selected travel style
-        const aMatch = a.tags ? a.tags.includes(preferences.travelStyle) : false;
-        const bMatch = b.tags ? b.tags.includes(preferences.travelStyle) : false;
+        const matchStyle = preferences ? preferences.travelStyle : "";
+        const aMatch = a.tags ? a.tags.includes(matchStyle) : false;
+        const bMatch = b.tags ? b.tags.includes(matchStyle) : false;
         return (bMatch ? 1 : 0) - (aMatch ? 1 : 0);
       });
       setSortedDestinations(sorted);
     }
-  }, [preferences]);
+  }, [preferences, destinations]);
 
   // Dynamic Hero Text Map
   const heroTextMap: Record<string, string> = {

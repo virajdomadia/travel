@@ -2,14 +2,21 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { destinations } from "../lib/data";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Destinations() {
+    const [destinations, setDestinations] = useState<any[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [maxPrice, setMaxPrice] = useState(100000);
     const [selectedDuration, setSelectedDuration] = useState("all");
+
+    useEffect(() => {
+        fetch('/api/destinations')
+            .then(res => res.json())
+            .then(data => setDestinations(data))
+            .catch(err => console.error(err));
+    }, []);
 
     // Extract unique durations for filter
     const durations = ["all", ...Array.from(new Set(destinations.map(d => d.duration)))];
@@ -24,7 +31,7 @@ export default function Destinations() {
 
             return matchesSearch && matchesPrice && matchesDuration;
         });
-    }, [searchQuery, maxPrice, selectedDuration]);
+    }, [searchQuery, maxPrice, selectedDuration, destinations]);
 
     return (
         <div className="max-w-7xl mx-auto px-8 py-32 min-h-screen">
