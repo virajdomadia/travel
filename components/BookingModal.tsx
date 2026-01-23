@@ -35,6 +35,9 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
         guests: 2,
         hotel: "standard",
         selectedActivities: [] as string[],
+        fullName: "",
+        email: "",
+        phone: ""
     });
 
     const numericBasePrice = parseInt(basePrice.replace(/[^0-9]/g, "")) || 1299;
@@ -55,21 +58,48 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
 
         form.selectedActivities.forEach(actId => {
             const act = activities.find(a => a.id === actId);
-            if (act) total += act.price * form.guests; // Per person or flat? Let's say per person
+            if (act) total += act.price * form.guests;
         });
 
         return total;
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (currentStep < steps.length - 1) {
             setCurrentStep(c => c + 1);
         } else {
+            if (!form.fullName || !form.email || !form.phone || !form.date) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+
             setLoading(true);
-            setTimeout(() => {
+            try {
+                const response = await fetch('/api/bookings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tourName,
+                        basePrice,
+                        fullName: form.fullName,
+                        email: form.email,
+                        phone: form.phone,
+                        travelers: form.guests,
+                        date: form.date,
+                    }),
+                });
+
+                if (response.ok) {
+                    setIsConfirmed(true);
+                } else {
+                    alert("Failed to create booking. Please try again.");
+                }
+            } catch (error) {
+                console.error(error);
+                alert("An error occurred.");
+            } finally {
                 setLoading(false);
-                setIsConfirmed(true);
-            }, 2000);
+            }
         }
     };
 
@@ -244,7 +274,44 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
                                     exit={{ x: -20, opacity: 0 }}
                                     className="space-y-6"
                                 >
-                                    <h2 className="text-2xl font-bold text-white">Summary</h2>
+                                    <h2 className="text-2xl font-bold text-white">Summary & Contact</h2>
+
+                                    {/* Contact Fields */}
+                                    <div className="grid grid-cols-1 gap-4 mb-4">
+                                        <div>
+                                            <label className="text-slate-400 text-xs uppercase tracking-wider mb-2 block">Full Name</label>
+                                            <input
+                                                type="text"
+                                                placeholder="John Doe"
+                                                value={form.fullName}
+                                                onChange={(e) => setForm({ ...form, fullName: e.target.value })}
+                                                className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-primary"
+                                            />
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="text-slate-400 text-xs uppercase tracking-wider mb-2 block">Email</label>
+                                                <input
+                                                    type="email"
+                                                    placeholder="john@example.com"
+                                                    value={form.email}
+                                                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                                                    className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-primary"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="text-slate-400 text-xs uppercase tracking-wider mb-2 block">Phone</label>
+                                                <input
+                                                    type="tel"
+                                                    placeholder="+91 98765 43210"
+                                                    value={form.phone}
+                                                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                                                    className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-primary"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div className="bg-white/5 rounded-xl p-6 border border-white/10 space-y-4">
                                         <div className="flex justify-between text-slate-400">
                                             <span>Base Package ({form.guests}x)</span>
