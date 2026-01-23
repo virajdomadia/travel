@@ -9,15 +9,16 @@ export async function GET(request: Request) {
         await connectToDatabase();
         const { searchParams } = new URL(request.url);
         const username = searchParams.get('username');
-        const email = searchParams.get('email'); // Fallback for guest lookups if needed
+        const isAdmin = searchParams.get('admin') === 'true'; // Simple check for now
 
         let query = {};
-        if (username) {
-            // In a real app we'd query by ID, but for this session-based auth:
-            // We can store username in the booking, or assume username lookup.
-            // Let's rely on finding bookings where 'userId' matches the username 
-            // (since we're using username as the ID in our simplified session)
+        if (isAdmin) {
+            query = {}; // No filter, return all
+        } else if (username) {
             query = { userId: username };
+        } else {
+            // Return nothing if no user specified and not admin
+            return NextResponse.json([]);
         }
 
         const bookings = await Booking.find(query).sort({ createdAt: -1 });

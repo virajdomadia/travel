@@ -1,159 +1,175 @@
+
 "use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { Edit, Trash2, MapPin, Star } from 'lucide-react';
-import Image from 'next/image';
-
-interface Destination {
-    id: string;
-    name: string;
-    description: string;
-    price: string;
-    image: string;
-    rating: number;
-    category: string;
-}
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 export default function AdminDashboard() {
-    const [destinations, setDestinations] = useState<Destination[]>([]);
+    const [stats, setStats] = useState<any>({
+        totalRevenue: 0,
+        totalBookings: 0,
+        destinations: {},
+        recentBookings: []
+    });
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchDestinations();
+        fetchStats();
     }, []);
 
-    const fetchDestinations = async () => {
+    const fetchStats = async () => {
         try {
-            const response = await fetch('/api/destinations');
-            const data = await response.json();
+            // Need to pass admin=true to bypass user filter
+            const res = await fetch('/api/bookings?admin=true');
+            const data = await res.json();
+
             if (Array.isArray(data)) {
-                setDestinations(data);
+                // Calculate Stats
+                const totalRevenue = data.reduce((acc, curr) => acc + (curr.totalAmount || 0), 0);
+                const totalBookings = data.length;
+
+                const destinations: Record<string, number> = {};
+                data.forEach(b => {
+                    destinations[b.tourName] = (destinations[b.tourName] || 0) + 1;
+                });
+
+                setStats({
+                    totalRevenue,
+                    totalBookings,
+                    destinations,
+                    recentBookings: data.slice(0, 10)
+                });
             }
-        } catch (error) {
-            console.error('Error fetching destinations:', error);
+        } catch (err) {
+            console.error(err);
         } finally {
             setLoading(false);
         }
     };
 
-    const handleDelete = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this destination?')) return;
+    if (loading) return <div className="min-h-screen bg-slate-900 flex items-center justify-center text-white">Loading Dashboard...</div>;
 
-        try {
-            const response = await fetch(`/api/destinations/${id}`, {
-                method: 'DELETE',
-            });
-
-            if (response.ok) {
-                setDestinations(prev => prev.filter(d => d.id !== id));
-            } else {
-                alert('Failed to delete');
-            }
-        } catch (error) {
-            console.error('Error deleting:', error);
-        }
-    };
-
-    const handleSeed = async () => {
-        setLoading(true);
-        try {
-            const response = await fetch('/api/seed', { method: 'POST' });
-            if (response.ok) {
-                await fetchDestinations();
-                alert('Database seeded successfully!');
-            }
-        } catch (error) {
-            console.error('Error seeding:', error);
-            alert('Failed to seed database');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    if (loading) {
-        return <div className="text-white text-center mt-20">Loading...</div>;
-    }
+    // Simulate Chart Data (Width percentages)
+    const maxBookings = Math.max(...Object.values(stats.destinations as Record<string, number>), 1);
 
     return (
-        <div>
-            <div className="flex justify-between items-center mb-8">
-                <h2 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-                    Dashboard
-                </h2>
-                <div className="flex gap-4">
-                    <button
-                        onClick={handleSeed}
-                        className="px-4 py-2 text-sm text-yellow-500 hover:bg-yellow-500/10 border border-yellow-500/20 rounded-lg transition-colors"
-                    >
-                        Reset / Seed Data
-                    </button>
-                    <Link
-                        href="/admin/create"
-                        className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
-                    >
-                        + Add New
-                    </Link>
+        <main className="min-h-screen bg-slate-900 pt-24 pb-12 px-4 md:px-8">
+            <div className="max-w-7xl mx-auto">
+                <div className="flex justify-between items-end mb-12">
+                    <div>
+                        <h1 className="text-4xl font-bold text-white mb-2">Operations Center</h1>
+                        <p className="text-slate-400">Real-time metrics and booking oversight.</p>
+                    </div>
+                    <button onClick={fetchStats} className="btn bg-white/10 text-white">Refresh Data</button>
                 </div>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {destinations.map((destination) => (
-                    <div key={destination.id} className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all group">
-                        <div className="relative h-48 w-full">
-                            <Image
-                                src={destination.image}
-                                alt={destination.name}
-                                fill
-                                className="object-cover group-hover:scale-105 transition-transform duration-500"
-                            />
-                            <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-white border border-white/10">
-                                {destination.category}
-                            </div>
+                {/* KPI Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div className="bg-slate-800 border border-white/10 p-6 rounded-2xl">
+                        <h3 className="text-slate-400 text-sm uppercase tracking-wider mb-2">Total Revenue</h3>
+                        <div className="text-3xl font-bold text-emerald-400">₹{stats.totalRevenue.toLocaleString()}</div>
+                    </div>
+                    <div className="bg-slate-800 border border-white/10 p-6 rounded-2xl">
+                        <h3 className="text-slate-400 text-sm uppercase tracking-wider mb-2">Total Bookings</h3>
+                        <div className="text-3xl font-bold text-white">{stats.totalBookings}</div>
+                    </div>
+                    <div className="bg-slate-800 border border-white/10 p-6 rounded-2xl">
+                        <h3 className="text-slate-400 text-sm uppercase tracking-wider mb-2">Conversion Rate</h3>
+                        <div className="text-3xl font-bold text-cyan-400">3.2%</div>
+                        <div className="text-xs text-slate-500 mt-1">Simulated Metric</div>
+                    </div>
+                    <div className="bg-slate-800 border border-white/10 p-6 rounded-2xl">
+                        <h3 className="text-slate-400 text-sm uppercase tracking-wider mb-2">Pending Actions</h3>
+                        <div className="text-3xl font-bold text-amber-400">0</div>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    {/* Recent Bookings Table */}
+                    <div className="lg:col-span-2 bg-slate-800 border border-white/10 rounded-2xl p-6">
+                        <h3 className="text-white font-bold mb-6 flex justify-between items-center">
+                            Recent Bookings
+                            <button className="text-primary text-sm hover:underline">Export CSV</button>
+                        </h3>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left text-sm text-slate-400">
+                                <thead className="border-b border-white/10 text-xs uppercase bg-white/5">
+                                    <tr>
+                                        <th className="p-3 rounded-tl-lg">ID</th>
+                                        <th className="p-3">Customer</th>
+                                        <th className="p-3">Tour</th>
+                                        <th className="p-3">Amount</th>
+                                        <th className="p-3 rounded-tr-lg">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {stats.recentBookings.map((booking: any) => (
+                                        <tr key={booking._id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                            <td className="p-3 font-mono">{booking._id?.slice(-6)}</td>
+                                            <td className="p-3 font-medium text-white">{booking.fullName}</td>
+                                            <td className="p-3">{booking.tourName}</td>
+                                            <td className="p-3">₹{booking.totalAmount?.toLocaleString()}</td>
+                                            <td className="p-3 px-2">
+                                                <span className={`px-2 py-1 rounded text-xs font-bold uppercase ${booking.status === 'confirmed' ? 'bg-emerald-500/10 text-emerald-400' :
+                                                        booking.status === 'cancelled' ? 'bg-red-500/10 text-red-500' :
+                                                            'bg-amber-500/10 text-amber-500'
+                                                    }`}>
+                                                    {booking.status}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {/* Popular Destinations Chart */}
+                    <div className="bg-slate-800 border border-white/10 rounded-2xl p-6">
+                        <h3 className="text-white font-bold mb-6">Popular Destinations</h3>
+                        <div className="space-y-4">
+                            {Object.entries(stats.destinations).map(([name, count]: any) => (
+                                <div key={name}>
+                                    <div className="flex justify-between text-sm text-slate-300 mb-1">
+                                        <span>{name}</span>
+                                        <span>{count}</span>
+                                    </div>
+                                    <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+                                        <motion.div
+                                            initial={{ width: 0 }}
+                                            animate={{ width: `${(count / maxBookings) * 100}%` }}
+                                            className="h-full bg-primary"
+                                        />
+                                    </div>
+                                </div>
+                            ))}
+                            {Object.keys(stats.destinations).length === 0 && (
+                                <p className="text-slate-500 italic text-center py-8">No booking data yet</p>
+                            )}
                         </div>
 
-                        <div className="p-5">
-                            <div className="flex justify-between items-start mb-2">
-                                <h3 className="text-xl font-semibold text-white">{destination.name}</h3>
-                                <div className="flex items-center gap-1 text-yellow-400 text-sm">
-                                    <Star size={14} fill="currentColor" />
-                                    {destination.rating}
+                        <div className="mt-8 pt-8 border-t border-white/10">
+                            <h3 className="text-white font-bold mb-4">Traffic Source</h3>
+                            <div className="flex items-center gap-4">
+                                <div className="w-32 h-32 rounded-full border-4 border-slate-700 relative flex items-center justify-center">
+                                    <span className="text-xs text-slate-400">Direct</span>
+                                    <div className="absolute inset-0 border-4 border-emerald-500 rounded-full border-l-transparent border-b-transparent rotate-45" />
                                 </div>
-                            </div>
-
-                            <p className="text-gray-400 text-sm line-clamp-2 mb-4 h-10">
-                                {destination.description}
-                            </p>
-
-                            <div className="flex justify-between items-center pt-4 border-t border-white/10">
-                                <span className="text-blue-400 font-bold">{destination.price}</span>
-
-                                <div className="flex gap-2">
-                                    <Link
-                                        href={`/admin/edit/${destination.id}`}
-                                        className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-                                    >
-                                        <Edit size={18} />
-                                    </Link>
-                                    <button
-                                        onClick={() => handleDelete(destination.id)}
-                                        className="p-2 text-red-500/70 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
-                                    >
-                                        <Trash2 size={18} />
-                                    </button>
+                                <div className="space-y-2 text-sm">
+                                    <div className="flex items-center gap-2 text-emerald-400">
+                                        <div className="w-3 h-3 bg-emerald-500 rounded-full" />
+                                        <span>Organic (65%)</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-slate-500">
+                                        <div className="w-3 h-3 bg-slate-700 rounded-full" />
+                                        <span>Paid (35%)</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                ))}
-            </div>
-
-            {destinations.length === 0 && (
-                <div className="text-center py-20 text-gray-500">
-                    <p className="text-xl">No destinations found.</p>
-                    <p className="text-sm mt-2">Click "Reset / Seed Data" to load sample content.</p>
                 </div>
-            )}
-        </div>
+            </div>
+        </main>
     );
 }
