@@ -192,15 +192,60 @@ export default function DestinationForm({ initialData, isEdit = false }: Destina
                 </div>
 
                 <div className="md:col-span-2">
-                    <label className="block text-gray-400 mb-2 text-sm">Image URL (Public Path)</label>
-                    <input
-                        type="text"
-                        name="image"
-                        value={formData.image}
-                        onChange={handleChange}
-                        required
-                        className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none"
-                    />
+                    <label className="block text-gray-400 mb-2 text-sm">Destination Image</label>
+
+                    {/* Image Preview */}
+                    {formData.image && (
+                        <div className="mb-4 relative w-full h-64 rounded-xl overflow-hidden border border-white/10 group">
+                            <img
+                                src={formData.image}
+                                alt="Preview"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                    )}
+
+                    <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
+                        <label className="flex-1 w-full md:w-auto cursor-pointer">
+                            <div className="bg-white/5 border border-dashed border-white/20 rounded-lg p-6 text-center hover:bg-white/10 transition-colors">
+                                <div className="text-2xl mb-2">📷</div>
+                                <span className="text-sm text-slate-400 font-medium">Upload Image</span>
+                            </div>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (!file) return;
+
+                                    if (file.size > 5 * 1024 * 1024) { // 5MB Limit
+                                        alert("File is too large. Max 5MB allowed.");
+                                        return;
+                                    }
+
+                                    const reader = new FileReader();
+                                    reader.onloadend = () => {
+                                        setFormData(prev => ({ ...prev, image: reader.result as string }));
+                                    };
+                                    reader.readAsDataURL(file);
+                                }}
+                                className="hidden"
+                            />
+                        </label>
+
+                        <div className="hidden md:block text-slate-600">OR</div>
+
+                        <div className="flex-1 w-full md:w-auto">
+                            <input
+                                type="text"
+                                name="image"
+                                value={formData.image}
+                                onChange={handleChange}
+                                placeholder="Paste URL (https://...)"
+                                className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-slate-600"
+                            />
+                        </div>
+                    </div>
                 </div>
 
                 <div className="md:col-span-2">

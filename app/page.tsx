@@ -16,15 +16,11 @@ import Image from "next/image";
 // Section Transition Wrapper
 const Section = ({ children, className }: { children: React.ReactNode; className?: string }) => {
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
+    <section
       className={`min-h-screen relative flex flex-col justify-center py-24 ${className}`}
     >
       {children}
-    </motion.section>
+    </section>
   );
 };
 
@@ -43,14 +39,19 @@ export default function Home() {
   const [itineraryGuests, setItineraryGuests] = useState(2);
 
   useEffect(() => {
+    let isMounted = true;
     // Fetch destinations from API
     fetch('/api/destinations')
       .then(res => res.json())
       .then(data => {
-        setDestinations(data);
-        setSortedDestinations(data);
+        if (isMounted) {
+          setDestinations(data);
+          setSortedDestinations(data);
+        }
       })
       .catch(err => console.error(err));
+
+    return () => { isMounted = false; };
   }, []);
 
   useEffect(() => {

@@ -122,6 +122,8 @@ export default function Navbar() {
                                     <Link href="/profile" className="block px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">My Profile</Link>
                                     <Link href="/bookings" className="block px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">My Bookings</Link>
                                     <Link href="/wishlist" className="block px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">My Wishlist ❤️</Link>
+                                    <Link href="/rewards" className="block px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">My Rewards 👑</Link>
+                                    <Link href="/compare" className="block px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">Compare Trips ⚖️</Link>
                                     <button onClick={logout} className="block w-full text-left px-4 py-3 text-sm text-red-400 hover:text-red-300 hover:bg-white/5 transition-colors">Sign Out</button>
                                 </div>
                             </div>

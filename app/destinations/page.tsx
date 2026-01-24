@@ -48,31 +48,39 @@ export default function Destinations() {
     const [availableStops, setAvailableStops] = useState<string[]>([]);
 
     useEffect(() => {
-        fetch('/api/destinations')
+        let isMounted = true;
+        setLoading(true);
+
+        fetch('/api/destinations', { cache: "no-store" })
             .then(res => res.json())
             .then(data => {
-                setDestinations(data);
+                if (isMounted) {
+                    setDestinations(data);
 
-                // Extract filter options
-                const allAmenities = new Set<string>();
-                const allTypes = new Set<string>();
-                const allStops = new Set<string>();
+                    const allAmenities = new Set<string>();
+                    const allTypes = new Set<string>();
+                    const allStops = new Set<string>();
 
-                data.forEach((d: any) => {
-                    d.amenities?.forEach((a: string) => allAmenities.add(a));
-                    if (d.hotelType) allTypes.add(d.hotelType);
-                    if (d.stops) allStops.add(d.stops);
-                });
+                    data.forEach((d: any) => {
+                        d.amenities?.forEach((a: string) => allAmenities.add(a));
+                        if (d.hotelType) allTypes.add(d.hotelType);
+                        if (d.stops) allStops.add(d.stops);
+                    });
 
-                setAvailableAmenities(Array.from(allAmenities));
-                setAvailableHotelTypes(Array.from(allTypes));
-                setAvailableStops(Array.from(allStops));
-                setLoading(false);
+                    setAvailableAmenities(Array.from(allAmenities));
+                    setAvailableHotelTypes(Array.from(allTypes));
+                    setAvailableStops(Array.from(allStops));
+                    setLoading(false);
+                }
             })
             .catch(err => {
                 console.error(err);
-                setLoading(false);
+                if (isMounted) setLoading(false);
             });
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     // Extract unique durations for filter
@@ -112,6 +120,14 @@ export default function Destinations() {
             setFn([...current, item]);
         }
     };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center text-slate-400">
+                Loading destinations...
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-slate-900 pt-28 pb-12 px-6">
@@ -231,55 +247,49 @@ export default function Destinations() {
                         <div className="text-center py-20 text-slate-500 animate-pulse">Loading amazing places...</div>
                     ) : viewMode === 'grid' ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                            <AnimatePresence mode="popLayout">
-                                {filteredDestinations.length > 0 ? (
-                                    filteredDestinations.map((dest) => (
-                                        <motion.div
-                                            layout
-                                            initial={{ opacity: 0, scale: 0.95 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            exit={{ opacity: 0, scale: 0.95 }}
-                                            transition={{ duration: 0.3 }}
-                                            key={dest.id}
-                                        >
-                                            <Link href={`/tours/${dest.id}`} className="block h-full bg-slate-800 border border-white/10 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1 transition-all duration-300 group">
-                                                <div className="relative h-48 overflow-hidden">
-                                                    <Image
-                                                        src={dest.image}
-                                                        alt={dest.name}
-                                                        fill
-                                                        className="object-cover transition-transform duration-700 group-hover:scale-110"
-                                                    />
-                                                    <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-xs font-bold text-white border border-white/10 flex items-center gap-1">
-                                                        <span>★</span> {dest.rating}
-                                                    </div>
+                            {filteredDestinations.length > 0 ? (
+                                filteredDestinations.map((dest) => (
+                                    <div
+                                        key={dest.id}
+                                        className="h-full"
+                                    >
+                                        <Link href={`/tours/${dest.id}`} className="block h-full bg-slate-800 border border-white/10 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1 transition-all duration-300 group">
+                                            <div className="relative h-48 overflow-hidden">
+                                                <Image
+                                                    src={dest.image}
+                                                    alt={dest.name}
+                                                    fill
+                                                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                                />
+                                                <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-xs font-bold text-white border border-white/10 flex items-center gap-1">
+                                                    <span>★</span> {dest.rating}
                                                 </div>
-                                                <div className="p-5">
-                                                    <div className="flex justify-between items-start mb-2">
-                                                        <span className="text-xs font-bold text-primary uppercase tracking-wider bg-primary/10 px-2 py-1 rounded">{dest.hotelType}</span>
-                                                        <span className="text-white font-bold">{dest.price}</span>
-                                                    </div>
-                                                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">{dest.name}</h3>
-                                                    <p className="text-slate-400 text-sm line-clamp-2 mb-4">{dest.description}</p>
+                                            </div>
+                                            <div className="p-5">
+                                                <div className="flex justify-between items-start mb-2">
+                                                    <span className="text-xs font-bold text-primary uppercase tracking-wider bg-primary/10 px-2 py-1 rounded">{dest.hotelType}</span>
+                                                    <span className="text-white font-bold">{dest.price}</span>
+                                                </div>
+                                                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">{dest.name}</h3>
+                                                <p className="text-slate-400 text-sm line-clamp-2 mb-4">{dest.description}</p>
 
-                                                    <div className="flex flex-wrap gap-2 mb-4">
-                                                        {dest.amenities?.slice(0, 3).map((a: string) => (
-                                                            <span key={a} className="text-[10px] text-slate-500 bg-white/5 px-2 py-1 rounded border border-white/5">{a}</span>
-                                                        ))}
-                                                        {dest.amenities?.length > 3 && <span className="text-[10px] text-slate-500 px-1">+{dest.amenities.length - 3}</span>}
-                                                    </div>
+                                                <div className="flex flex-wrap gap-2 mb-4">
+                                                    {dest.amenities?.slice(0, 3).map((a: string) => (
+                                                        <span key={a} className="text-[10px] text-slate-500 bg-white/5 px-2 py-1 rounded border border-white/5">{a}</span>
+                                                    ))}
+                                                    {dest.amenities?.length > 3 && <span className="text-[10px] text-slate-500 px-1">+{dest.amenities.length - 3}</span>}
                                                 </div>
-                                            </Link>
-                                        </motion.div>
-                                    ))
-                                ) : (
-                                    <div className="col-span-full py-20 text-center bg-slate-800/50 rounded-3xl border border-white/5">
-                                        <div className="text-5xl mb-4">🏜️</div>
-                                        <h3 className="text-xl font-bold text-white mb-2">No matches found</h3>
-                                        <button onClick={() => { setSearchQuery(""); setMaxPrice(150000); setSelectedAmenities([]); setSelectedHotelTypes([]); setSelectedStops([]); }} className="text-primary hover:underline">Clear all filters</button>
+                                            </div>
+                                        </Link>
                                     </div>
-                                )}
-                            </AnimatePresence>
+                                ))
+                            ) : (
+                                <div className="col-span-full py-20 text-center bg-slate-800/50 rounded-3xl border border-white/5">
+                                    <div className="text-5xl mb-4">🏜️</div>
+                                    <h3 className="text-xl font-bold text-white mb-2">No matches found</h3>
+                                    <button onClick={() => { setSearchQuery(""); setMaxPrice(150000); setSelectedAmenities([]); setSelectedHotelTypes([]); setSelectedStops([]); }} className="text-primary hover:underline">Clear all filters</button>
+                                </div>
+                            )}
                         </div>
                     ) : (
                         <div className="h-[600px] w-full bg-slate-800 rounded-3xl overflow-hidden border border-white/10 relative z-0">

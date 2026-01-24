@@ -43,19 +43,21 @@ export default function Deals() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        let isMounted = true;
         const fetchDeals = async () => {
             try {
                 const response = await fetch('/api/deals');
                 const data = await response.json();
-                setDeals(data);
+                if (isMounted) setDeals(data);
             } catch (error) {
                 console.error('Error fetching deals:', error);
             } finally {
-                setLoading(false);
+                if (isMounted) setLoading(false);
             }
         };
 
         fetchDeals();
+        return () => { isMounted = false; };
     }, []);
 
     if (loading) {

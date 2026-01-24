@@ -24,6 +24,15 @@ const UserSchema = new mongoose.Schema({
         type: [String], // Array of Destination IDs
         default: [],
     },
+    loyaltyPoints: {
+        type: Number,
+        default: 0,
+    },
+    rewardsTier: {
+        type: String,
+        enum: ['Silver', 'Gold', 'Platinum'],
+        default: 'Silver',
+    },
 }, { timestamps: true });
 
 export default mongoose.models.User || mongoose.model('User', UserSchema);

@@ -18,25 +18,27 @@ export default function TourDetails() {
 
     useEffect(() => {
         if (!params?.id) return;
+        let isMounted = true;
 
         const fetchTour = async () => {
             try {
                 const res = await fetch(`/api/destinations/${params.id}`);
                 const data = await res.json();
-                if (res.ok) {
+                if (res.ok && isMounted) {
                     setTour(data);
                     trackView(data.category, data.id);
-                } else {
+                } else if (isMounted) {
                     console.error("Tour not found");
                 }
             } catch (err) {
                 console.error(err);
             } finally {
-                setLoading(false);
+                if (isMounted) setLoading(false);
             }
         };
 
         fetchTour();
+        return () => { isMounted = false; };
     }, [params?.id, trackView]);
 
     if (loading) {

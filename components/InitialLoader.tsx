@@ -18,7 +18,7 @@ export default function InitialLoader() {
         // Simulate initial asset loading
         const timer = setTimeout(() => {
             setIsLoading(false);
-        }, 2200);
+        }, 800);
 
         return () => {
             clearTimeout(timer);

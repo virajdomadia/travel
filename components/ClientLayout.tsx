@@ -13,12 +13,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
     return (
         <>
-            <InitialLoader />
+            {/* <InitialLoader /> */}
             {!isAdmin && <Navbar />}
             <SmoothScroll>
-                <PageTransition>
-                    {children}
-                </PageTransition>
+                {/* <PageTransition> */}
+                {children}
+                {/* </PageTransition> */}
             </SmoothScroll>
             {!isAdmin && <Footer />}
         </>

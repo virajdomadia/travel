@@ -21,6 +21,7 @@ export default function WishlistPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        let isMounted = true;
         const fetchData = async () => {
             try {
                 // 1. Fetch User's Wishlist IDs
@@ -28,25 +29,28 @@ export default function WishlistPage() {
                 const wishData = await wishRes.json();
 
                 if (wishData.wishlist && wishData.wishlist.length > 0) {
-                    setWishlistIds(wishData.wishlist);
+                    if (isMounted) setWishlistIds(wishData.wishlist);
 
                     // 2. Fetch All Destinations to filter (In real app, fetch specific IDs)
                     const destRes = await fetch('/api/destinations');
                     const destData = await destRes.json();
 
-                    const saved = destData.filter((d: Destination) => wishData.wishlist.includes(d.id));
-                    setDestinations(saved);
+                    if (isMounted) {
+                        const saved = destData.filter((d: Destination) => wishData.wishlist.includes(d.id));
+                        setDestinations(saved);
+                    }
                 } else {
-                    setDestinations([]);
+                    if (isMounted) setDestinations([]);
                 }
             } catch (err) {
                 console.error(err);
             } finally {
-                setLoading(false);
+                if (isMounted) setLoading(false);
             }
         };
 
         fetchData();
+        return () => { isMounted = false; };
     }, []);
 
     const removeFromWishlist = async (id: string) => {

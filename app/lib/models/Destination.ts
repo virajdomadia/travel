@@ -19,7 +19,7 @@ const DestinationSchema = new mongoose.Schema({
         required: true,
     },
     image: {
-        type: String,
+        type: String, // Storing Base64 string directly
         required: true,
     },
     rating: {
