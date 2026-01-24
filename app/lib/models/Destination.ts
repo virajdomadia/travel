@@ -59,6 +59,12 @@ const DestinationSchema = new mongoose.Schema({
         type: String,
         default: 'Non-stop',
     },
-}, { timestamps: true });
+    // New MakeMyTrip-style fields
+    gallery: [String],
+    inclusions: [String],
+    exclusions: [String],
+    policies: mongoose.Schema.Types.Mixed,
+    itinerary: [mongoose.Schema.Types.Mixed],
+}, { timestamps: true, strict: false });
 
 export default mongoose.models.Destination || mongoose.model('Destination', DestinationSchema);

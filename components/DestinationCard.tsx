@@ -13,6 +13,7 @@ interface Destination {
     image: string;
     rating: number;
     duration: string;
+    category?: string;
 }
 
 interface DestinationCardProps {
@@ -172,7 +173,7 @@ export default function DestinationCard({ destination, index }: DestinationCardP
 
                     {/* Duration Badge */}
                     <motion.div
-                        className="absolute top-6 left-6 z-20"
+                        className="absolute top-6 left-6 z-20 flex flex-col gap-2"
                         style={{
                             x: contentTranslateX,
                             y: contentTranslateY,
@@ -182,6 +183,15 @@ export default function DestinationCard({ destination, index }: DestinationCardP
                         <div className="bg-primary/80 backdrop-blur-md px-3 py-1 rounded-full shadow-lg">
                             <span className="text-white text-xs font-bold uppercase tracking-wider">{destination.duration}</span>
                         </div>
+                        {destination.category && (
+                            <div className={`backdrop-blur-md px-3 py-1 rounded-full shadow-lg flex items-center gap-1 ${destination.category === "Domestic"
+                                    ? "bg-green-500/80"
+                                    : "bg-blue-500/80"
+                                }`}>
+                                <span className="text-xs">{destination.category === "Domestic" ? "🇮🇳" : "🌍"}</span>
+                                <span className="text-white text-xs font-bold uppercase tracking-wider">{destination.category}</span>
+                            </div>
+                        )}
                     </motion.div>
 
                     {/* Content Info */}
