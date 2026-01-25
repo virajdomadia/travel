@@ -22,6 +22,8 @@ export async function POST(request: Request) {
                     response: "I've crafted a 5-day zen journey through Kyoto focusing on culture and cuisine.",
                     isItinerary: true,
                     itinerary: {
+                        tripName: "Kyoto Zen Experience",
+                        totalPrice: "₹1,25,000",
                         days: [
                             { day: 1, title: "Arrival & Gion District", activities: ["Check into Ryokan", "Evening walk in Gion Geisha District", "Kaiseki Dinner"] },
                             { day: 2, title: "Temple Run", activities: ["Kinkaku-ji (Golden Pavilion)", "Ryoan-ji Zen Garden", "Bamboo Grove walk"] },
@@ -33,13 +35,29 @@ export async function POST(request: Request) {
                 });
             } else if (lowerMsg.includes("swiss") || lowerMsg.includes("europe") || lowerMsg.includes("alps")) {
                 return NextResponse.json({
-                    response: "A breathtaking Alpine adventure awaits. Here is your Swiss itinerary.",
+                    response: "A breathtaking Alpine adventure awaits. I've included the Glacier Express and Jungfraujoch.",
                     isItinerary: true,
                     itinerary: {
+                        tripName: "Swiss Alps Expedition",
+                        totalPrice: "₹2,10,000",
                         days: [
                             { day: 1, title: "Zurich Arrival", activities: ["Land in Zurich", "Train to Interlaken", "Lake Brienz Boat Tour"] },
                             { day: 2, title: "Top of Europe", activities: ["Jungfraujoch Railway", "Ice Palace Tour", "Fondue Dinner"] },
                             { day: 3, title: "Adventure Day", activities: ["Paragliding over Interlaken", "Hiking in Grindelwald", "Spa relaxation"] },
+                        ]
+                    }
+                });
+            } else if (lowerMsg.includes("goa") || lowerMsg.includes("beach")) {
+                return NextResponse.json({
+                    response: "Here is your sun-soaked Goa itinerary. Perfect for relaxation and parties.",
+                    isItinerary: true,
+                    itinerary: {
+                        tripName: "Goa Beach & Party Week",
+                        totalPrice: "₹45,000",
+                        days: [
+                            { day: 1, title: "North Goa Vibes", activities: ["Check-in at Baga", "Sunset at Anjuna", "Dinner at Curlies"] },
+                            { day: 2, title: "Forts & Beaches", activities: ["Chapora Fort", "Vagator Beach", "Thalassa for Greek Dinner"] },
+                            { day: 3, title: "South Goa Peace", activities: ["Drive to Palolem", "Kayak in the backwaters", "Silent Noise Party"] },
                         ]
                     }
                 });
@@ -63,6 +81,8 @@ export async function POST(request: Request) {
                 "response": "Short friendly text introduction",
                 "isItinerary": true,
                 "itinerary": {
+                    "tripName": "Creative catchy name for the trip",
+                    "totalPrice": "Estimated price in INR (e.g. ₹1,50,000)",
                     "days": [
                         { "day": 1, "title": "Day Title", "activities": ["Activity 1", "Activity 2"] }
                     ]
@@ -91,7 +111,7 @@ export async function POST(request: Request) {
         console.error("AI Planner Error:", error);
         // Fallback mock
         return NextResponse.json({
-            response: "I'm processing your request but encountered a hiccup. Could you try asking again specifically about Japan or Switzerland for my demo database?",
+            response: "I'm processing your request but encountered a hiccup. Could you try asking again specifically about Japan, Switzerland, or Goa for my demo database?",
             isItinerary: false
         });
     }

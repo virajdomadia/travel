@@ -282,10 +282,10 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
             </motion.div>
         </div>
     ) : (
-        <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-slate-900/95 md:bg-slate-900/90 backdrop-blur-md z-[100] flex items-end md:items-center justify-center p-0 md:p-4">
             <motion.div
                 layoutId="modal"
-                className="bg-slate-900 border border-white/10 w-full max-w-5xl h-[95vh] md:h-[800px] rounded-3xl overflow-hidden flex flex-col md:flex-row shadow-2xl"
+                className="bg-slate-900 border-t md:border border-white/10 w-full max-w-5xl h-[100dvh] md:h-[800px] md:rounded-3xl rounded-t-3xl overflow-hidden flex flex-col md:flex-row shadow-2xl"
             >
                 {/* Visual Side (Image) - Hidden on mobile */}
                 <div className="hidden md:block w-1/3 relative bg-slate-800">

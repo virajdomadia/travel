@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { ChevronDown } from "lucide-react";
 
 interface WeatherDestination {
     id: string;
@@ -18,6 +19,128 @@ interface WeatherDestination {
     category: "Domestic" | "International";
     bestMonths: number[]; // Month indices (0-11)
 }
+
+const WeatherCarousel = ({ dests }: { dests: WeatherDestination[] }) => {
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const [isPaused, setIsPaused] = useState(false);
+
+    useEffect(() => {
+        const scrollContainer = scrollRef.current;
+        if (!scrollContainer) return;
+
+        const interval = setInterval(() => {
+            if (!isPaused && scrollContainer) {
+                const firstCard = scrollContainer.firstElementChild as HTMLElement;
+                const cardWidth = firstCard ? firstCard.clientWidth : 0;
+                const gap = 24;
+                const scrollAmount = cardWidth + gap;
+
+                if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 10) {
+                    scrollContainer.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                    scrollContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                }
+            }
+        }, 3000);
+
+        return () => clearInterval(interval);
+    }, [isPaused]);
+
+    return (
+        <div
+            ref={scrollRef}
+            className="flex overflow-x-auto pb-8 gap-6 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 scroll-smooth"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            onTouchStart={() => setIsPaused(true)}
+            onTouchEnd={() => setIsPaused(false)}
+        >
+            <AnimatePresence>
+                {dests.map((destination, index) => (
+                    <motion.div
+                        key={destination.id}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ duration: 0.3 }}
+                        className="min-w-[85vw] md:min-w-[45vw] lg:min-w-[300px] snap-center shrink-0 group"
+                    >
+                        <Link href={`/tours/${destination.id}`}>
+                            <div className="bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden hover:border-primary/50 transition-all hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 h-full flex flex-col">
+                                {/* Image */}
+                                <div className="relative h-48 overflow-hidden shrink-0">
+                                    <Image
+                                        src={destination.image}
+                                        alt={destination.name}
+                                        fill
+                                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent" />
+
+                                    {/* Weather Badge */}
+                                    <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-2">
+                                        <span className="text-2xl">☀️</span>
+                                        <span className="text-sm font-bold text-slate-900">{destination.temperature}</span>
+                                    </div>
+
+                                    {/* Category Badge */}
+                                    <div className={`absolute top-3 left-3 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-1 ${destination.category === "Domestic"
+                                        ? "bg-green-500/90"
+                                        : "bg-blue-500/90"
+                                        }`}>
+                                        <span className="text-sm">{destination.category === "Domestic" ? "🇮🇳" : "🌍"}</span>
+                                        <span className="text-white text-xs font-bold">{destination.category}</span>
+                                    </div>
+                                </div>
+
+                                {/* Content */}
+                                <div className="p-5 flex flex-col flex-grow">
+                                    <h3 className="text-xl font-bold text-white mb-2">{destination.name}</h3>
+                                    <p className="text-sm text-slate-400 mb-3 line-clamp-2">{destination.description}</p>
+
+                                    {/* Weather Info */}
+                                    <div className="space-y-2 mb-4">
+                                        <div className="flex items-center gap-2 text-sm">
+                                            <span className="text-primary">🌡️</span>
+                                            <span className="text-slate-300">{destination.condition}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-sm">
+                                            <span className="text-primary">📅</span>
+                                            <span className="text-slate-300">{destination.season}</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Best For Tags (Limit to 2-3) */}
+                                    <div className="flex flex-wrap gap-2 mb-auto">
+                                        {destination.bestFor.slice(0, 3).map((tag) => (
+                                            <span
+                                                key={tag}
+                                                className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full whitespace-nowrap"
+                                            >
+                                                {tag}
+                                            </span>
+                                        ))}
+                                    </div>
+
+                                    {/* Price */}
+                                    <div className="flex items-center justify-between pt-4 border-t border-white/10 mt-4">
+                                        <div>
+                                            <span className="text-slate-500 text-xs">Starting from</span>
+                                            <p className="text-primary font-bold text-lg">{destination.price}</p>
+                                        </div>
+                                        <div className="text-primary group-hover:translate-x-1 transition-transform">
+                                            →
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </Link>
+                    </motion.div>
+                ))}
+            </AnimatePresence>
+        </div>
+    );
+};
 
 const weatherData: WeatherDestination[] = [
     // WINTER DESTINATIONS (Oct-Mar)
@@ -351,6 +474,7 @@ const months = [
 export default function WeatherRecommendations() {
     const [selectedMonth, setSelectedMonth] = useState<string>("");
     const [filteredDestinations, setFilteredDestinations] = useState<WeatherDestination[]>(weatherData);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     useEffect(() => {
         // Set current month as default
@@ -418,13 +542,15 @@ export default function WeatherRecommendations() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.3 }}
-                    className="mb-12"
+                    className="mb-12 relative z-50"
                 >
                     <div className="bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
                         <label className="text-white font-semibold mb-4 block">
                             When are you planning to travel?
                         </label>
-                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+
+                        {/* Desktop Grid (Hidden on Mobile) */}
+                        <div className="hidden md:grid grid-cols-4 lg:grid-cols-6 gap-3">
                             {months.map((month) => (
                                 <button
                                     key={month}
@@ -438,93 +564,46 @@ export default function WeatherRecommendations() {
                                 </button>
                             ))}
                         </div>
+
+                        {/* Mobile Dropdown (Visible on Mobile) */}
+                        <div className="md:hidden relative">
+                            <button
+                                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                className="w-full flex items-center justify-between px-6 py-4 rounded-xl bg-slate-900/80 border border-white/10 text-white font-medium shadow-lg"
+                            >
+                                <span>{selectedMonth || "Select Month"}</span>
+                                <ChevronDown className={`w-5 h-5 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} />
+                            </button>
+
+                            <AnimatePresence>
+                                {isDropdownOpen && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        className="absolute top-full left-0 right-0 mt-2 bg-slate-900 border border-white/10 rounded-xl overflow-hidden shadow-2xl max-h-60 overflow-y-auto z-50"
+                                    >
+                                        {months.map((month) => (
+                                            <button
+                                                key={month}
+                                                onClick={() => {
+                                                    setSelectedMonth(month);
+                                                    setIsDropdownOpen(false);
+                                                }}
+                                                className={`w-full text-left px-6 py-3 border-b border-white/5 last:border-0 ${selectedMonth === month ? "bg-primary/20 text-primary" : "text-slate-300 hover:bg-white/5"}`}
+                                            >
+                                                {month}
+                                            </button>
+                                        ))}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
                     </div>
                 </motion.div>
 
-                {/* Destinations Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {filteredDestinations.map((destination, index) => (
-                        <motion.div
-                            key={destination.id}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.1 }}
-                            className="group"
-                        >
-                            <Link href={`/tours/${destination.id}`}>
-                                <div className="bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden hover:border-primary/50 transition-all hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10">
-                                    {/* Image */}
-                                    <div className="relative h-48 overflow-hidden">
-                                        <Image
-                                            src={destination.image}
-                                            alt={destination.name}
-                                            fill
-                                            className="object-cover group-hover:scale-110 transition-transform duration-500"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent" />
-
-                                        {/* Weather Badge */}
-                                        <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-2">
-                                            <span className="text-2xl">☀️</span>
-                                            <span className="text-sm font-bold text-slate-900">{destination.temperature}</span>
-                                        </div>
-
-                                        {/* Category Badge */}
-                                        <div className={`absolute top-3 left-3 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-1 ${destination.category === "Domestic"
-                                                ? "bg-green-500/90"
-                                                : "bg-blue-500/90"
-                                            }`}>
-                                            <span className="text-sm">{destination.category === "Domestic" ? "🇮🇳" : "🌍"}</span>
-                                            <span className="text-white text-xs font-bold">{destination.category}</span>
-                                        </div>
-                                    </div>
-
-                                    {/* Content */}
-                                    <div className="p-5">
-                                        <h3 className="text-xl font-bold text-white mb-2">{destination.name}</h3>
-                                        <p className="text-sm text-slate-400 mb-3">{destination.description}</p>
-
-                                        {/* Weather Info */}
-                                        <div className="space-y-2 mb-4">
-                                            <div className="flex items-center gap-2 text-sm">
-                                                <span className="text-primary">🌡️</span>
-                                                <span className="text-slate-300">{destination.condition}</span>
-                                            </div>
-                                            <div className="flex items-center gap-2 text-sm">
-                                                <span className="text-primary">📅</span>
-                                                <span className="text-slate-300">{destination.season}</span>
-                                            </div>
-                                        </div>
-
-                                        {/* Best For Tags */}
-                                        <div className="flex flex-wrap gap-2 mb-4">
-                                            {destination.bestFor.map((tag) => (
-                                                <span
-                                                    key={tag}
-                                                    className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full"
-                                                >
-                                                    {tag}
-                                                </span>
-                                            ))}
-                                        </div>
-
-                                        {/* Price */}
-                                        <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                                            <div>
-                                                <span className="text-slate-500 text-xs">Starting from</span>
-                                                <p className="text-primary font-bold text-lg">{destination.price}</p>
-                                            </div>
-                                            <div className="text-primary group-hover:translate-x-1 transition-transform">
-                                                →
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
-                        </motion.div>
-                    ))}
-                </div>
+                {/* Destinations Carousel (Replaces Grid) */}
+                <WeatherCarousel dests={filteredDestinations} />
 
                 {/* No Results */}
                 {filteredDestinations.length === 0 && (

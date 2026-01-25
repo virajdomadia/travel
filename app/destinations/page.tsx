@@ -4,35 +4,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import dynamic from 'next/dynamic';
-import 'leaflet/dist/leaflet.css';
-
-// Dynamic import for Map to avoid SSR issues
-const MapContainer = dynamic(async () => {
-    const L = await import('leaflet');
-    const mod = await import('react-leaflet');
-
-    // Fix for Leaflet Default Icon in Next.js
-    // @ts-ignore
-    delete L.default.Icon.Default.prototype._getIconUrl;
-    L.default.Icon.Default.mergeOptions({
-        iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-        iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-    });
-
-    return mod.MapContainer;
-}, { ssr: false });
-const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
-const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
-const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
+import MobileFilterModal from "@/components/MobileFilterModal";
+import TextReveal from "@/components/TextReveal";
+import ScrollReveal from "@/components/ScrollReveal";
+import { Filter } from "lucide-react";
 
 export default function Destinations() {
     const [destinations, setDestinations] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-
-    // View State
-    const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
 
     // Filter States
     const [searchQuery, setSearchQuery] = useState("");
@@ -41,6 +20,9 @@ export default function Destinations() {
     const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
     const [selectedHotelTypes, setSelectedHotelTypes] = useState<string[]>([]);
     const [selectedStops, setSelectedStops] = useState<string[]>([]);
+
+    // Mobile Modal State
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     // Available Options (Derived from Data)
     const [availableAmenities, setAvailableAmenities] = useState<string[]>([]);
@@ -133,8 +115,32 @@ export default function Destinations() {
         <div className="min-h-screen bg-slate-900 pt-28 pb-12 px-6">
             <div className="max-w-[1400px] mx-auto h-full flex flex-col md:flex-row gap-8">
 
-                {/* Sidebar Filters */}
-                <aside className="w-full md:w-80 shrink-0 space-y-8">
+                {/* Mobile Filter Button (FAB) */}
+                <button
+                    onClick={() => setIsFilterOpen(true)}
+                    className="md:hidden fixed bottom-6 right-6 z-40 bg-primary text-white p-4 rounded-full shadow-2xl shadow-primary/30 flex items-center gap-2"
+                >
+                    <Filter size={24} />
+                    <span className="font-bold text-sm">Filters</span>
+                </button>
+
+                {/* Mobile Filter Modal */}
+                <MobileFilterModal
+                    isOpen={isFilterOpen}
+                    onClose={() => setIsFilterOpen(false)}
+                    searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+                    maxPrice={maxPrice} setMaxPrice={setMaxPrice}
+                    selectedAmenities={selectedAmenities} setSelectedAmenities={setSelectedAmenities}
+                    selectedHotelTypes={selectedHotelTypes} setSelectedHotelTypes={setSelectedHotelTypes}
+                    selectedStops={selectedStops} setSelectedStops={setSelectedStops}
+                    availableAmenities={availableAmenities}
+                    availableHotelTypes={availableHotelTypes}
+                    availableStops={availableStops}
+                    resultCount={filteredDestinations.length}
+                />
+
+                {/* Sidebar Filters (Desktop Only) */}
+                <aside className="hidden md:block w-80 shrink-0 space-y-8">
                     <div>
                         <h2 className="text-2xl font-bold text-white mb-6">Filters</h2>
 
@@ -220,105 +226,70 @@ export default function Destinations() {
                 {/* Main Content */}
                 <main className="flex-1">
                     {/* Header Controls */}
-                    <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
-                        <div>
-                            <h1 className="text-3xl font-bold text-white">Explore Destinations</h1>
-                            <p className="text-slate-400 text-sm">{filteredDestinations.length} experiences found</p>
-                        </div>
-
-                        <div className="bg-slate-800 p-1 rounded-xl flex border border-white/10">
-                            <button
-                                onClick={() => setViewMode('grid')}
-                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${viewMode === 'grid' ? 'bg-primary text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
-                            >
-                                Grid View
-                            </button>
-                            <button
-                                onClick={() => setViewMode('map')}
-                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${viewMode === 'map' ? 'bg-primary text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
-                            >
-                                Map View
-                            </button>
-                        </div>
+                    <div className="flex flex-col sm:flex-row justify-between items-center mb-12 gap-4">
+                        <ScrollReveal>
+                            <div>
+                                <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
+                                    <TextReveal>Explore Destinations</TextReveal>
+                                </h1>
+                                <p className="text-slate-400 text-sm font-medium tracking-wide uppercase">{filteredDestinations.length} experiences found</p>
+                            </div>
+                        </ScrollReveal>
                     </div>
 
                     {/* Content Area */}
                     {loading ? (
-                        <div className="text-center py-20 text-slate-500 animate-pulse">Loading amazing places...</div>
-                    ) : viewMode === 'grid' ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                            {filteredDestinations.length > 0 ? (
-                                filteredDestinations.map((dest) => (
-                                    <div
-                                        key={dest.id}
-                                        className="h-full"
-                                    >
-                                        <Link href={`/tours/${dest.id}`} className="block h-full bg-slate-800 border border-white/10 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1 transition-all duration-300 group">
-                                            <div className="relative h-48 overflow-hidden">
-                                                <Image
-                                                    src={dest.image}
-                                                    alt={dest.name}
-                                                    fill
-                                                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                                                />
-                                                <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-xs font-bold text-white border border-white/10 flex items-center gap-1">
-                                                    <span>★</span> {dest.rating}
-                                                </div>
-                                            </div>
-                                            <div className="p-5">
-                                                <div className="flex justify-between items-start mb-2">
-                                                    <span className="text-xs font-bold text-primary uppercase tracking-wider bg-primary/10 px-2 py-1 rounded">{dest.hotelType}</span>
-                                                    <span className="text-white font-bold">{dest.price}</span>
-                                                </div>
-                                                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">{dest.name}</h3>
-                                                <p className="text-slate-400 text-sm line-clamp-2 mb-4">{dest.description}</p>
-
-                                                <div className="flex flex-wrap gap-2 mb-4">
-                                                    {dest.amenities?.slice(0, 3).map((a: string) => (
-                                                        <span key={a} className="text-[10px] text-slate-500 bg-white/5 px-2 py-1 rounded border border-white/5">{a}</span>
-                                                    ))}
-                                                    {dest.amenities?.length > 3 && <span className="text-[10px] text-slate-500 px-1">+{dest.amenities.length - 3}</span>}
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    </div>
-                                ))
-                            ) : (
-                                <div className="col-span-full py-20 text-center bg-slate-800/50 rounded-3xl border border-white/5">
-                                    <div className="text-5xl mb-4">🏜️</div>
-                                    <h3 className="text-xl font-bold text-white mb-2">No matches found</h3>
-                                    <button onClick={() => { setSearchQuery(""); setMaxPrice(150000); setSelectedAmenities([]); setSelectedHotelTypes([]); setSelectedStops([]); }} className="text-primary hover:underline">Clear all filters</button>
-                                </div>
-                            )}
+                            {[1, 2, 3, 4, 5, 6].map((i) => (
+                                <div key={i} className="h-96 bg-slate-800/50 rounded-2xl animate-pulse border border-white/5" />
+                            ))}
                         </div>
                     ) : (
-                        <div className="h-[600px] w-full bg-slate-800 rounded-3xl overflow-hidden border border-white/10 relative z-0">
-                            {/* Map Container */}
-                            <MapContainer
-                                center={[20.5937, 78.9629]}
-                                zoom={4}
-                                style={{ height: '100%', width: '100%' }}
-                            >
-                                <TileLayer
-                                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                    url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-                                />
-                                {filteredDestinations.map(dest => (
-                                    dest.lat && dest.lng && (
-                                        <Marker position={[dest.lat, dest.lng]} key={dest.id}>
-                                            <Popup>
-                                                <div className="min-w-[200px]">
-                                                    <h3 className="font-bold text-lg mb-1">{dest.name}</h3>
-                                                    <p className="text-sm text-slate-600 mb-2">{dest.price}</p>
-                                                    <Link href={`/tours/${dest.id}`} className="block text-center bg-blue-500 text-white py-1 px-3 rounded text-sm hover:bg-blue-600">
-                                                        View Details
-                                                    </Link>
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                            {filteredDestinations.length > 0 ? (
+                                filteredDestinations.map((dest, index) => (
+                                    <ScrollReveal key={dest.id} delay={index * 0.1}>
+                                        <div className="h-full transform hover:-translate-y-2 transition-transform duration-500">
+                                            <Link href={`/tours/${dest.id}`} className="block h-full bg-slate-800/40 backdrop-blur-sm border border-white/10 rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 group">
+                                                <div className="relative h-64 overflow-hidden">
+                                                    <Image
+                                                        src={dest.image}
+                                                        alt={dest.name}
+                                                        fill
+                                                        className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                                                    />
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-60" />
+                                                    <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-bold text-white border border-white/10 flex items-center gap-1">
+                                                        <span>★</span> {dest.rating}
+                                                    </div>
                                                 </div>
-                                            </Popup>
-                                        </Marker>
-                                    )
-                                ))}
-                            </MapContainer>
+                                                <div className="p-6 relative">
+                                                    <div className="flex justify-between items-start mb-4">
+                                                        <span className="text-[10px] font-bold text-primary uppercase tracking-widest bg-primary/10 px-3 py-1 rounded-full border border-primary/20">{dest.hotelType}</span>
+                                                        <span className="text-white font-bold text-lg">{dest.price}</span>
+                                                    </div>
+                                                    <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-primary transition-colors">{dest.name}</h3>
+                                                    <p className="text-slate-400 text-sm line-clamp-2 mb-6 font-light leading-relaxed">{dest.description}</p>
+
+                                                    <div className="flex flex-wrap gap-2 pt-4 border-t border-white/5">
+                                                        {dest.amenities?.slice(0, 3).map((a: string) => (
+                                                            <span key={a} className="text-[10px] text-slate-400 bg-white/5 px-2 py-1 rounded border border-white/5 group-hover:border-white/10 transition-colors">{a}</span>
+                                                        ))}
+                                                        {dest.amenities?.length > 3 && <span className="text-[10px] text-slate-500 px-1 self-center">+{dest.amenities.length - 3}</span>}
+                                                    </div>
+                                                </div>
+                                            </Link>
+                                        </div>
+                                    </ScrollReveal>
+                                ))
+                            ) : (
+                                <div className="col-span-full py-32 text-center bg-slate-800/30 rounded-3xl border border-white/5 border-dashed">
+                                    <div className="text-6xl mb-6 opacity-50">🏜️</div>
+                                    <h3 className="text-2xl font-bold text-white mb-3">No matches found</h3>
+                                    <p className="text-slate-400 mb-6">Try adjusting your filters to find your perfect getaway.</p>
+                                    <button onClick={() => { setSearchQuery(""); setMaxPrice(150000); setSelectedAmenities([]); setSelectedHotelTypes([]); setSelectedStops([]); }} className="text-primary hover:text-white font-bold transition-colors">Clear all filters</button>
+                                </div>
+                            )}
                         </div>
                     )}
                 </main>

@@ -2,7 +2,6 @@
 
 import JourneyProgress from "@/components/JourneyProgress";
 import DestinationCard from "@/components/DestinationCard";
-import HomeMap from "@/components/HomeMap";
 import SmartSearch from "@/components/SmartSearch";
 import PreferencesModal from "@/components/PreferencesModal";
 import BookingModal from "@/components/BookingModal";
@@ -14,8 +13,12 @@ import BudgetCalculator from "@/components/BudgetCalculator";
 import CategoryFilter from "@/components/CategoryFilter";
 import { usePersonalization } from "@/context/PersonalizationContext";
 import { useEffect, useState, useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import ScrollReveal from "@/components/ScrollReveal";
+import TextReveal from "@/components/TextReveal";
+import ParallaxImage from "@/components/ParallaxImage";
+import MagneticButton from "@/components/MagneticButton";
 
 // Section Transition Wrapper
 const Section = ({ children, className }: { children: React.ReactNode; className?: string }) => {
@@ -25,6 +28,64 @@ const Section = ({ children, className }: { children: React.ReactNode; className
     >
       {children}
     </section>
+  );
+};
+
+const Carousel = ({ dests }: { dests: any[] }) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer) return;
+
+    const interval = setInterval(() => {
+      if (!isPaused && scrollContainer) {
+        // Get width of first card + gap
+        const firstCard = scrollContainer.firstElementChild as HTMLElement;
+        const cardWidth = firstCard ? firstCard.clientWidth : 0;
+        const gap = 24; // md:gap-8 is 32px, gap-6 is 24px. Let's approx or get computed style.
+        // Actually, scrollBy with behavior smooth works well with snap points.
+
+        const scrollAmount = cardWidth + 32; // Approx width + gap
+
+        if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 10) {
+          // Reset to start instantly or smoothly
+          scrollContainer.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          scrollContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
+      }
+    }, 3000); // Change every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [isPaused]);
+
+  return (
+    <div
+      ref={scrollRef}
+      className="flex overflow-x-auto pb-12 gap-6 md:gap-8 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 scroll-smooth"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={() => setIsPaused(true)}
+      onTouchEnd={() => setIsPaused(false)}
+    >
+      <AnimatePresence>
+        {dests.map((dest, i) => (
+          <motion.div
+            key={dest.id}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.3 }}
+            layout
+            className="min-w-[85vw] md:min-w-[350px] snap-center shrink-0"
+          >
+            <DestinationCard destination={dest} index={i} />
+          </motion.div>
+        ))}
+      </AnimatePresence>
+    </div>
   );
 };
 
@@ -113,7 +174,7 @@ export default function Home() {
       <JourneyProgress />
 
       {/* 1. HERO: The Departure */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative h-[100dvh] flex items-center justify-center overflow-hidden">
 
         {/* Parallax Background */}
         <motion.div style={{ y: yHero }} className="absolute inset-0 z-0 scale-110">
@@ -134,48 +195,33 @@ export default function Home() {
         </motion.div>
 
         {/* Content */}
-        <motion.div style={{ y: yText }} className="relative z-10 text-center px-4 max-w-5xl mx-auto">
-          <motion.h2
-            initial={{ opacity: 0, letterSpacing: "1em" }}
-            animate={{ opacity: 1, letterSpacing: "0.2em" }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
-            className="text-primary font-bold uppercase text-sm md:text-xl mb-6"
-          >
-            {preferences ? "Curated Just For You" : "The Journey Begins Here"}
-          </motion.h2>
+        <motion.div style={{ y: yText }} className="relative z-10 text-center px-4 max-w-5xl mx-auto mt-[-50px]">
+          <ScrollReveal delay={0.2} duration={1}>
+            <motion.h2
+              className="text-primary font-bold uppercase text-xs md:text-xl mb-4 md:mb-6 tracking-[0.2em]"
+            >
+              {preferences ? "Curated Just For You" : "The Journey Begins Here"}
+            </motion.h2>
 
-          <motion.h1
-            key={preferences ? "personalized" : "default"}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 1 }}
-            className="text-6xl md:text-9xl font-bold text-white mb-8 tracking-tight drop-shadow-2xl"
-          >
-            {dynamicTitle} <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-teal-400 to-sky-400 bg-300% animate-gradient">
-              {dynamicSubtitle}
-            </span>
-          </motion.h1>
+            <motion.h1
+              className="text-5xl md:text-9xl font-bold text-white mb-6 md:mb-8 tracking-tight drop-shadow-2xl"
+            >
+              {dynamicTitle} <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-teal-400 to-sky-400 bg-300% animate-gradient">
+                {dynamicSubtitle}
+              </span>
+            </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 1 }}
-            className="text-white/80 text-xl max-w-xl mx-auto mb-8"
-          >
-            {preferences
-              ? `We've designed a ${preferences.budget} ${preferences.travelStyle} experience for your ${preferences.companions} trip.`
-              : "Curated expeditions to the world's most untamed corners."}
-          </motion.p>
+            <p className="text-white/80 text-base md:text-xl max-w-xl mx-auto mb-8 px-4">
+              {preferences
+                ? `We've designed a ${preferences.budget} ${preferences.travelStyle} experience for your ${preferences.companions} trip.`
+                : "Curated expeditions to the world's most untamed corners."}
+            </p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.2, duration: 1 }}
-            className="mb-12 w-full px-4"
-          >
-            <SmartSearch />
-          </motion.div>
+            <div className="mb-12 w-full px-4 transform hover:scale-[1.02] transition-transform duration-500">
+              <SmartSearch />
+            </div>
+          </ScrollReveal>
         </motion.div>
 
         {/* Scroll Hint */}
@@ -196,36 +242,38 @@ export default function Home() {
       {/* 2. DESTINATIONS: The First Stop */}
       <Section className="z-10 bg-slate-900">
         <div className="max-w-7xl mx-auto px-8 w-full">
-          <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-8">
-            <div>
-              <span className="text-primary font-bold tracking-widest uppercase mb-2 block">01. Destinations</span>
-              <h2 className="text-4xl md:text-6xl font-bold text-white">Choose Your <br /> Adventure</h2>
+          <ScrollReveal>
+            <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-12 gap-8">
+              <div>
+                <span className="text-primary font-bold tracking-widest uppercase mb-2 block">01. Destinations</span>
+                <h2 className="text-4xl md:text-6xl font-bold text-white">
+                  <TextReveal>Choose Your Adventure</TextReveal>
+                </h2>
+              </div>
+              <p className="text-slate-400 max-w-sm text-lg">
+                {preferences ? `Handpicked ${preferences.travelStyle} destinations for you.` : "From the icy peaks of the Alps to the tropical tranquility of the Maldives."}
+              </p>
             </div>
-            <p className="text-slate-400 max-w-sm text-lg">
-              {preferences ? `Handpicked ${preferences.travelStyle} destinations for you.` : "From the icy peaks of the Alps to the tropical tranquility of the Maldives."}
-            </p>
-          </div>
+          </ScrollReveal>
 
           {/* Category Filter */}
-          <div className="mb-12">
-            <CategoryFilter
-              selectedCategory={selectedCategory}
-              onCategoryChange={setSelectedCategory}
-              domesticCount={destinations.filter(d => d.category === "Domestic").length}
-              internationalCount={destinations.filter(d => d.category === "International").length}
-            />
-          </div>
+          <ScrollReveal delay={0.2}>
+            <div className="mb-12">
+              <CategoryFilter
+                selectedCategory={selectedCategory}
+                onCategoryChange={setSelectedCategory}
+                domesticCount={destinations.filter(d => d.category === "Domestic").length}
+                internationalCount={destinations.filter(d => d.category === "International").length}
+              />
+            </div>
+          </ScrollReveal>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {sortedDestinations
-              .filter(dest => selectedCategory === "All" || dest.category === selectedCategory)
-              .slice(0, 6)
-              .map((dest, i) => (
-                <DestinationCard key={dest.id} destination={dest} index={i} />
-              ))}
-          </div>
+          <ScrollReveal delay={0.4}>
+            <Carousel dests={sortedDestinations.filter(dest => selectedCategory === "All" || dest.category === selectedCategory).slice(0, 6)} />
+          </ScrollReveal>
         </div>
       </Section>
+
 
       {/* Recommended for User */}
       <RecommendedTours />
@@ -241,37 +289,43 @@ export default function Home() {
 
         <div className="relative z-10 max-w-7xl mx-auto px-8 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <span className="text-primary font-bold tracking-widest uppercase mb-2 block">02. Experiences</span>
-              <h2 className="text-4xl md:text-6xl font-bold text-white mb-8">Not Just a Trip, <br /> A Transformation.</h2>
-              <div className="space-y-8">
-                <div className="flex gap-6">
-                  <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-3xl shrink-0">🏔️</div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white mb-2">Private Expeditions</h3>
-                    <p className="text-slate-400">Access restricted areas and hidden gems with our expert local guides.</p>
-                  </div>
-                </div>
-                <div className="flex gap-6">
-                  <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-3xl shrink-0">🥂</div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white mb-2">Luxury & Comfort</h3>
-                    <p className="text-slate-400">Handpicked 5-star accommodations and first-class travel logistics.</p>
-                  </div>
-                </div>
-                <div className="flex gap-6">
-                  <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-3xl shrink-0">🧘</div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white mb-2">Holistic Wellness</h3>
-                    <p className="text-slate-400">Rejuvenate with exclusive spa treatments, yoga, and mindfulness sessions.</p>
-                  </div>
+            <ScrollReveal>
+              <div>
+                <span className="text-primary font-bold tracking-widest uppercase mb-2 block">02. Experiences</span>
+                <h2 className="text-4xl md:text-6xl font-bold text-white mb-8">
+                  <TextReveal>Not Just a Trip, A Transformation.</TextReveal>
+                </h2>
+                <div className="space-y-8">
+                  <motion.div whileHover={{ x: 10 }} className="flex gap-6">
+                    <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-3xl shrink-0">🏔️</div>
+                    <div>
+                      <h3 className="text-xl font-bold text-white mb-2">Private Expeditions</h3>
+                      <p className="text-slate-400">Access restricted areas and hidden gems with our expert local guides.</p>
+                    </div>
+                  </motion.div>
+                  <motion.div whileHover={{ x: 10 }} className="flex gap-6">
+                    <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-3xl shrink-0">🥂</div>
+                    <div>
+                      <h3 className="text-xl font-bold text-white mb-2">Luxury & Comfort</h3>
+                      <p className="text-slate-400">Handpicked 5-star accommodations and first-class travel logistics.</p>
+                    </div>
+                  </motion.div>
+                  <motion.div whileHover={{ x: 10 }} className="flex gap-6">
+                    <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-3xl shrink-0">🧘</div>
+                    <div>
+                      <h3 className="text-xl font-bold text-white mb-2">Holistic Wellness</h3>
+                      <p className="text-slate-400">Rejuvenate with exclusive spa treatments, yoga, and mindfulness sessions.</p>
+                    </div>
+                  </motion.div>
                 </div>
               </div>
-            </div>
-            <div className="relative h-[600px] w-full rounded-[2rem] overflow-hidden border border-white/10">
-              <Image src="/swiss-alps.png" alt="Experience" fill className="object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent mix-blend-overlay" />
-            </div>
+            </ScrollReveal>
+            <ScrollReveal delay={0.3}>
+              <div className="relative h-[600px] w-full rounded-[2rem] overflow-hidden border border-white/10">
+                <ParallaxImage src="/swiss-alps.png" alt="Experience" className="h-[600px]" speed={50} />
+                <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent mix-blend-overlay pointer-events-none" />
+              </div>
+            </ScrollReveal>
           </div>
         </div>
       </Section>
@@ -280,7 +334,9 @@ export default function Home() {
       <Section className="bg-slate-900">
         <div className="max-w-7xl mx-auto px-8 text-center w-full">
           <span className="text-primary font-bold tracking-widest uppercase mb-4 block">03. Packages</span>
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-16">Curate Your <br /> Perfect Itinerary</h2>
+          <h2 className="text-4xl md:text-6xl font-bold text-white mb-16">
+            <TextReveal>Curate Your Perfect Itinerary</TextReveal>
+          </h2>
 
           {/* Package Builder Interface Mockup */}
           <div className="bg-slate-800/50 border border-white/10 rounded-3xl p-8 backdrop-blur-xl max-w-4xl mx-auto relative overflow-hidden group">
@@ -334,7 +390,17 @@ export default function Home() {
             </div>
 
             <div className="relative h-96 bg-slate-900 rounded-2xl border border-white/10 overflow-hidden mb-8 z-0">
-              <HomeMap selectedDestination={itineraryDestination} />
+              <Image
+                src="/hero.png"
+                alt="Destination Map"
+                fill
+                className="object-cover opacity-50 grayscale hover:grayscale-0 transition-all duration-700"
+              />
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <span className="bg-black/50 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full text-white text-sm font-bold flex items-center gap-2">
+                  <span className="text-primary">📍</span> Visualizing Itinerary
+                </span>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -393,20 +459,22 @@ export default function Home() {
 
         <div className="relative z-10 text-center px-4">
           <h2 className="text-5xl md:text-8xl font-bold text-white mb-8 tracking-tighter">
-            Your Story <br /> <span className="text-primary">Awaits</span>
+            <TextReveal>Your Story Awaits</TextReveal>
           </h2>
-          <button
-            onClick={() => setIsBookingOpen(true)}
-            className="group relative px-12 py-6 bg-white text-slate-900 font-bold rounded-full overflow-hidden text-xl hover:scale-105 transition-transform duration-300"
-          >
-            <span className="relative z-10 flex items-center gap-3">
-              Book Your Journey
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
-              </svg>
-            </span>
-            <div className="absolute inset-0 bg-gradient-to-r from-sky-300 to-teal-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          </button>
+          <div className="flex justify-center">
+            <MagneticButton
+              onClick={() => setIsBookingOpen(true)}
+              className="group relative px-12 py-6 bg-white text-slate-900 font-bold rounded-full overflow-hidden text-xl hover:scale-105 transition-transform duration-300"
+            >
+              <span className="relative z-10 flex items-center gap-3">
+                Book Your Journey
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
+                </svg>
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-sky-300 to-teal-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </MagneticButton>
+          </div>
         </div>
       </section>
 
