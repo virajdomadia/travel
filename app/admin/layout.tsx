@@ -121,25 +121,25 @@ export default function AdminLayout({
                         Dashboard
                     </Link>
                     <Link
-                        href="/admin/create"
-                        className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${pathname === '/admin/create' ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                        href="/admin/destinations/create"
+                        className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${pathname === '/admin/destinations/create' ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
                     >
                         <Plus size={20} />
-                        Add Destination
-                    </Link>
-                    <Link
-                        href="/admin/deals"
-                        className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${pathname.startsWith('/admin/deals') ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
-                    >
-                        <Tag size={20} />
-                        Deals
+                        Add Package
                     </Link>
                     <Link
                         href="/admin/bookings"
-                        className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${pathname === '/admin/bookings' ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                        className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${pathname.startsWith('/admin/bookings') ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
                     >
                         <Calendar size={20} />
-                        Bookings
+                        Manage Bookings
+                    </Link>
+                    <Link
+                        href="/admin/content"
+                        className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${pathname === '/admin/content' ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                    >
+                        <Tag size={20} />
+                        Manage Site Content
                     </Link>
                 </nav>
 

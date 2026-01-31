@@ -69,7 +69,7 @@ export default function TravelAssistant() {
             return "Our packages range from ₹15,000 to ₹150,000 per person depending on destination, duration, and luxury level. Use our Budget Calculator to get a detailed breakdown!";
         }
         if (lowerMessage.includes("weather") || lowerMessage.includes("climate")) {
-            return "Check out our Weather-Based Recommendations section to find destinations with optimal weather for your travel dates!";
+            return "We recommend visiting our destinations page to explore various locations. Each place has its own unique charm depending on the season!";
         }
         if (lowerMessage.includes("book") || lowerMessage.includes("reserve")) {
             return "To book a trip, browse our destinations, select your preferred package, and click 'Book This Trip'. Our team will confirm within 24 hours!";
@@ -174,8 +174,8 @@ export default function TravelAssistant() {
                                 >
                                     <div
                                         className={`max-w-[80%] rounded-2xl px-4 py-3 ${message.sender === "user"
-                                                ? "bg-primary text-white rounded-br-sm"
-                                                : "bg-slate-800 text-slate-200 rounded-bl-sm"
+                                            ? "bg-primary text-white rounded-br-sm"
+                                            : "bg-slate-800 text-slate-200 rounded-bl-sm"
                                             }`}
                                     >
                                         <p className="text-sm leading-relaxed">{message.text}</p>

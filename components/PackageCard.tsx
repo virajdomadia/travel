@@ -13,15 +13,16 @@ interface Destination {
     image: string;
     rating: number;
     duration: string;
+    date?: string; // Added date
     category?: string;
 }
 
-interface DestinationCardProps {
+interface PackageCardProps {
     destination: Destination;
     index: number;
 }
 
-export default function DestinationCard({ destination, index }: DestinationCardProps) {
+export default function PackageCard({ destination, index }: PackageCardProps) {
     const ref = useRef<HTMLDivElement>(null);
 
     // Motion values for tilt effect
@@ -122,7 +123,7 @@ export default function DestinationCard({ destination, index }: DestinationCardP
             }}
             className="group relative h-[400px] w-full cursor-pointer perspective-1000"
         >
-            <Link href={`/tours/${destination.id}`} className="block w-full h-full relative preserve-3d">
+            <Link href={`/packages/${destination.id}`} className="block w-full h-full relative preserve-3d">
 
                 {/* ... (Shadow Drop) */}
 
@@ -167,7 +168,18 @@ export default function DestinationCard({ destination, index }: DestinationCardP
                         </button>
 
                         <div className="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full shadow-lg flex items-center">
-                            <span className="text-white font-bold">{destination.price}</span>
+                            <span className="text-white font-bold">
+                                {destination.price.startsWith('₹') ? destination.price : '₹' + new Intl.NumberFormat('en-IN').format(parseInt(destination.price.replace(/[^0-9]/g, '') || '0'))}
+                            </span>
+                            <button
+                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); alert("Booking coming soon!"); }}
+                                className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white ml-3 px-4 py-2 rounded-full font-bold text-xs transition-all shadow-lg hover:shadow-blue-500/25 flex items-center gap-2"
+                            >
+                                Book
+                                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                            </button>
                         </div>
                     </motion.div>
 
@@ -181,17 +193,10 @@ export default function DestinationCard({ destination, index }: DestinationCardP
                         }}
                     >
                         <div className="bg-primary/80 backdrop-blur-md px-3 py-1 rounded-full shadow-lg">
-                            <span className="text-white text-xs font-bold uppercase tracking-wider">{destination.duration}</span>
+                            <span className="text-white text-xs font-bold uppercase tracking-wider">
+                                {destination.duration} {isNaN(Number(destination.duration)) ? '' : (Number(destination.duration) > 1 ? 'Days' : 'Day')}
+                            </span>
                         </div>
-                        {destination.category && (
-                            <div className={`backdrop-blur-md px-3 py-1 rounded-full shadow-lg flex items-center gap-1 ${destination.category === "Domestic"
-                                    ? "bg-green-500/80"
-                                    : "bg-blue-500/80"
-                                }`}>
-                                <span className="text-xs">{destination.category === "Domestic" ? "🇮🇳" : "🌍"}</span>
-                                <span className="text-white text-xs font-bold uppercase tracking-wider">{destination.category}</span>
-                            </div>
-                        )}
                     </motion.div>
 
                     {/* Content Info */}
@@ -205,17 +210,19 @@ export default function DestinationCard({ destination, index }: DestinationCardP
                     >
                         <h3 className="text-4xl font-bold text-white mb-2 drop-shadow-lg translate-z-20">{destination.name}</h3>
 
-                        <div className="overflow-hidden mb-4">
-                            <p className="text-white/80 line-clamp-2 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out">
-                                {destination.description}
-                            </p>
-                        </div>
+                        {/* Date Display */}
+                        {destination.date && (
+                            <div className="flex items-center gap-2 mb-4 text-white/90 font-medium">
+                                <span>📅</span>
+                                <span>{new Date(destination.date).toLocaleDateString(undefined, {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric'
+                                })}</span>
+                            </div>
+                        )}
 
                         <div className="flex items-center justify-between border-t border-white/10 pt-4">
-                            <div className="flex items-center gap-1 text-amber-400">
-                                <span>★</span>
-                                <span className="text-white font-medium">{destination.rating}</span>
-                            </div>
                             <div className="text-primary font-bold uppercase text-sm tracking-widest group-hover:tracking-[0.2em] transition-all duration-300">
                                 View Details
                             </div>

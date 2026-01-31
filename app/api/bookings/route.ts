@@ -45,12 +45,14 @@ export async function POST(request: Request) {
 
         const session = await getSession();
 
-        // Ensure status is pending initially
-        // If user is logged in, force the userId to match the session to prevent spoofing
+        const isAdmin = session && (session as any).role === 'admin';
+
         const bookingData = {
             ...body,
-            userId: session ? (session as any).username : body.userId, // Trust session over body if logged in
-            status: 'pending'
+            // If admin, respect body.userId (or whatever is passed), else force session username
+            userId: isAdmin ? (body.userId || 'manual-booking') : (session ? (session as any).username : body.userId),
+            // If admin, respect body.status, else force pending
+            status: isAdmin ? (body.status || 'pending') : 'pending'
         };
 
         const newBooking = await Booking.create(bookingData);

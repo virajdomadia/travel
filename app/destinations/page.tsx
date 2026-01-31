@@ -116,16 +116,16 @@ export default function Destinations() {
             <div className="max-w-[1400px] mx-auto h-full flex flex-col md:flex-row gap-8">
 
                 {/* Mobile Filter Button (FAB) */}
-                <button
+                {/* <button
                     onClick={() => setIsFilterOpen(true)}
                     className="md:hidden fixed bottom-6 right-6 z-40 bg-primary text-white p-4 rounded-full shadow-2xl shadow-primary/30 flex items-center gap-2"
                 >
                     <Filter size={24} />
                     <span className="font-bold text-sm">Filters</span>
-                </button>
+                </button> */}
 
                 {/* Mobile Filter Modal */}
-                <MobileFilterModal
+                {/* <MobileFilterModal
                     isOpen={isFilterOpen}
                     onClose={() => setIsFilterOpen(false)}
                     searchQuery={searchQuery} setSearchQuery={setSearchQuery}
@@ -137,15 +137,16 @@ export default function Destinations() {
                     availableHotelTypes={availableHotelTypes}
                     availableStops={availableStops}
                     resultCount={filteredDestinations.length}
-                />
+                /> */}
 
                 {/* Sidebar Filters (Desktop Only) */}
-                <aside className="hidden md:block w-80 shrink-0 space-y-8">
+                {/* <aside className="hidden md:block w-80 shrink-0 space-y-8">
                     <div>
                         <h2 className="text-2xl font-bold text-white mb-6">Filters</h2>
-
-                        {/* Search */}
-                        <div className="relative mb-6">
+                        
+                        // ... content omitted for brevity in comment ...
+                        // Search
+                         <div className="relative mb-6">
                             <input
                                 type="text"
                                 placeholder="Search places..."
@@ -154,9 +155,9 @@ export default function Destinations() {
                                 className="w-full bg-slate-800 border border-white/10 rounded-xl py-3 pl-4 pr-10 text-white focus:outline-none focus:border-primary transition-colors"
                             />
                             <svg className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                        </div>
+                        </div> 
 
-                        {/* Price Range */}
+                        
                         <div className="mb-6">
                             <label className="flex justify-between text-sm font-medium text-slate-300 mb-2">
                                 <span>Max Price</span>
@@ -173,7 +174,7 @@ export default function Destinations() {
                             />
                         </div>
 
-                        {/* Hotel Type */}
+                        
                         <div className="mb-6">
                             <h3 className="text-white font-semibold mb-3">Hotel Class</h3>
                             <div className="space-y-2">
@@ -189,7 +190,7 @@ export default function Destinations() {
                             </div>
                         </div>
 
-                        {/* Stops */}
+                        
                         <div className="mb-6">
                             <h3 className="text-white font-semibold mb-3">Stops</h3>
                             <div className="flex flex-wrap gap-2">
@@ -205,7 +206,7 @@ export default function Destinations() {
                             </div>
                         </div>
 
-                        {/* Amenities */}
+                        
                         <div className="mb-6">
                             <h3 className="text-white font-semibold mb-3">Amenities</h3>
                             <div className="grid grid-cols-2 gap-2">
@@ -221,7 +222,7 @@ export default function Destinations() {
                             </div>
                         </div>
                     </div>
-                </aside>
+                </aside> */}
 
                 {/* Main Content */}
                 <main className="flex-1">
@@ -230,9 +231,9 @@ export default function Destinations() {
                         <ScrollReveal>
                             <div>
                                 <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
-                                    <TextReveal>Explore Destinations</TextReveal>
+                                    <TextReveal>Explore Packages</TextReveal>
                                 </h1>
-                                <p className="text-slate-400 text-sm font-medium tracking-wide uppercase">{filteredDestinations.length} experiences found</p>
+                                <p className="text-slate-400 text-sm font-medium tracking-wide uppercase">{filteredDestinations.length} packages found</p>
                             </div>
                         </ScrollReveal>
                     </div>
@@ -250,7 +251,7 @@ export default function Destinations() {
                                 filteredDestinations.map((dest, index) => (
                                     <ScrollReveal key={dest.id} delay={index * 0.1}>
                                         <div className="h-full transform hover:-translate-y-2 transition-transform duration-500">
-                                            <Link href={`/tours/${dest.id}`} className="block h-full bg-slate-800/40 backdrop-blur-sm border border-white/10 rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 group">
+                                            <Link href={`/packages/${dest.id}`} className="block h-full bg-slate-800/40 backdrop-blur-sm border border-white/10 rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 group">
                                                 <div className="relative h-64 overflow-hidden">
                                                     <Image
                                                         src={dest.image}
@@ -266,17 +267,35 @@ export default function Destinations() {
                                                 <div className="p-6 relative">
                                                     <div className="flex justify-between items-start mb-4">
                                                         <span className="text-[10px] font-bold text-primary uppercase tracking-widest bg-primary/10 px-3 py-1 rounded-full border border-primary/20">{dest.hotelType}</span>
-                                                        <span className="text-white font-bold text-lg">{dest.price}</span>
+                                                        <div className="flex flex-col items-end">
+                                                            <span className="text-white font-bold text-lg">
+                                                                {dest.price.startsWith('₹') ? dest.price : '₹' + new Intl.NumberFormat('en-IN').format(parseInt(dest.price.replace(/[^0-9]/g, '') || '0'))}
+                                                            </span>
+                                                            <span className="text-xs text-slate-400 font-medium">
+                                                                {dest.duration} {isNaN(Number(dest.duration)) ? '' : (Number(dest.duration) > 1 ? 'Days' : 'Day')}
+                                                            </span>
+                                                        </div>
                                                     </div>
+
                                                     <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-primary transition-colors">{dest.name}</h3>
                                                     <p className="text-slate-400 text-sm line-clamp-2 mb-6 font-light leading-relaxed">{dest.description}</p>
 
-                                                    <div className="flex flex-wrap gap-2 pt-4 border-t border-white/5">
+                                                    <div className="flex flex-wrap gap-2 pt-4 border-t border-white/5 mb-6">
                                                         {dest.amenities?.slice(0, 3).map((a: string) => (
                                                             <span key={a} className="text-[10px] text-slate-400 bg-white/5 px-2 py-1 rounded border border-white/5 group-hover:border-white/10 transition-colors">{a}</span>
                                                         ))}
                                                         {dest.amenities?.length > 3 && <span className="text-[10px] text-slate-500 px-1 self-center">+{dest.amenities.length - 3}</span>}
                                                     </div>
+
+                                                    <button
+                                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); alert("Booking coming soon!"); }}
+                                                        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white py-3 rounded-xl font-bold text-sm transition-all shadow-lg hover:shadow-blue-500/25 flex items-center justify-center gap-2 group/btn"
+                                                    >
+                                                        <span>Book Package</span>
+                                                        <svg className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                                        </svg>
+                                                    </button>
                                                 </div>
                                             </Link>
                                         </div>

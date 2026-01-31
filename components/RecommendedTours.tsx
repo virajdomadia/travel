@@ -90,7 +90,7 @@ export default function RecommendedTours() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {recommendations.map(tour => (
                             <Link
-                                href={`/tours/${tour.id}`}
+                                href={`/packages/${tour.id}`}
                                 key={tour.id}
                                 className="group relative block h-[300px] rounded-2xl overflow-hidden"
                             >

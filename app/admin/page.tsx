@@ -1,8 +1,9 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import { Plus } from "lucide-react";
 
 export default function AdminDashboard() {
     const [stats, setStats] = useState<any>({
@@ -13,9 +14,24 @@ export default function AdminDashboard() {
     });
     const [loading, setLoading] = useState(true);
 
+    const [destinationsList, setDestinationsList] = useState<any[]>([]);
+
     useEffect(() => {
         fetchStats();
+        fetchDestinations();
     }, []);
+
+    const fetchDestinations = async () => {
+        try {
+            const res = await fetch('/api/destinations');
+            const data = await res.json();
+            if (Array.isArray(data)) {
+                setDestinationsList(data);
+            }
+        } catch (err) {
+            console.error("Failed to fetch destinations", err);
+        }
+    };
 
     const fetchStats = async () => {
         try {
@@ -47,6 +63,24 @@ export default function AdminDashboard() {
         }
     };
 
+    const handleDeleteDestination = async (id: string, name: string) => {
+        if (!confirm(`Are you sure you want to delete ${name}?`)) return;
+
+        try {
+            const res = await fetch(`/api/destinations/${id}`, {
+                method: 'DELETE',
+            });
+            if (res.ok) {
+                alert('Destination deleted successfully');
+                fetchDestinations();
+            } else {
+                alert('Failed to delete destination');
+            }
+        } catch (error) {
+            console.error('Delete error', error);
+        }
+    };
+
     if (loading) return <div className="min-h-screen bg-slate-900 flex items-center justify-center text-white">Loading Dashboard...</div>;
 
     // Simulate Chart Data (Width percentages)
@@ -61,10 +95,10 @@ export default function AdminDashboard() {
                         <p className="text-slate-400">Real-time metrics and booking oversight.</p>
                     </div>
                     <div className="flex gap-4">
-                        <a href="/admin/create" className="btn bg-primary text-white hover:bg-sky-600 transition-colors flex items-center gap-2 px-4 py-2 rounded-lg font-bold">
-                            <span className="text-xl">+</span> Add Listing
+                        <a href="/admin/destinations/create" className="btn bg-primary text-white hover:bg-sky-600 transition-colors flex items-center gap-2 px-4 py-2 rounded-lg font-bold">
+                            <span className="text-xl">+</span> Add Package
                         </a>
-                        <button onClick={fetchStats} className="btn bg-white/10 text-white">Refresh Data</button>
+                        <button onClick={() => { fetchStats(); fetchDestinations(); }} className="btn bg-white/10 text-white">Refresh Data</button>
                     </div>
                 </div>
 
@@ -79,13 +113,76 @@ export default function AdminDashboard() {
                         <div className="text-3xl font-bold text-white">{stats.totalBookings}</div>
                     </div>
                     <div className="bg-slate-800 border border-white/10 p-6 rounded-2xl">
-                        <h3 className="text-slate-400 text-sm uppercase tracking-wider mb-2">Conversion Rate</h3>
-                        <div className="text-3xl font-bold text-cyan-400">3.2%</div>
-                        <div className="text-xs text-slate-500 mt-1">Simulated Metric</div>
+                        <h3 className="text-slate-400 text-sm uppercase tracking-wider mb-2">Total Packages</h3>
+                        <div className="text-3xl font-bold text-cyan-400">{destinationsList.length}</div>
                     </div>
                     <div className="bg-slate-800 border border-white/10 p-6 rounded-2xl">
                         <h3 className="text-slate-400 text-sm uppercase tracking-wider mb-2">Pending Actions</h3>
                         <div className="text-3xl font-bold text-amber-400">0</div>
+                    </div>
+                </div>
+
+                <div className="flex justify-between items-center mb-8">
+                    <h1 className="text-3xl font-bold text-white">Package Management</h1>
+                    <div className="flex gap-4">
+                        <Link href="/admin/content" className="btn bg-slate-800 text-white hover:bg-slate-700 border border-white/10 flex items-center gap-2 px-4 py-2 rounded-lg">
+                            <span>✏️</span> Manage Site Content
+                        </Link>
+                        <Link href="/admin/destinations/create" className="btn bg-primary text-white hover:bg-sky-600 transition-colors flex items-center gap-2 px-4 py-2 rounded-lg font-bold">
+                            <Plus size={16} /> Add Package
+                        </Link>
+                    </div>
+                </div>
+
+                {/* Packages Management Table */}
+                <div className="bg-slate-800 rounded-2xl border border-white/10 overflow-hidden mb-8">
+                    <h3 className="text-white font-bold mb-6 p-6">Manage Packages</h3>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left text-sm text-slate-400">
+                            <thead className="border-b border-white/10 text-xs uppercase bg-white/5">
+                                <tr>
+                                    <th className="p-3 rounded-tl-lg">Image</th>
+                                    <th className="p-3">Name</th>
+                                    <th className="p-3">Price</th>
+                                    <th className="p-3">Duration</th>
+                                    <th className="p-3">Category</th>
+                                    <th className="p-3 rounded-tr-lg">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {destinationsList.map((dest) => (
+                                    <tr key={dest.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                        <td className="p-3">
+                                            <div className="w-12 h-12 rounded-lg overflow-hidden relative">
+                                                <img src={dest.image} alt={dest.name} className="object-cover w-full h-full" />
+                                            </div>
+                                        </td>
+                                        <td className="p-3 font-medium text-white">{dest.name}</td>
+                                        <td className="p-3 font-bold text-primary">{dest.price}</td>
+                                        <td className="p-3">{dest.duration}</td>
+                                        <td className="p-3">
+                                            <span className="px-2 py-1 bg-white/10 rounded text-xs uppercase">{dest.category}</span>
+                                        </td>
+                                        <td className="p-3">
+                                            <div className="flex gap-2">
+                                                <a href={`/admin/destinations/edit/${dest.id}`} className="text-sky-400 hover:text-sky-300 font-bold">Edit</a>
+                                                <button
+                                                    onClick={() => handleDeleteDestination(dest.id, dest.name)}
+                                                    className="text-red-400 hover:text-red-300 font-bold"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                                {destinationsList.length === 0 && (
+                                    <tr>
+                                        <td colSpan={6} className="text-center py-8">No packages found. Create one!</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -153,7 +250,7 @@ export default function AdminDashboard() {
                             )}
                         </div>
 
-                        <div className="mt-8 pt-8 border-t border-white/10">
+                        {/* <div className="mt-8 pt-8 border-t border-white/10">
                             <h3 className="text-white font-bold mb-4">Traffic Source</h3>
                             <div className="flex items-center gap-4">
                                 <div className="w-32 h-32 rounded-full border-4 border-slate-700 relative flex items-center justify-center">
@@ -171,7 +268,7 @@ export default function AdminDashboard() {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

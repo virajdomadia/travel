@@ -1,6 +1,16 @@
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 export default function Footer() {
+    const [siteContent, setSiteContent] = useState<any>(null);
+
+    useEffect(() => {
+        fetch('/api/content')
+            .then(res => res.json())
+            .then(data => setSiteContent(data))
+            .catch(err => console.error(err));
+    }, []);
+
     return (
         <footer className="bg-background-alt pt-16 pb-8 border-t border-white/5">
             <div className="max-w-7xl mx-auto px-8">
@@ -18,7 +28,7 @@ export default function Footer() {
                         <h4 className="text-lg font-bold mb-4 text-white">Quick Links</h4>
                         <ul className="space-y-2">
                             <li><Link href="/destinations" className="text-slate-400 text-sm hover:text-primary transition-colors">Destinations</Link></li>
-                            <li><Link href="/tours" className="text-slate-400 text-sm hover:text-primary transition-colors">Tours</Link></li>
+                            <li><Link href="/packages" className="text-slate-400 text-sm hover:text-primary transition-colors">Packages</Link></li>
                             <li><Link href="/deals" className="text-slate-400 text-sm hover:text-primary transition-colors">Flights</Link></li>
                             <li><Link href="/hotels" className="text-slate-400 text-sm hover:text-primary transition-colors">Hotels</Link></li>
                         </ul>
@@ -28,7 +38,9 @@ export default function Footer() {
                         <h4 className="text-lg font-bold mb-4 text-white">Support</h4>
                         <ul className="space-y-2">
                             <li><Link href="/help" className="text-slate-400 text-sm hover:text-primary transition-colors">Help Center</Link></li>
-                            <li><Link href="/contact" className="text-slate-400 text-sm hover:text-primary transition-colors">Contact Us</Link></li>
+                            {siteContent?.contact?.email && (
+                                <li><a href={`mailto:${siteContent.contact.email}`} className="text-slate-400 text-sm hover:text-primary transition-colors">Contact Us</a></li>
+                            )}
                             <li><Link href="/privacy" className="text-slate-400 text-sm hover:text-primary transition-colors">Privacy Policy</Link></li>
                             <li><Link href="/terms" className="text-slate-400 text-sm hover:text-primary transition-colors">Terms of Service</Link></li>
                             <li><Link href="/cancellation" className="text-slate-400 text-sm hover:text-primary transition-colors">Cancellation Policy</Link></li>
@@ -56,9 +68,9 @@ export default function Footer() {
                 <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-slate-500 text-sm">
                     <p>&copy; {new Date().getFullYear()} 7 Fold Wonders. All rights reserved.</p>
                     <div className="flex gap-6">
-                        <Link href="#" className="hover:text-primary transition-colors">Instagram</Link>
-                        <Link href="#" className="hover:text-primary transition-colors">Twitter</Link>
-                        <Link href="#" className="hover:text-primary transition-colors">Facebook</Link>
+                        {siteContent?.contact?.socials?.instagram && <a href={siteContent.contact.socials.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Instagram</a>}
+                        {siteContent?.contact?.socials?.twitter && <a href={siteContent.contact.socials.twitter} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Twitter</a>}
+                        {siteContent?.contact?.socials?.facebook && <a href={siteContent.contact.socials.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Facebook</a>}
                     </div>
                 </div>
             </div>

@@ -1,51 +1,60 @@
 import { NextResponse } from 'next/server';
 import connectToDatabase from '@/app/lib/db';
 import Booking from '@/app/lib/models/Booking';
+import { getSession } from '@/app/lib/auth';
 
-export async function PUT(
-    request: Request,
-    { params }: { params: { id: string } }
-) {
+export async function GET(request: Request, { params }: { params: { id: string } }) {
     try {
         await connectToDatabase();
-        const id = params.id;
-        const body = await request.json();
+        const session = await getSession();
+        if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-        // Allow updating status or other fields
-        const updatedBooking = await Booking.findByIdAndUpdate(
-            id,
-            { $set: body },
-            { new: true }
-        );
+        const booking = await Booking.findById(params.id);
+        if (!booking) return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
 
-        if (!updatedBooking) {
-            return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
+        // Authorization check: Admin or Owner
+        if ((session as any).role !== 'admin' && booking.userId !== (session as any).username) {
+            return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 
-        return NextResponse.json(updatedBooking);
+        return NextResponse.json(booking);
     } catch (error) {
-        console.error('Failed to update booking:', error);
-        return NextResponse.json({ error: 'Failed to update booking' }, { status: 500 });
+        return NextResponse.json({ error: 'Server Error' }, { status: 500 });
     }
 }
 
-export async function DELETE(
-    request: Request,
-    { params }: { params: { id: string } }
-) {
+export async function PUT(request: Request, { params }: { params: { id: string } }) {
     try {
         await connectToDatabase();
-        const id = params.id;
-
-        const deletedBooking = await Booking.findByIdAndDelete(id);
-
-        if (!deletedBooking) {
-            return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
+        const session = await getSession();
+        if (!session || (session as any).role !== 'admin') {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        return NextResponse.json({ message: 'Booking deleted successfully' });
+        const body = await request.json();
+        const updatedBooking = await Booking.findByIdAndUpdate(params.id, body, { new: true });
+
+        if (!updatedBooking) return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
+
+        return NextResponse.json(updatedBooking);
     } catch (error) {
-        console.error('Failed to delete booking:', error);
-        return NextResponse.json({ error: 'Failed to delete booking' }, { status: 500 });
+        return NextResponse.json({ error: 'Server Error' }, { status: 500 });
+    }
+}
+
+export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+    try {
+        await connectToDatabase();
+        const session = await getSession();
+        if (!session || (session as any).role !== 'admin') {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const deletedBooking = await Booking.findByIdAndDelete(params.id);
+        if (!deletedBooking) return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
+
+        return NextResponse.json({ message: 'Booking deleted' });
+    } catch (error) {
+        return NextResponse.json({ error: 'Server Error' }, { status: 500 });
     }
 }

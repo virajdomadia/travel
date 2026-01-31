@@ -197,7 +197,7 @@ export default function ComparePage() {
 
                                                     <div className="pt-6 mt-auto">
                                                         <Link
-                                                            href={`/tours/${dest.id}`}
+                                                            href={`/packages/${dest.id}`}
                                                             className="btn w-full bg-white/10 hover:bg-white text-white hover:text-slate-900 border border-white/10 hover:border-white transition-all py-3 flex items-center justify-center gap-2 group"
                                                         >
                                                             View Details

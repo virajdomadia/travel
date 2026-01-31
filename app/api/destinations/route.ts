@@ -21,8 +21,20 @@ export async function POST(request: Request) {
         const body = await request.json();
 
         // Basic validation
-        if (!body.id || !body.name) {
+        if (!body.name) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+        }
+
+        // Auto-generate ID if missing
+        if (!body.id) {
+            body.id = body.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        }
+
+        // Ensure uniqueness check might be needed or let DB throw error on unique index?
+        // Let's check for existing ID to be safe and avoid 500 error
+        const existing = await Destination.findOne({ id: body.id });
+        if (existing) {
+            return NextResponse.json({ error: 'A package with this generated ID already exists. Please change the title.' }, { status: 400 });
         }
 
         const destination = await Destination.create(body);

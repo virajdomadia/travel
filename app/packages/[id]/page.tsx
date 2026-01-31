@@ -154,8 +154,8 @@ export default function TourDetails() {
                     )}
 
 
-                    <Link href="/destinations" className="text-primary hover:underline flex items-center gap-2 font-medium mb-12">
-                        &larr; Back to Destinations
+                    <Link href="/packages" className="text-primary hover:underline flex items-center gap-2 font-medium mb-12">
+                        &larr; Back to Packages
                     </Link>
 
 
