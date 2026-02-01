@@ -28,6 +28,8 @@ export async function PUT(request: Request) {
             if (body.hero) content.hero = { ...content.hero, ...body.hero };
             if (body.about) content.about = { ...content.about, ...body.about };
             if (body.contact) content.contact = { ...content.contact, ...body.contact };
+            if (body.theme) content.theme = { ...content.theme, ...body.theme };
+            if (body.branding) content.branding = { ...content.branding, ...body.branding };
             await content.save();
         }
 

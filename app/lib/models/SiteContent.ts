@@ -20,6 +20,21 @@ const SiteContentSchema = new mongoose.Schema({
             twitter: { type: String, default: "#" },
             facebook: { type: String, default: "#" }
         }
+    },
+    theme: {
+        primaryColor: { type: String, default: "#3b82f6" }, // blue-500
+        secondaryColor: { type: String, default: "#f97316" }, // orange-500
+        accentColor: { type: String, default: "#10b981" }, // emerald-500
+        backgroundColor: { type: String, default: "#0f172a" }, // slate-900
+        textColor: { type: String, default: "#ffffff" },
+        fontHeading: { type: String, default: "Inter" },
+        fontBody: { type: String, default: "Inter" },
+        radius: { type: String, default: "0.5rem" }
+    },
+    branding: {
+        siteName: { type: String, default: "TravelDCT" },
+        logoUrl: { type: String, default: "/logo.png" },
+        faviconUrl: { type: String, default: "/favicon.ico" }
     }
 }, { timestamps: true });
 
