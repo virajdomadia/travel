@@ -82,7 +82,7 @@ export default function Home() {
   const containerRef = useRef(null);
   const { scrollY } = useScroll();
   const { preferences } = usePersonalization();
-  const [destinations, setDestinations] = useState<any[]>([]);
+  const [packages, setPackages] = useState<any[]>([]);
   const [siteContent, setSiteContent] = useState<any>(null);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -95,11 +95,11 @@ export default function Home() {
 
   useEffect(() => {
     let isMounted = true;
-    fetch('/api/destinations')
+    fetch('/api/packages')
       .then(res => res.json())
       .then(data => {
         if (isMounted) {
-          setDestinations(data);
+          setPackages(data);
         }
       })
       .catch(err => console.error(err));
@@ -259,7 +259,7 @@ export default function Home() {
           </ScrollReveal>
 
           <ScrollReveal delay={0.2}>
-            <Carousel dests={destinations.slice(0, 8)} />
+            <Carousel dests={Array.isArray(packages) ? packages.slice(0, 8) : []} />
           </ScrollReveal>
         </div>
       </Section>

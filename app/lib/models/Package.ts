@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const DestinationSchema = new mongoose.Schema({
+const PackageSchema = new mongoose.Schema({
     id: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     description: { type: String },
@@ -28,4 +28,4 @@ const DestinationSchema = new mongoose.Schema({
     reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }]
 }, { timestamps: true, strict: false });
 
-export default mongoose.models.Destination || mongoose.model('Destination', DestinationSchema);
+export default mongoose.models.Package || mongoose.model('Package', PackageSchema);

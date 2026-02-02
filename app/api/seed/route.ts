@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import connectToDatabase from '@/app/lib/db';
-import Destination from '@/app/lib/models/Destination';
+import Package from '@/app/lib/models/Package';
 
 export async function GET() {
     try {
@@ -40,7 +40,7 @@ export async function POST() {
 
         // Try to save just Kerala first
         try {
-            const saved = await Destination.findOneAndUpdate(
+            const saved = await Package.findOneAndUpdate(
                 { id: 'kerala-backwaters' },
                 kerala,
                 { upsert: true, new: true, strict: false }
@@ -58,7 +58,7 @@ export async function POST() {
 
         for (const place of destinations) {
             try {
-                await Destination.findOneAndUpdate(
+                await Package.findOneAndUpdate(
                     { id: place.id },
                     place,
                     { upsert: true, new: true, strict: false }

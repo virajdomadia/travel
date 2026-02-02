@@ -4,12 +4,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ImageUpload from './ImageUpload';
 
-interface DestinationFormProps {
+interface PackageFormProps {
     initialData?: any;
     isEdit?: boolean;
 }
 
-export default function PackageForm({ initialData, isEdit = false }: DestinationFormProps) {
+export default function PackageForm({ initialData, isEdit = false }: PackageFormProps) {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
@@ -52,8 +52,8 @@ export default function PackageForm({ initialData, isEdit = false }: Destination
 
         try {
             const url = isEdit
-                ? `/api/destinations/${formData.id}`
-                : '/api/destinations';
+                ? `/api/packages/${formData.id}`
+                : '/api/packages';
 
             const method = isEdit ? 'PUT' : 'POST';
 
@@ -124,11 +124,11 @@ export default function PackageForm({ initialData, isEdit = false }: Destination
                 </div>
 
                 <div>
-                    <label className="block text-gray-400 mb-2 text-sm">Tour Date</label>
+                    <label className="block text-gray-400 mb-2 text-sm">Tour Month/Year</label>
                     <input
-                        type="date"
+                        type="month"
                         name="date"
-                        value={formData.date}
+                        value={formData.date ? formData.date.slice(0, 7) : ''}
                         onChange={handleChange}
                         required
                         className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none [color-scheme:dark]"
@@ -137,7 +137,7 @@ export default function PackageForm({ initialData, isEdit = false }: Destination
 
                 <div className="md:col-span-2">
                     <ImageUpload
-                        label="Destination Image"
+                        label="Package Image"
                         value={formData.image}
                         onChange={(val) => setFormData(prev => ({ ...prev, image: val }))}
                     />

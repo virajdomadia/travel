@@ -54,8 +54,7 @@ export default function SimplePackageCard({ destination }: SimplePackageCardProp
                             <span>📅</span>
                             <span>{new Date(destination.date).toLocaleDateString(undefined, {
                                 year: 'numeric',
-                                month: 'short',
-                                day: 'numeric'
+                                month: 'long'
                             })}</span>
                         </div>
                     )}

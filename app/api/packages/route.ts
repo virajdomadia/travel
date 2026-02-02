@@ -1,17 +1,17 @@
 import { NextResponse } from 'next/server';
 import connectToDatabase from '@/app/lib/db';
-import Destination from '@/app/lib/models/Destination';
+import Package from '@/app/lib/models/Package';
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
     try {
         await connectToDatabase();
-        const destinations = await Destination.find({});
-        return NextResponse.json(destinations);
+        const packages = await Package.find({});
+        return NextResponse.json(packages);
     } catch (error) {
-        console.error('Failed to fetch destinations:', error);
-        return NextResponse.json({ error: 'Failed to fetch destinations' }, { status: 500 });
+        console.error('Failed to fetch packages:', error);
+        return NextResponse.json({ error: 'Failed to fetch packages' }, { status: 500 });
     }
 }
 
@@ -30,17 +30,16 @@ export async function POST(request: Request) {
             body.id = body.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
         }
 
-        // Ensure uniqueness check might be needed or let DB throw error on unique index?
-        // Let's check for existing ID to be safe and avoid 500 error
-        const existing = await Destination.findOne({ id: body.id });
+        // Check for existing ID
+        const existing = await Package.findOne({ id: body.id });
         if (existing) {
             return NextResponse.json({ error: 'A package with this generated ID already exists. Please change the title.' }, { status: 400 });
         }
 
-        const destination = await Destination.create(body);
-        return NextResponse.json(destination, { status: 201 });
+        const newPackage = await Package.create(body);
+        return NextResponse.json(newPackage, { status: 201 });
     } catch (error) {
-        console.error('Failed to create destination:', error);
-        return NextResponse.json({ error: 'Failed to create destination' }, { status: 500 });
+        console.error('Failed to create package:', error);
+        return NextResponse.json({ error: 'Failed to create package' }, { status: 500 });
     }
 }

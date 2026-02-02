@@ -9,27 +9,27 @@ export default function AdminDashboard() {
     const [stats, setStats] = useState<any>({
         totalRevenue: 0,
         totalBookings: 0,
-        destinations: {},
+        packages: {},
         recentBookings: []
     });
     const [loading, setLoading] = useState(true);
 
-    const [destinationsList, setDestinationsList] = useState<any[]>([]);
+    const [packagesList, setPackagesList] = useState<any[]>([]);
 
     useEffect(() => {
         fetchStats();
-        fetchDestinations();
+        fetchPackages();
     }, []);
 
-    const fetchDestinations = async () => {
+    const fetchPackages = async () => {
         try {
-            const res = await fetch('/api/destinations');
+            const res = await fetch('/api/packages');
             const data = await res.json();
             if (Array.isArray(data)) {
-                setDestinationsList(data);
+                setPackagesList(data);
             }
         } catch (err) {
-            console.error("Failed to fetch destinations", err);
+            console.error("Failed to fetch packages", err);
         }
     };
 
@@ -44,15 +44,15 @@ export default function AdminDashboard() {
                 const totalRevenue = data.reduce((acc, curr) => acc + (curr.totalAmount || 0), 0);
                 const totalBookings = data.length;
 
-                const destinations: Record<string, number> = {};
+                const packages: Record<string, number> = {};
                 data.forEach(b => {
-                    destinations[b.tourName] = (destinations[b.tourName] || 0) + 1;
+                    packages[b.tourName] = (packages[b.tourName] || 0) + 1;
                 });
 
                 setStats({
                     totalRevenue,
                     totalBookings,
-                    destinations,
+                    packages,
                     recentBookings: data.slice(0, 10)
                 });
             }
@@ -63,18 +63,18 @@ export default function AdminDashboard() {
         }
     };
 
-    const handleDeleteDestination = async (id: string, name: string) => {
+    const handleDeletePackage = async (id: string, name: string) => {
         if (!confirm(`Are you sure you want to delete ${name}?`)) return;
 
         try {
-            const res = await fetch(`/api/destinations/${id}`, {
+            const res = await fetch(`/api/packages/${id}`, {
                 method: 'DELETE',
             });
             if (res.ok) {
-                alert('Destination deleted successfully');
-                fetchDestinations();
+                alert('Package deleted successfully');
+                fetchPackages();
             } else {
-                alert('Failed to delete destination');
+                alert('Failed to delete package');
             }
         } catch (error) {
             console.error('Delete error', error);
@@ -84,7 +84,7 @@ export default function AdminDashboard() {
     if (loading) return <div className="min-h-screen bg-slate-900 flex items-center justify-center text-white">Loading Dashboard...</div>;
 
     // Simulate Chart Data (Width percentages)
-    const maxBookings = Math.max(...Object.values(stats.destinations as Record<string, number>), 1);
+    const maxBookings = Math.max(...Object.values(stats.packages || {}) as number[], 1);
 
     return (
         <main className="min-h-screen bg-slate-900 pt-24 pb-12 px-4 md:px-8">
@@ -95,10 +95,10 @@ export default function AdminDashboard() {
                         <p className="text-slate-400">Real-time metrics and booking oversight.</p>
                     </div>
                     <div className="flex gap-4">
-                        <a href="/admin/destinations/create" className="btn bg-primary text-white hover:bg-sky-600 transition-colors flex items-center gap-2 px-4 py-2 rounded-lg font-bold">
+                        <a href="/admin/packages/create" className="btn bg-primary text-white hover:bg-sky-600 transition-colors flex items-center gap-2 px-4 py-2 rounded-lg font-bold">
                             <span className="text-xl">+</span> Add Package
                         </a>
-                        <button onClick={() => { fetchStats(); fetchDestinations(); }} className="btn bg-white/10 text-white">Refresh Data</button>
+                        <button onClick={() => { fetchStats(); fetchPackages(); }} className="btn bg-white/10 text-white">Refresh Data</button>
                     </div>
                 </div>
 
@@ -114,7 +114,7 @@ export default function AdminDashboard() {
                     </div>
                     <div className="bg-slate-800 border border-white/10 p-6 rounded-2xl">
                         <h3 className="text-slate-400 text-sm uppercase tracking-wider mb-2">Total Packages</h3>
-                        <div className="text-3xl font-bold text-cyan-400">{destinationsList.length}</div>
+                        <div className="text-3xl font-bold text-cyan-400">{packagesList.length}</div>
                     </div>
                     <div className="bg-slate-800 border border-white/10 p-6 rounded-2xl">
                         <h3 className="text-slate-400 text-sm uppercase tracking-wider mb-2">Pending Actions</h3>
@@ -128,7 +128,7 @@ export default function AdminDashboard() {
                         <Link href="/admin/content" className="btn bg-slate-800 text-white hover:bg-slate-700 border border-white/10 flex items-center gap-2 px-4 py-2 rounded-lg">
                             <span>✏️</span> Manage Site Content
                         </Link>
-                        <Link href="/admin/destinations/create" className="btn bg-primary text-white hover:bg-sky-600 transition-colors flex items-center gap-2 px-4 py-2 rounded-lg font-bold">
+                        <Link href="/admin/packages/create" className="btn bg-primary text-white hover:bg-sky-600 transition-colors flex items-center gap-2 px-4 py-2 rounded-lg font-bold">
                             <Plus size={16} /> Add Package
                         </Link>
                     </div>
@@ -150,7 +150,7 @@ export default function AdminDashboard() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {destinationsList.map((dest) => (
+                                {packagesList.map((dest) => (
                                     <tr key={dest.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
                                         <td className="p-3">
                                             <div className="w-12 h-12 rounded-lg overflow-hidden relative">
@@ -165,9 +165,9 @@ export default function AdminDashboard() {
                                         </td>
                                         <td className="p-3">
                                             <div className="flex gap-2">
-                                                <a href={`/admin/destinations/edit/${dest.id}`} className="text-sky-400 hover:text-sky-300 font-bold">Edit</a>
+                                                <a href={`/admin/packages/edit/${dest.id}`} className="text-sky-400 hover:text-sky-300 font-bold">Edit</a>
                                                 <button
-                                                    onClick={() => handleDeleteDestination(dest.id, dest.name)}
+                                                    onClick={() => handleDeletePackage(dest.id, dest.name)}
                                                     className="text-red-400 hover:text-red-300 font-bold"
                                                 >
                                                     Delete
@@ -176,7 +176,7 @@ export default function AdminDashboard() {
                                         </td>
                                     </tr>
                                 ))}
-                                {destinationsList.length === 0 && (
+                                {packagesList.length === 0 && (
                                     <tr>
                                         <td colSpan={6} className="text-center py-8">No packages found. Create one!</td>
                                     </tr>
@@ -228,9 +228,9 @@ export default function AdminDashboard() {
 
                     {/* Popular Destinations Chart */}
                     <div className="bg-slate-800 border border-white/10 rounded-2xl p-6">
-                        <h3 className="text-white font-bold mb-6">Popular Destinations</h3>
+                        <h3 className="text-white font-bold mb-6">Popular Packages</h3>
                         <div className="space-y-4">
-                            {Object.entries(stats.destinations).map(([name, count]: any) => (
+                            {Object.entries(stats.packages || {}).map(([name, count]: any) => (
                                 <div key={name}>
                                     <div className="flex justify-between text-sm text-slate-300 mb-1">
                                         <span>{name}</span>
@@ -245,7 +245,7 @@ export default function AdminDashboard() {
                                     </div>
                                 </div>
                             ))}
-                            {Object.keys(stats.destinations).length === 0 && (
+                            {Object.keys(stats.packages || {}).length === 0 && (
                                 <p className="text-slate-500 italic text-center py-8">No booking data yet</p>
                             )}
                         </div>
