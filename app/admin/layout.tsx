@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Plus, LogOut, Tag, Calendar } from 'lucide-react';
+import { LayoutDashboard, Plus, LogOut, Tag, Calendar, Menu, X } from 'lucide-react';
 
 export default function AdminLayout({
     children,
@@ -14,6 +14,7 @@ export default function AdminLayout({
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const pathname = usePathname();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         checkAuth();
@@ -67,7 +68,7 @@ export default function AdminLayout({
         return (
             <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
                 <div className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
-                    <h1 className="text-2xl font-bold mb-6 text-center">Admin Access</h1>
+                    <h1 className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Travel Admin</h1>
                     <form onSubmit={handleLogin} className="space-y-4">
                         <div>
                             <label className="block text-sm font-medium mb-2 text-gray-300">Username</label>
@@ -75,7 +76,7 @@ export default function AdminLayout({
                                 type="text"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
-                                className="w-full bg-white/5 border border-white/10 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-500"
+                                className="w-full bg-white/5 border border-white/10 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-secondary text-white placeholder-gray-500"
                                 placeholder="Enter admin username"
                             />
                         </div>
@@ -85,13 +86,13 @@ export default function AdminLayout({
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full bg-white/5 border border-white/10 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-500"
+                                className="w-full bg-white/5 border border-white/10 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-secondary text-white placeholder-gray-500"
                                 placeholder="Enter admin password"
                             />
                         </div>
                         <button
                             type="submit"
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors"
+                            className="btn btn-secondary w-full py-3 rounded-lg font-bold text-slate-900 shadow-lg shadow-secondary/25"
                         >
                             Login
                         </button>
@@ -103,40 +104,55 @@ export default function AdminLayout({
     }
 
     return (
-        <div className="min-h-screen bg-black text-white flex">
+        <div className="min-h-screen bg-black text-white flex relative">
+            {/* Mobile Header */}
+            <div className="md:hidden fixed top-0 left-0 right-0 bg-slate-900 border-b border-white/10 p-4 z-20 flex justify-between items-center">
+                <span className="font-bold text-secondary">Travel Admin</span>
+                <button onClick={() => setIsMobileMenuOpen(true)}>
+                    <Menu size={24} />
+                </button>
+            </div>
+
             {/* Sidebar */}
-            <aside className="w-64 border-r border-white/10 p-6 flex flex-col fixed h-full bg-black z-10">
-                <div className="mb-8">
-                    <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <aside className={`w-64 border-r border-white/10 p-6 flex flex-col fixed h-full bg-slate-900 z-30 transition-transform duration-300 md:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                <div className="mb-8 flex justify-between items-center">
+                    <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                         Travel Admin
                     </h1>
+                    <button className="md:hidden text-slate-400 hover:text-white" onClick={() => setIsMobileMenuOpen(false)}>
+                        <X size={24} />
+                    </button>
                 </div>
 
                 <nav className="space-y-2 flex-1">
                     <Link
                         href="/admin"
-                        className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${pathname === '/admin' ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${pathname === '/admin' ? 'bg-secondary text-slate-900 font-bold' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
                     >
                         <LayoutDashboard size={20} />
                         Dashboard
                     </Link>
                     <Link
                         href="/admin/packages/create"
-                        className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${pathname === '/admin/packages/create' ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${pathname === '/admin/packages/create' ? 'bg-secondary text-slate-900 font-bold' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
                     >
                         <Plus size={20} />
                         Add Package
                     </Link>
                     <Link
                         href="/admin/bookings"
-                        className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${pathname.startsWith('/admin/bookings') ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${pathname.startsWith('/admin/bookings') ? 'bg-secondary text-slate-900 font-bold' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
                     >
                         <Calendar size={20} />
                         Manage Bookings
                     </Link>
                     <Link
                         href="/admin/content"
-                        className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${pathname === '/admin/content' ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${pathname === '/admin/content' ? 'bg-secondary text-slate-900 font-bold' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
                     >
                         <Tag size={20} />
                         Manage Site Content
@@ -153,9 +169,17 @@ export default function AdminLayout({
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 ml-64 p-8">
+            <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 w-full overflow-x-hidden">
                 {children}
             </main>
+
+            {/* Overlay */}
+            {isMobileMenuOpen && (
+                <div
+                    className="fixed inset-0 bg-black/60 z-20 md:hidden backdrop-blur-sm"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                />
+            )}
         </div>
     );
 }

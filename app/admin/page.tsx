@@ -95,7 +95,7 @@ export default function AdminDashboard() {
                         <p className="text-slate-400">Real-time metrics and booking oversight.</p>
                     </div>
                     <div className="flex gap-4">
-                        <a href="/admin/packages/create" className="btn bg-primary text-white hover:bg-sky-600 transition-colors flex items-center gap-2 px-4 py-2 rounded-lg font-bold">
+                        <a href="/admin/packages/create" className="btn btn-secondary flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-slate-900">
                             <span className="text-xl">+</span> Add Package
                         </a>
                         <button onClick={() => { fetchStats(); fetchPackages(); }} className="btn bg-white/10 text-white">Refresh Data</button>
@@ -114,7 +114,7 @@ export default function AdminDashboard() {
                     </div>
                     <div className="bg-slate-800 border border-white/10 p-6 rounded-2xl">
                         <h3 className="text-slate-400 text-sm uppercase tracking-wider mb-2">Total Packages</h3>
-                        <div className="text-3xl font-bold text-cyan-400">{packagesList.length}</div>
+                        <div className="text-3xl font-bold text-secondary">{packagesList.length}</div>
                     </div>
                     <div className="bg-slate-800 border border-white/10 p-6 rounded-2xl">
                         <h3 className="text-slate-400 text-sm uppercase tracking-wider mb-2">Pending Actions</h3>
@@ -128,7 +128,7 @@ export default function AdminDashboard() {
                         <Link href="/admin/content" className="btn bg-slate-800 text-white hover:bg-slate-700 border border-white/10 flex items-center gap-2 px-4 py-2 rounded-lg">
                             <span>✏️</span> Manage Site Content
                         </Link>
-                        <Link href="/admin/packages/create" className="btn bg-primary text-white hover:bg-sky-600 transition-colors flex items-center gap-2 px-4 py-2 rounded-lg font-bold">
+                        <Link href="/admin/packages/create" className="btn btn-secondary flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-slate-900">
                             <Plus size={16} /> Add Package
                         </Link>
                     </div>
@@ -158,7 +158,7 @@ export default function AdminDashboard() {
                                             </div>
                                         </td>
                                         <td className="p-3 font-medium text-white">{dest.name}</td>
-                                        <td className="p-3 font-bold text-primary">{dest.price}</td>
+                                        <td className="p-3 font-bold text-secondary">{dest.price}</td>
                                         <td className="p-3">{dest.duration}</td>
                                         <td className="p-3">
                                             <span className="px-2 py-1 bg-white/10 rounded text-xs uppercase">{dest.category}</span>
@@ -240,7 +240,7 @@ export default function AdminDashboard() {
                                         <motion.div
                                             initial={{ width: 0 }}
                                             animate={{ width: `${(count / maxBookings) * 100}%` }}
-                                            className="h-full bg-primary"
+                                            className="h-full bg-secondary"
                                         />
                                     </div>
                                 </div>
