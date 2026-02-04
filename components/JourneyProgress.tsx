@@ -20,13 +20,13 @@ export default function JourneyProgress() {
 
             {/* Progress Line */}
             <motion.div
-                className="absolute left-0 top-0 w-[2px] bg-gradient-to-b from-sky-400 to-teal-400 origin-top"
+                className="absolute left-0 top-0 w-[2px] bg-secondary origin-top"
                 style={{ scaleY, height: "100%" }}
             />
 
             {/* Plane Icon traveling down the line */}
             <motion.div
-                className="absolute left-[-11px] w-6 h-6 text-primary filter drop-shadow-[0_0_8px_rgba(14,165,233,0.8)]"
+                className="absolute left-[-11px] w-6 h-6 text-secondary filter drop-shadow-[0_0_8px_rgba(237,204,38,0.8)]"
                 style={{ top: topPosition }}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-full h-full rotate-180">

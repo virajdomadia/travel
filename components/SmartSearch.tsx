@@ -56,7 +56,7 @@ export default function SmartSearch() {
                         </div>
 
                         <div className="relative mb-8">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" size={20} />
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-secondary" size={20} />
                             <input
                                 autoFocus
                                 type="text"
@@ -76,7 +76,7 @@ export default function SmartSearch() {
                                         key={cat.id}
                                         onClick={() => setActiveCategory(activeCategory === cat.id ? '' : cat.id)}
                                         className={`flex items-center gap-2 px-4 py-3 rounded-xl border transition-all whitespace-nowrap ${activeCategory === cat.id
-                                            ? 'bg-primary border-primary text-white shadow-lg shadow-primary/20'
+                                            ? 'bg-secondary border-secondary text-slate-900 shadow-lg shadow-secondary/20'
                                             : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10 hover:border-white/20'
                                             }`}
                                     >
@@ -89,7 +89,7 @@ export default function SmartSearch() {
 
                         <button
                             onClick={handleSearch}
-                            className="w-full bg-gradient-to-r from-primary to-purple-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                            className="btn btn-secondary w-full py-4 text-lg font-bold shadow-lg shadow-secondary/25 hover:scale-[1.02] active:scale-[0.98] transition-all"
                         >
                             Search Experiences
                         </button>
@@ -110,7 +110,7 @@ export default function SmartSearch() {
                 <div className="pl-6 flex-1 text-gray-300 font-medium truncate">
                     {query || "Where do you want to go?"}
                 </div>
-                <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white shadow-lg shadow-primary/30">
+                <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center text-slate-900 shadow-lg shadow-secondary/30">
                     <Search size={20} />
                 </div>
             </motion.div>

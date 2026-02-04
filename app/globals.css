@@ -9,6 +9,9 @@
 
   --primary: #0ea5e9;
   --primary-glow: rgba(14, 165, 233, 0.4);
+  --secondary: #EDCC26;
+  --secondary-glow: rgba(237, 204, 38, 0.4);
+  --accent: #EDCC26;
   --glass: rgba(255, 255, 255, 0.05);
   --glass-card: rgba(30, 41, 59, 0.7);
   --glass-border: rgba(255, 255, 255, 0.1);
@@ -33,6 +36,10 @@ body {
 
   .btn-primary {
     @apply bg-primary text-white hover:bg-sky-600 hover:shadow-lg hover:shadow-sky-500/20;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-slate-900 hover:bg-yellow-400 hover:shadow-lg hover:shadow-yellow-500/20;
   }
 
   .btn-outline {
@@ -91,7 +98,9 @@ body {
 
   /* Hide scrollbar for IE, Edge and Firefox */
   .scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
 }

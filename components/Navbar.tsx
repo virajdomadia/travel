@@ -71,18 +71,15 @@ export default function Navbar() {
             <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${scrolled ? "bg-slate-900/60 backdrop-blur-xl py-3 border-b border-white/10 shadow-2xl shadow-indigo-500/5" : "bg-transparent py-6"}`}>
                 <div className="max-w-7xl mx-auto px-8 flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-4 z-50 relative group">
-                        <div className="relative w-10 h-10 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12">
+                        <div className="relative w-48 h-16 transition-transform duration-500 group-hover:scale-105">
                             <Image
-                                src="/favicon.png"
+                                src="/logo.png"
                                 alt="7 Fold Wonders"
                                 fill
                                 className="object-contain drop-shadow-2xl"
                                 priority
                             />
                         </div>
-                        <span className="text-xl font-bold tracking-widest text-white uppercase font-heading drop-shadow-md">
-                            7 Fold Wonders
-                        </span>
                     </Link>
 
                     {/* Desktop Nav */}
@@ -112,7 +109,7 @@ export default function Navbar() {
                         {user ? (
                             <div className="relative hidden md:block group">
                                 <button className="flex items-center gap-2 text-white/80 hover:text-white font-medium">
-                                    <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold uppercase">
+                                    <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-slate-900 font-bold uppercase">
                                         {user.username.charAt(0)}
                                     </div>
                                     <span className="max-w-[100px] truncate">{user.username}</span>
@@ -139,7 +136,7 @@ export default function Navbar() {
 
                                 <button
                                     onClick={() => openAuth("signup")}
-                                    className="btn btn-primary hidden md:block"
+                                    className="btn btn-secondary hidden md:block"
                                 >
                                     Join Free
                                 </button>
@@ -177,7 +174,7 @@ export default function Navbar() {
                             {user ? (
                                 <>
                                     <div className="flex items-center gap-3 text-white mb-4 justify-center">
-                                        <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold uppercase text-lg">
+                                        <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-slate-900 font-bold uppercase text-lg">
                                             {user.username.charAt(0)}
                                         </div>
                                         <span className="font-bold text-lg">{user.username}</span>
@@ -189,7 +186,7 @@ export default function Navbar() {
                                 <>
                                     <button
                                         onClick={() => openAuth("signup")}
-                                        className="btn btn-primary w-full"
+                                        className="btn btn-secondary w-full"
                                     >
                                         Join Club
                                     </button>

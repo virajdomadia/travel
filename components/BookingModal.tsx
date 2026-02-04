@@ -146,7 +146,7 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
                     currency: order.currency,
                     name: "7 Fold Wonders",
                     description: `Booking for ${tourName}`,
-                    image: "/logo.png", // Add logo if available
+                    image: "/logo.png",
                     order_id: order.id,
                     handler: async function (response: any) {
                         // Payment Success - Now Create Booking
@@ -256,7 +256,7 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
                 animate={{ scale: 1, opacity: 1 }}
                 className="bg-slate-800 border border-white/10 p-8 rounded-3xl max-w-md w-full text-center"
             >
-                <div className="w-20 h-20 bg-primary/20 text-primary rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="w-20 h-20 bg-secondary/20 text-secondary rounded-full flex items-center justify-center mx-auto mb-6">
                     <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                     </svg>
@@ -277,7 +277,7 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
                         Download Itinerary
                     </button>
-                    <button onClick={onClose} className="btn btn-primary w-full">Close</button>
+                    <button onClick={onClose} className="btn btn-secondary w-full">Close</button>
                 </div>
             </motion.div>
         </div>
@@ -301,7 +301,7 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent" />
                     <div className="absolute bottom-8 left-8 text-white">
-                        <p className="text-primary text-sm font-bold tracking-widest uppercase mb-1">Building Trip</p>
+                        <p className="text-secondary text-sm font-bold tracking-widest uppercase mb-1">Building Trip</p>
                         <h3 className="text-2xl font-bold">{tourName}</h3>
                         <p className="text-slate-400 text-sm mt-2">Step {currentStep + 1} of {steps.length}</p>
                     </div>
@@ -313,7 +313,7 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
                     <div className="p-6 border-b border-white/5 flex justify-between items-center bg-slate-900/50 z-10">
                         <div className="flex gap-2">
                             {steps.map((s, i) => (
-                                <div key={i} className={`h-1 w-8 rounded-full transition-colors ${i <= currentStep ? "bg-primary" : "bg-slate-700"}`} />
+                                <div key={i} className={`h-1 w-8 rounded-full transition-colors ${i <= currentStep ? "bg-secondary" : "bg-slate-700"}`} />
                             ))}
                         </div>
                         <button onClick={onClose} className="text-slate-500 hover:text-white">&times;</button>
@@ -391,7 +391,7 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
                                             <div
                                                 key={hotel.id}
                                                 onClick={() => setForm({ ...form, hotel: hotel.id })}
-                                                className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all ${form.hotel === hotel.id ? "bg-primary/20 border-primary" : "bg-white/5 border-white/10 hover:bg-white/10"}`}
+                                                className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all ${form.hotel === hotel.id ? "bg-secondary/20 border-secondary" : "bg-white/5 border-white/10 hover:bg-white/10"}`}
                                             >
                                                 <div className="relative w-24 h-16 rounded-lg overflow-hidden shrink-0">
                                                     <Image src={hotel.image} alt={hotel.name} fill className="object-cover" />
@@ -430,7 +430,7 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
                                                     />
                                                     <span className="text-white font-medium">{activity.name}</span>
                                                 </div>
-                                                <span className="text-primary font-bold">+₹{activity.price.toLocaleString()}</span>
+                                                <span className="text-secondary font-bold">+₹{activity.price.toLocaleString()}</span>
                                             </label>
                                         ))}
                                     </div>
@@ -538,7 +538,7 @@ export default function BookingModal({ isOpen, onClose, tourName = "Santorini Dr
                         </button>
                         <button
                             onClick={handleNext}
-                            className="bg-primary hover:bg-sky-600 text-white font-bold px-8 py-3 rounded-xl transition-all shadow-lg shadow-primary/25"
+                            className="btn btn-secondary text-slate-900 font-bold px-8 py-3 rounded-xl transition-all shadow-lg shadow-secondary/25"
                         >
                             {currentStep === steps.length - 1 ? (loading ? "Booking..." : "Confirm & Pay") : "Next Step"}
                         </button>

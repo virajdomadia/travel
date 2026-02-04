@@ -52,7 +52,7 @@ export default function TourItinerary({ itinerary }: TourItineraryProps) {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="text-primary font-bold tracking-widest uppercase mb-2 block"
+                        className="text-secondary font-bold tracking-widest uppercase mb-2 block"
                     >
                         Day-by-Day Itinerary
                     </motion.span>
@@ -101,7 +101,7 @@ export default function TourItinerary({ itinerary }: TourItineraryProps) {
                                                 {day.highlights.slice(0, 2).map((highlight, i) => (
                                                     <span
                                                         key={i}
-                                                        className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full"
+                                                        className="text-xs bg-secondary/10 text-secondary px-2 py-1 rounded-full"
                                                     >
                                                         {highlight}
                                                     </span>
@@ -134,7 +134,7 @@ export default function TourItinerary({ itinerary }: TourItineraryProps) {
                                                 {/* Activities Timeline */}
                                                 <div className="mb-6">
                                                     <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                                                        <span className="text-primary">📅</span>
+                                                        <span className="text-secondary">📅</span>
                                                         Activities
                                                     </h4>
                                                     <div className="space-y-4">
@@ -142,18 +142,18 @@ export default function TourItinerary({ itinerary }: TourItineraryProps) {
                                                             <div key={i} className="flex gap-4 items-start">
                                                                 {/* Timeline Dot */}
                                                                 <div className="relative flex flex-col items-center">
-                                                                    <div className="w-10 h-10 rounded-full bg-primary/20 border-2 border-primary flex items-center justify-center flex-shrink-0">
+                                                                    <div className="w-10 h-10 rounded-full bg-secondary/20 border-2 border-secondary flex items-center justify-center flex-shrink-0">
                                                                         <span className="text-lg">{activity.icon}</span>
                                                                     </div>
                                                                     {i < day.activities.length - 1 && (
-                                                                        <div className="w-0.5 h-12 bg-gradient-to-b from-primary to-transparent mt-2" />
+                                                                        <div className="w-0.5 h-12 bg-gradient-to-b from-secondary to-transparent mt-2" />
                                                                     )}
                                                                 </div>
 
                                                                 {/* Activity Details */}
                                                                 <div className="flex-1 pt-2">
                                                                     <div className="flex items-center gap-2 mb-1">
-                                                                        <div className="text-primary text-sm font-semibold">
+                                                                        <div className="text-secondary text-sm font-semibold">
                                                                             {activity.time}
                                                                         </div>
                                                                         {activity.location && (
@@ -194,14 +194,14 @@ export default function TourItinerary({ itinerary }: TourItineraryProps) {
                                                 {/* Meals */}
                                                 <div className="mb-6">
                                                     <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
-                                                        <span className="text-primary">🍽️</span>
+                                                        <span className="text-secondary">🍽️</span>
                                                         Meals Included
                                                     </h4>
                                                     <div className="flex flex-wrap gap-2">
                                                         {day.meals.map((meal, i) => (
                                                             <span
                                                                 key={i}
-                                                                className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm"
+                                                                className="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-sm"
                                                             >
                                                                 {meal}
                                                             </span>
@@ -213,7 +213,7 @@ export default function TourItinerary({ itinerary }: TourItineraryProps) {
                                                 {day.hotelOptions && day.hotelOptions.length > 0 ? (
                                                     <div className="mb-6">
                                                         <h4 className="text-white font-semibold mb-4 flex items-center gap-2">
-                                                            <span className="text-primary">🏨</span>
+                                                            <span className="text-secondary">🏨</span>
                                                             Hotel Options for Day {day.day}
                                                         </h4>
                                                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -239,7 +239,7 @@ export default function TourItinerary({ itinerary }: TourItineraryProps) {
                                                                     {/* Hotel Details */}
                                                                     <div className="p-4">
                                                                         <h5 className="text-white font-bold mb-1">{hotel.name}</h5>
-                                                                        <p className="text-xs text-primary mb-2">{hotel.type}</p>
+                                                                        <p className="text-xs text-secondary mb-2">{hotel.type}</p>
                                                                         <p className="text-sm text-slate-400 mb-3 line-clamp-2">{hotel.description}</p>
 
                                                                         {/* Amenities */}
@@ -261,8 +261,8 @@ export default function TourItinerary({ itinerary }: TourItineraryProps) {
 
                                                                         {/* Price */}
                                                                         <div className="flex items-center justify-between pt-3 border-t border-white/10">
-                                                                            <span className="text-primary font-bold">{hotel.price}</span>
-                                                                            <button className="text-xs bg-primary/10 hover:bg-primary/20 text-primary px-3 py-1 rounded-full transition-colors">
+                                                                            <span className="text-secondary font-bold">{hotel.price}</span>
+                                                                            <button className="text-xs bg-secondary/10 hover:bg-secondary/20 text-secondary px-3 py-1 rounded-full transition-colors">
                                                                                 View Details
                                                                             </button>
                                                                         </div>
@@ -274,7 +274,7 @@ export default function TourItinerary({ itinerary }: TourItineraryProps) {
                                                 ) : day.accommodation ? (
                                                     <div className="mb-6">
                                                         <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
-                                                            <span className="text-primary">🏨</span>
+                                                            <span className="text-secondary">🏨</span>
                                                             Accommodation
                                                         </h4>
                                                         <div className="bg-slate-900/50 rounded-xl p-4">
@@ -287,14 +287,14 @@ export default function TourItinerary({ itinerary }: TourItineraryProps) {
                                                 {day.highlights.length > 2 && (
                                                     <div className="mt-6">
                                                         <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
-                                                            <span className="text-primary">✨</span>
+                                                            <span className="text-secondary">✨</span>
                                                             Highlights
                                                         </h4>
                                                         <div className="flex flex-wrap gap-2">
                                                             {day.highlights.map((highlight, i) => (
                                                                 <span
                                                                     key={i}
-                                                                    className="bg-gradient-to-r from-primary/10 to-sky-500/10 text-primary border border-primary/20 px-3 py-1 rounded-full text-sm"
+                                                                    className="bg-gradient-to-r from-secondary/10 to-sky-500/10 text-secondary border border-secondary/20 px-3 py-1 rounded-full text-sm"
                                                                 >
                                                                     {highlight}
                                                                 </span>

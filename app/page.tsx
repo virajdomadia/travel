@@ -1,7 +1,6 @@
 "use client";
 
 import SimplePackageCard from "@/components/SimplePackageCard";
-import TravelAssistant from "@/components/TravelAssistant";
 import PreferencesModal from "@/components/PreferencesModal";
 import BookingModal from "@/components/BookingModal";
 import BudgetCalculator from "@/components/BudgetCalculator";
@@ -133,7 +132,7 @@ export default function Home() {
   const yText = useTransform(scrollY, [0, 500], [0, 100]);
 
   return (
-    <main ref={containerRef} className="bg-slate-900 overflow-hidden relative selection:bg-primary selection:text-white">
+    <main ref={containerRef} className="bg-slate-900 overflow-hidden relative selection:bg-secondary selection:text-slate-900">
       <PreferencesModal
         isOpen={isPreferencesOpen}
         onClose={() => setIsPreferencesOpen(false)}
@@ -152,7 +151,6 @@ export default function Home() {
         initialDestination={itineraryDestination}
         initialDuration={5}
       />
-      <TravelAssistant />
       <JourneyProgress />
 
       {/* 1. HERO: The Departure */}
@@ -173,14 +171,14 @@ export default function Home() {
         {/* Floating Clouds/Elements (Abstract) */}
         <motion.div style={{ y: yClouds }} className="absolute inset-0 z-[5] pointer-events-none opacity-30">
           <div className="absolute top-[10%] left-[5%] w-64 h-64 bg-white/20 blur-[100px] rounded-full" />
-          <div className="absolute top-[40%] right-[10%] w-96 h-96 bg-primary/20 blur-[120px] rounded-full" />
+          <div className="absolute top-[40%] right-[10%] w-96 h-96 bg-secondary/20 blur-[120px] rounded-full" />
         </motion.div>
 
         {/* Content */}
         <motion.div style={{ y: yText }} className="relative z-10 text-center px-4 max-w-5xl mx-auto mt-[-50px]">
           <ScrollReveal delay={0.2} duration={1}>
             <motion.h2
-              className="text-primary font-bold uppercase text-xs md:text-xl mb-4 md:mb-6 tracking-[0.2em]"
+              className="text-secondary font-bold uppercase text-xs md:text-xl mb-4 md:mb-6 tracking-[0.2em]"
             >
               {preferences ? "Curated Just For You" : "The Journey Begins Here"}
             </motion.h2>
@@ -189,7 +187,7 @@ export default function Home() {
               className="text-5xl md:text-9xl font-bold text-white mb-6 md:mb-8 tracking-tight drop-shadow-2xl"
             >
               {dynamicTitle} <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-teal-400 to-sky-400 bg-300% animate-gradient">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary bg-300% animate-gradient">
                 {dynamicSubtitle}
               </span>
             </motion.h1>
@@ -199,6 +197,8 @@ export default function Home() {
                 ? `We've designed a ${preferences.budget} ${preferences.travelStyle} experience for your ${preferences.companions} trip.`
                 : "Curated expeditions to the world's most untamed corners."}
             </p>
+
+
 
 
           </ScrollReveal>
@@ -211,7 +211,7 @@ export default function Home() {
           transition={{ delay: 2, duration: 1 }}
           className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/50 z-20"
         >
-          <span className="text-xs tracking-widest uppercase">Start Exploring</span>
+          <span className="text-xs tracking-widest uppercase text-secondary">Start Exploring</span>
           <div className="w-[1px] h-16 bg-gradient-to-b from-white to-transparent" />
         </motion.div>
       </section>
@@ -223,7 +223,7 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <ScrollReveal>
                 <div>
-                  <span className="text-primary font-bold tracking-widest uppercase mb-2 block">Who We Are</span>
+                  <span className="text-secondary font-bold tracking-widest uppercase mb-2 block">Who We Are</span>
                   <h2 className="text-4xl md:text-6xl font-bold text-white mb-8">
                     <TextReveal>{siteContent?.about?.title || "Your Trusted Travel Partner"}</TextReveal>
                   </h2>
@@ -248,7 +248,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-8 w-full">
           <ScrollReveal>
             <div className="text-center mb-16">
-              <span className="text-primary font-bold tracking-widest uppercase mb-2 block">Featured Packages</span>
+              <span className="text-secondary font-bold tracking-widest uppercase mb-2 block">Featured Packages</span>
               <h2 className="text-4xl md:text-6xl font-bold text-white mb-4">
                 <TextReveal>Explore Our Top Picks</TextReveal>
               </h2>
@@ -275,7 +275,7 @@ export default function Home() {
           </p>
           <a
             href={`mailto:${siteContent?.contact?.email || "contact@traveldct.com"}`}
-            className="inline-flex items-center gap-3 px-12 py-6 bg-white text-slate-900 font-bold rounded-full overflow-hidden text-xl hover:scale-105 transition-transform duration-300 shadow-xl shadow-white/10"
+            className="inline-flex items-center gap-3 px-12 py-6 bg-secondary text-slate-900 font-bold rounded-full overflow-hidden text-xl hover:scale-105 transition-transform duration-300 shadow-xl shadow-white/10"
           >
             Contact Us
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">

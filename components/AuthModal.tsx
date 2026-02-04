@@ -79,7 +79,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = "login" }: Au
                 className="bg-slate-800/50 border border-white/10 w-full max-w-md rounded-[2.5rem] overflow-hidden shadow-2xl relative"
             >
                 {/* Background Glow */}
-                <div className="absolute -top-24 -left-24 w-48 h-48 bg-primary/20 blur-[100px] rounded-full" />
+                <div className="absolute -top-24 -left-24 w-48 h-48 bg-secondary/20 blur-[100px] rounded-full" />
                 <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-sky-500/20 blur-[100px] rounded-full" />
 
                 <div className="p-8 md:p-12 relative z-10">
@@ -100,7 +100,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = "login" }: Au
                                 animate={{ opacity: 1, scale: 1 }}
                                 className="text-center py-12"
                             >
-                                <div className="w-20 h-20 bg-primary/20 text-primary rounded-full flex items-center justify-center mx-auto mb-6">
+                                <div className="w-20 h-20 bg-secondary/20 text-secondary rounded-full flex items-center justify-center mx-auto mb-6">
                                     <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                                     </svg>
@@ -169,7 +169,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = "login" }: Au
 
                                     {mode === "login" && (
                                         <div className="text-right">
-                                            <button type="button" className="text-primary text-sm font-medium hover:underline">
+                                            <button type="button" className="text-secondary text-sm font-medium hover:underline">
                                                 Forgot password?
                                             </button>
                                         </div>
@@ -178,7 +178,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = "login" }: Au
                                     <button
                                         type="submit"
                                         disabled={isLoading}
-                                        className="btn btn-primary w-full py-4 text-lg font-bold shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden"
+                                        className="btn btn-secondary text-slate-900 w-full py-4 text-lg font-bold shadow-lg shadow-secondary/25 disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden"
                                     >
                                         <span className={isLoading ? "opacity-0" : "opacity-100"}>
                                             {mode === "login" ? "Sign In" : "Create Account"}
@@ -225,7 +225,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = "login" }: Au
                                         {mode === "login" ? "Don't have an account?" : "Already a member?"}{" "}
                                         <button
                                             onClick={() => setMode(mode === "login" ? "signup" : "login")}
-                                            className="text-primary font-bold hover:underline"
+                                            className="text-secondary font-bold hover:underline"
                                         >
                                             {mode === "login" ? "Sign Up Now" : "Sign In"}
                                         </button>

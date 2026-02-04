@@ -20,6 +20,9 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "7 Fold Wonders | Premium Travel Experiences",
   description: "Discover the world's most breathtaking destinations with 7 Fold Wonders.",
+  icons: {
+    icon: "/icon.png",
+  },
 };
 
 async function getSiteSettings() {

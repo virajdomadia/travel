@@ -97,11 +97,11 @@ export default function AIPlanner({ onBook }: AIPlannerProps) {
                         animate={{ opacity: 1, y: 0 }}
                         className={`flex gap-4 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}
                     >
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${msg.role === "user" ? "bg-primary text-white" : "bg-indigo-500/20 text-indigo-400"}`}>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${msg.role === "user" ? "bg-secondary text-slate-900" : "bg-indigo-500/20 text-indigo-400"}`}>
                             {msg.role === "user" ? <UserIcon size={16} /> : <Bot size={16} />}
                         </div>
 
-                        <div className={`max-w-[85%] md:max-w-[80%] rounded-2xl p-4 ${msg.role === "user" ? "bg-primary text-white" : "bg-slate-800 border border-white/10 text-slate-300"}`}>
+                        <div className={`max-w-[85%] md:max-w-[80%] rounded-2xl p-4 ${msg.role === "user" ? "bg-secondary text-slate-900" : "bg-slate-800 border border-white/10 text-slate-300"}`}>
                             {msg.type === "itinerary" ? (
                                 <div className="space-y-4">
                                     <p className="mb-4 text-white font-medium">{msg.content}</p>

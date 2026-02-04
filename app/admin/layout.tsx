@@ -121,8 +121,8 @@ export default function AdminLayout({
                         Dashboard
                     </Link>
                     <Link
-                        href="/admin/destinations/create"
-                        className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${pathname === '/admin/destinations/create' ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                        href="/admin/packages/create"
+                        className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${pathname === '/admin/packages/create' ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
                     >
                         <Plus size={20} />
                         Add Package

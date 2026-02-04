@@ -36,9 +36,9 @@ export default function InitialLoader() {
                     transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }} // Bezier for premium feel
                     className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-slate-950"
                 >
-                    <div className="relative w-24 h-24 mb-8">
+                    <div className="relative w-64 h-32 mb-8">
                         <Image
-                            src="/favicon.png"
+                            src="/logo.png"
                             alt="Logo"
                             fill
                             className="object-contain drop-shadow-2xl"
@@ -55,27 +55,8 @@ export default function InitialLoader() {
                                 repeat: Infinity,
                                 ease: "easeInOut"
                             }}
-                            className="absolute inset-0 bg-primary/30 blur-2xl rounded-full -z-10"
+                            className="absolute inset-0 bg-secondary/30 blur-2xl rounded-full -z-10"
                         />
-                    </div>
-
-                    <div className="text-center overflow-hidden">
-                        <motion.h1
-                            initial={{ y: 20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.2, duration: 0.8 }}
-                            className="text-4xl font-bold text-white tracking-[0.2em] font-heading mb-3"
-                        >
-                            7 FOLD WONDERS
-                        </motion.h1>
-                        <motion.p
-                            initial={{ y: 20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.4, duration: 0.8 }}
-                            className="text-slate-400 text-xs tracking-[0.3em] uppercase"
-                        >
-                            Premium Travel Experiences
-                        </motion.p>
                     </div>
 
                     {/* Minimal Progress Line */}
@@ -84,7 +65,7 @@ export default function InitialLoader() {
                             initial={{ x: "-100%" }}
                             animate={{ x: "0%" }}
                             transition={{ duration: 2, ease: "easeInOut" }}
-                            className="absolute inset-0 bg-white"
+                            className="absolute inset-0 bg-secondary"
                         />
                     </div>
                 </motion.div>

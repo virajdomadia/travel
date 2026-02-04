@@ -101,11 +101,11 @@ const WeatherCarousel = ({ dests }: { dests: WeatherDestination[] }) => {
                                     {/* Weather Info */}
                                     <div className="space-y-2 mb-4">
                                         <div className="flex items-center gap-2 text-sm">
-                                            <span className="text-primary">🌡️</span>
+                                            <span className="text-secondary">🌡️</span>
                                             <span className="text-slate-300">{destination.condition}</span>
                                         </div>
                                         <div className="flex items-center gap-2 text-sm">
-                                            <span className="text-primary">📅</span>
+                                            <span className="text-secondary">📅</span>
                                             <span className="text-slate-300">{destination.season}</span>
                                         </div>
                                     </div>
@@ -115,7 +115,7 @@ const WeatherCarousel = ({ dests }: { dests: WeatherDestination[] }) => {
                                         {destination.bestFor.slice(0, 3).map((tag) => (
                                             <span
                                                 key={tag}
-                                                className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full whitespace-nowrap"
+                                                className="text-xs bg-secondary/10 text-secondary px-2 py-1 rounded-full whitespace-nowrap"
                                             >
                                                 {tag}
                                             </span>
@@ -126,9 +126,9 @@ const WeatherCarousel = ({ dests }: { dests: WeatherDestination[] }) => {
                                     <div className="flex items-center justify-between pt-4 border-t border-white/10 mt-4">
                                         <div>
                                             <span className="text-slate-500 text-xs">Starting from</span>
-                                            <p className="text-primary font-bold text-lg">{destination.price}</p>
+                                            <p className="text-secondary font-bold text-lg">{destination.price}</p>
                                         </div>
-                                        <div className="text-primary group-hover:translate-x-1 transition-transform">
+                                        <div className="text-secondary group-hover:translate-x-1 transition-transform">
                                             →
                                         </div>
                                     </div>
@@ -521,7 +521,7 @@ export default function WeatherRecommendations() {
                         className="text-4xl md:text-6xl font-bold text-white mb-6"
                     >
                         Perfect Weather, <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-sky-400">
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary to-sky-400">
                             Perfect Destination
                         </span>
                     </motion.h2>
@@ -556,7 +556,7 @@ export default function WeatherRecommendations() {
                                     key={month}
                                     onClick={() => setSelectedMonth(month)}
                                     className={`px-4 py-3 rounded-xl font-medium transition-all ${selectedMonth === month
-                                        ? "bg-primary text-white shadow-lg shadow-primary/25"
+                                        ? "bg-secondary text-slate-900 shadow-lg shadow-secondary/25"
                                         : "bg-slate-700/50 text-slate-300 hover:bg-slate-700"
                                         }`}
                                 >
@@ -590,7 +590,7 @@ export default function WeatherRecommendations() {
                                                     setSelectedMonth(month);
                                                     setIsDropdownOpen(false);
                                                 }}
-                                                className={`w-full text-left px-6 py-3 border-b border-white/5 last:border-0 ${selectedMonth === month ? "bg-primary/20 text-primary" : "text-slate-300 hover:bg-white/5"}`}
+                                                className={`w-full text-left px-6 py-3 border-b border-white/5 last:border-0 ${selectedMonth === month ? "bg-secondary/20 text-secondary" : "text-slate-300 hover:bg-white/5"}`}
                                             >
                                                 {month}
                                             </button>

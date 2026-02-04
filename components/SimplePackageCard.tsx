@@ -30,13 +30,14 @@ export default function SimplePackageCard({ destination }: SimplePackageCardProp
                     alt={destination.name}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    unoptimized
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
             </div>
 
             {/* Badge */}
             <div className="absolute top-6 left-6 z-20 flex flex-col gap-2">
-                <div className="bg-primary/90 backdrop-blur-md px-4 py-1.5 rounded-full shadow-lg">
+                <div className="bg-secondary/90 backdrop-blur-md px-4 py-1.5 rounded-full shadow-lg">
                     <span className="text-white text-xs font-bold uppercase tracking-wider">
                         {destination.duration} {isNaN(Number(destination.duration)) ? '' : (Number(destination.duration) > 1 ? 'Days' : 'Day')}
                     </span>
@@ -64,7 +65,7 @@ export default function SimplePackageCard({ destination }: SimplePackageCardProp
                     <div className="flex justify-between items-end mb-4">
                         <div className="flex flex-col">
                             <span className="text-slate-300 text-xs uppercase tracking-wider">Price</span>
-                            <span className="text-primary font-bold text-xl">
+                            <span className="text-secondary font-bold text-xl">
                                 {destination.price.startsWith('₹') ? destination.price : '₹' + new Intl.NumberFormat('en-IN').format(parseInt(destination.price.replace(/[^0-9]/g, '') || '0'))}
                             </span>
                         </div>
@@ -72,7 +73,7 @@ export default function SimplePackageCard({ destination }: SimplePackageCardProp
 
                     <button
                         onClick={(e) => { e.preventDefault(); alert("Booking coming soon!"); }}
-                        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white py-3 rounded-xl font-bold text-sm transition-all shadow-lg hover:shadow-blue-500/25 flex items-center justify-center gap-2 group/btn"
+                        className="btn btn-secondary w-full py-3 rounded-xl font-bold text-sm shadow-lg shadow-secondary/25 flex items-center justify-center gap-2 group/btn"
                     >
                         <span>Book Package</span>
                         <svg className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
