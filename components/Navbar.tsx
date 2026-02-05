@@ -71,7 +71,7 @@ export default function Navbar() {
             <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${scrolled ? "bg-slate-900/60 backdrop-blur-xl py-3 border-b border-white/10 shadow-2xl shadow-indigo-500/5" : "bg-transparent py-6"}`}>
                 <div className="max-w-7xl mx-auto px-8 flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-4 z-50 relative group">
-                        <div className="relative w-48 h-16 transition-transform duration-500 group-hover:scale-105">
+                        <div className="relative w-56 h-20 md:w-80 md:h-28 transition-transform duration-500 group-hover:scale-105">
                             <Image
                                 src="/logo.png"
                                 alt="7 Fold Wonders"
