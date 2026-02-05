@@ -5,15 +5,17 @@ import Contact from "@/app/lib/models/Contact";
 export async function POST(req: NextRequest) {
     try {
         await dbConnect();
-        const { name, email, message } = await req.json();
+        const { name, email, mobile, destination, message } = await req.json();
 
-        if (!name || !email || !message) {
+        if (!name || !email || !message || !mobile || !destination) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
         const newContact = await Contact.create({
             name,
             email,
+            mobile,
+            destination,
             message,
         });
 

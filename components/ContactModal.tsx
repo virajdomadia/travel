@@ -16,6 +16,8 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
+        mobile: "",
+        destination: "",
         message: "",
     });
 
@@ -36,7 +38,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
             if (res.ok) {
                 setSuccess(true);
-                setFormData({ name: "", email: "", message: "" });
+                setFormData({ name: "", email: "", mobile: "", destination: "", message: "" });
                 setTimeout(() => {
                     setSuccess(false);
                     onClose();
@@ -155,7 +157,35 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-slate-300 mb-1">
-                                                Message
+                                                Mobile Number
+                                            </label>
+                                            <input
+                                                type="tel"
+                                                name="mobile"
+                                                value={formData.mobile}
+                                                onChange={handleChange}
+                                                required
+                                                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-secondary transition-colors"
+                                                placeholder="+91 98765 43210"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-slate-300 mb-1">
+                                                Where do you want to travel?
+                                            </label>
+                                            <input
+                                                type="text"
+                                                name="destination"
+                                                value={formData.destination}
+                                                onChange={handleChange}
+                                                required
+                                                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-secondary transition-colors"
+                                                placeholder="e.g. Dubai, Bali, Europe"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-slate-300 mb-1">
+                                                Any more information
                                             </label>
                                             <textarea
                                                 name="message"
@@ -164,7 +194,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                                                 required
                                                 rows={4}
                                                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-secondary transition-colors resize-none"
-                                                placeholder="How can we help you?"
+                                                placeholder="Tell us about your preferences..."
                                             ></textarea>
                                         </div>
 

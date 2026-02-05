@@ -7,6 +7,8 @@ interface Contact {
     _id: string;
     name: string;
     email: string;
+    mobile: string;
+    destination: string;
     message: string;
     createdAt: string;
 }
@@ -58,10 +60,16 @@ export default function AdminInquiries() {
                                 Name
                             </th>
                             <th scope="col" className="px-6 py-4">
+                                Mobile
+                            </th>
+                            <th scope="col" className="px-6 py-4">
+                                Destination
+                            </th>
+                            <th scope="col" className="px-6 py-4">
                                 Email
                             </th>
                             <th scope="col" className="px-6 py-4">
-                                Message
+                                Additional Info
                             </th>
                             <th scope="col" className="px-6 py-4">
                                 Date
@@ -72,6 +80,8 @@ export default function AdminInquiries() {
                         {contacts.map((contact) => (
                             <tr key={contact._id} className="hover:bg-white/5 transition-colors">
                                 <td className="px-6 py-4 font-medium text-white">{contact.name}</td>
+                                <td className="px-6 py-4">{contact.mobile}</td>
+                                <td className="px-6 py-4">{contact.destination}</td>
                                 <td className="px-6 py-4">{contact.email}</td>
                                 <td className="px-6 py-4 max-w-md truncate" title={contact.message}>
                                     {contact.message}
@@ -84,7 +94,7 @@ export default function AdminInquiries() {
 
                         {contacts.length === 0 && (
                             <tr>
-                                <td colSpan={4} className="px-6 py-8 text-center text-slate-500">
+                                <td colSpan={6} className="px-6 py-8 text-center text-slate-500">
                                     No inquiries found.
                                 </td>
                             </tr>
