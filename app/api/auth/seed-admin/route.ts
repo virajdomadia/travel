@@ -10,7 +10,11 @@ export async function GET() {
         // check if admin already exists
         const existingAdmin = await User.findOne({ username: 'admin' });
         if (existingAdmin) {
-            return NextResponse.json({ message: 'Admin already exists' });
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash('admin123', salt);
+            existingAdmin.password = hashedPassword;
+            await existingAdmin.save();
+            return NextResponse.json({ message: 'Admin password reset to admin123' });
         }
 
         // Create random strong password if you were automating this, 

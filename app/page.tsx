@@ -4,6 +4,7 @@ import SimplePackageCard from "@/components/SimplePackageCard";
 import PreferencesModal from "@/components/PreferencesModal";
 import BookingModal from "@/components/BookingModal";
 import BudgetCalculator from "@/components/BudgetCalculator";
+import ContactModal from "@/components/ContactModal";
 import JourneyProgress from "@/components/JourneyProgress";
 import { usePersonalization } from "@/context/PersonalizationContext";
 import { useEffect, useState, useRef } from "react";
@@ -86,6 +87,7 @@ export default function Home() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [isBudgetCalcOpen, setIsBudgetCalcOpen] = useState(false);
+  const [isContactOpen, setIsContactOpen] = useState(false);
 
   // Itinerary Builder State (Restored for BookingModal)
   const [itineraryDestination, setItineraryDestination] = useState("Kerala, India");
@@ -150,6 +152,10 @@ export default function Home() {
         onClose={() => setIsBudgetCalcOpen(false)}
         initialDestination={itineraryDestination}
         initialDuration={5}
+      />
+      <ContactModal
+        isOpen={isContactOpen}
+        onClose={() => setIsContactOpen(false)}
       />
       <JourneyProgress />
 
@@ -266,22 +272,25 @@ export default function Home() {
 
       {/* 4. CTA: Contact */}
       <section className="relative h-[60vh] flex items-center justify-center overflow-hidden bg-slate-950">
-        <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
+        <div className="relative z-30 text-center px-4 max-w-3xl mx-auto">
           <h2 className="text-4xl md:text-7xl font-bold text-white mb-8">
             <TextReveal>Ready to Plan Your Trip?</TextReveal>
           </h2>
           <p className="text-slate-300 text-xl mb-12">
             Get in touch with our travel experts today.
           </p>
-          <a
-            href={`mailto:${siteContent?.contact?.email || "contact@traveldct.com"}`}
+          <button
+            onClick={() => {
+              console.log("Contact button clicked! Setting isOpen to true.");
+              setIsContactOpen(true);
+            }}
             className="inline-flex items-center gap-3 px-12 py-6 bg-secondary text-slate-900 font-bold rounded-full overflow-hidden text-xl hover:scale-105 transition-transform duration-300 shadow-xl shadow-white/10"
           >
             Contact Us
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
             </svg>
-          </a>
+          </button>
         </div>
       </section>
 

@@ -15,11 +15,25 @@ export default function AdminDashboard() {
     const [loading, setLoading] = useState(true);
 
     const [packagesList, setPackagesList] = useState<any[]>([]);
+    const [contacts, setContacts] = useState<any[]>([]);
 
     useEffect(() => {
         fetchStats();
         fetchPackages();
+        fetchContacts();
     }, []);
+
+    const fetchContacts = async () => {
+        try {
+            const res = await fetch('/api/admin/contacts');
+            const data = await res.json();
+            if (Array.isArray(data)) {
+                setContacts(data);
+            }
+        } catch (err) {
+            console.error("Failed to fetch contacts", err);
+        }
+    };
 
     const fetchPackages = async () => {
         try {
@@ -102,8 +116,11 @@ export default function AdminDashboard() {
                     </div>
                 </div>
 
-                {/* KPI Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+                    <div className="bg-slate-800 border border-white/10 p-6 rounded-2xl">
+                        <h3 className="text-slate-400 text-sm uppercase tracking-wider mb-2">Total Inquiries</h3>
+                        <div className="text-3xl font-bold text-sky-400">{contacts.length}</div>
+                    </div>
                     <div className="bg-slate-800 border border-white/10 p-6 rounded-2xl">
                         <h3 className="text-slate-400 text-sm uppercase tracking-wider mb-2">Total Revenue</h3>
                         <div className="text-3xl font-bold text-emerald-400">₹{stats.totalRevenue.toLocaleString()}</div>
@@ -269,6 +286,44 @@ export default function AdminDashboard() {
                                 </div>
                             </div>
                         </div> */}
+                    </div>
+                </div>
+
+                {/* Contact Messages */}
+                <div className="bg-slate-800 border border-white/10 rounded-2xl p-6 mt-8">
+                    <h3 className="text-white font-bold mb-6">Recent Inquiries</h3>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left text-sm text-slate-400">
+                            <thead className="border-b border-white/10 text-xs uppercase bg-white/5">
+                                <tr>
+                                    <th className="p-3 rounded-tl-lg">Date</th>
+                                    <th className="p-3">Name</th>
+                                    <th className="p-3">Email</th>
+                                    <th className="p-3">Message</th>
+                                    <th className="p-3 rounded-tr-lg">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {contacts.map((contact) => (
+                                    <tr key={contact._id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                        <td className="p-3 whitespace-nowrap">{new Date(contact.createdAt).toLocaleDateString()}</td>
+                                        <td className="p-3 font-medium text-white whitespace-nowrap">{contact.name}</td>
+                                        <td className="p-3 text-sky-400">{contact.email}</td>
+                                        <td className="p-3 max-w-xs truncate" title={contact.message}>{contact.message}</td>
+                                        <td className="p-3">
+                                            <span className={`px-2 py-1 rounded text-xs font-bold uppercase ${contact.status === 'New' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-slate-700 text-slate-400'}`}>
+                                                {contact.status}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                ))}
+                                {contacts.length === 0 && (
+                                    <tr>
+                                        <td colSpan={5} className="text-center py-8">No inquiries yet.</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

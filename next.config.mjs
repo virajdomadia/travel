@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    // Trigger rebuild
     reactStrictMode: true,
     images: {
         remotePatterns: [

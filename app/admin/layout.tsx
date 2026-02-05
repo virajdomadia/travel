@@ -25,9 +25,11 @@ export default function AdminLayout({
             const res = await fetch('/api/auth/me');
             const data = await res.json();
             if (data.user && data.user.role === 'admin') {
+                console.log("Auth verified: admin");
                 setIsAuthenticated(true);
                 setUsername(data.user.username);
             } else {
+                console.log("Auth failed or not admin:", data);
                 setIsAuthenticated(false);
             }
         } catch (error) {
@@ -43,10 +45,12 @@ export default function AdminLayout({
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
             });
+            console.log("Login response status:", res.status);
 
             if (res.ok) {
                 // Cookie is set by server
-                checkAuth();
+                console.log("Login OK, checking auth...");
+                await checkAuth();
             } else {
                 alert('Invalid credentials');
             }
