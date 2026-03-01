@@ -191,12 +191,36 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { title: "Personalized Planning", desc: "Customized holidays and group tours designed for you.", icon: "M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" },
-              { title: "Domestic & International", desc: "Global reach with local expertise in every destination.", icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
-              { title: "Corporate Services", desc: "Seamless travel management for your business needs.", icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" },
-              { title: "Honeymoon Packages", desc: "Romantic gateways with unforgettable memories.", icon: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" },
-              { title: "Visa Assistance", desc: "Hassle-free documentation and support for your travels.", icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" },
-              { title: "Transparent Pricing", desc: "No hidden costs, just honest and competitive rates.", icon: "M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3zM12 8V7m0 1v1m0 0H7.5M12 9V8m0 5v1m0-1h4.5" }
+              {
+                title: "Fixed Group Departures",
+                desc: "Pre-planned, structured tours with guaranteed departures.",
+                icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              },
+              {
+                title: "College & Institutional Tours",
+                desc: "Complete end-to-end coordination including transport, accommodation, permissions, safety planning, and faculty assistance.",
+                icon: "M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"
+              },
+              {
+                title: "Customized Tours",
+                desc: "Tailor-made travel experiences for families, couples, and corporate groups.",
+                icon: "M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7l5-2 5.553 2.221a1 1 0 01.447.894v10.764a1 1 0 01-1.447.894L15 17l-6 3z"
+              },
+              {
+                title: "Visa Assistance",
+                desc: "Full documentation support with compliance tracking.",
+                icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              },
+              {
+                title: "Flight & Hotel Bookings",
+                desc: "Competitive pricing with reliable supplier network.",
+                icon: "M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"
+              },
+              {
+                title: "Corporate & MICE Travel",
+                desc: "Incentive trips, conferences, and business travel management.",
+                icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+              }
             ].map((item, i) => (
               <ScrollReveal key={i} delay={i * 0.1}>
                 <div className="p-10 rounded-[2rem] bg-slate-800/20 border border-white/5 hover:border-secondary/30 transition-all duration-500 group relative">
