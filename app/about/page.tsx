@@ -53,12 +53,13 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Main Content */}
-      <Section className="bg-slate-900">
+      {/* Story & Legacy */}
+      <Section className="bg-slate-900 pb-12">
         <div className="max-w-6xl mx-auto px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <ScrollReveal>
               <div>
+                <span className="text-secondary font-bold tracking-widest uppercase mb-4 block">Our Heritage</span>
                 <h2 className="text-3xl md:text-5xl font-bold text-white mb-8">
                   Our Story & Legacy
                 </h2>
@@ -86,14 +87,70 @@ export default function AboutPage() {
         </div>
       </Section>
 
-      {/* Mission Section */}
-      <Section className="bg-slate-950">
+      {/* Mission & Vision */}
+      <Section className="bg-slate-950 py-20 border-y border-white/5">
+        <div className="max-w-6xl mx-auto px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <ScrollReveal>
+              <div className="h-full p-10 rounded-[2.5rem] bg-gradient-to-br from-slate-900 to-slate-950 border border-white/10 relative overflow-hidden group">
+                <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/10 blur-[80px] rounded-full group-hover:bg-primary/20 transition-colors" />
+                <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center text-primary">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  Our Mission
+                </h2>
+                <div className="space-y-4 text-slate-300 leading-relaxed">
+                  <p>
+                    At 7FoldWanders, our mission is to deliver <span className="text-white font-medium">seamless, reliable, and value-driven travel experiences</span> through professional planning, transparent pricing, and personalized service.
+                  </p>
+                  <p>
+                    We are committed to providing high-quality domestic and international tour packages, customized holiday solutions, corporate travel management, and hassle-free travel services while upholding the corporate integrity, financial stability, and operational excellence of our parent company.
+                  </p>
+                  <p>
+                    Our goal is to build a trusted travel brand in India that combines customer satisfaction, ethical business practices, and long-term relationships—making every journey smooth, safe, and memorable.
+                  </p>
+                </div>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.2}>
+              <div className="h-full p-10 rounded-[2.5rem] bg-gradient-to-br from-slate-900 to-slate-950 border border-white/10 relative overflow-hidden group">
+                <div className="absolute -top-10 -right-10 w-40 h-40 bg-secondary/10 blur-[80px] rounded-full group-hover:bg-secondary/20 transition-colors" />
+                <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-secondary/20 flex items-center justify-center text-secondary">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  </div>
+                  Our Vision
+                </h2>
+                <div className="text-slate-300 leading-relaxed">
+                  <p>
+                    To establish 7FoldWanders as a <span className="text-white font-medium">trusted leader in fixed group departures and curated international holidays</span> across India, delivering seamless global travel experiences with excellence, integrity, and strong corporate governance.
+                  </p>
+                  <p className="mt-4">
+                    We aim to be the preferred choice for professionally managed group tours, customized international tour packages, and premium holiday planning, setting new benchmarks in the travel and tourism industry.
+                  </p>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+        </div>
+      </Section>
+
+      {/* Services Section */}
+      <Section className="bg-slate-900">
         <div className="max-w-6xl mx-auto px-8">
           <div className="text-center mb-16">
             <ScrollReveal>
-              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">What We Offer</h2>
+              <span className="text-secondary font-bold tracking-widest uppercase mb-4 block">Expert Solutions</span>
+              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Our Services</h2>
               <p className="text-slate-400 text-xl max-w-3xl mx-auto">
-                At 7FoldWanders, we believe travel should be easy, memorable, and stress-free.
+                Comprehensive travel management tailored to your needs.
               </p>
             </ScrollReveal>
           </div>
