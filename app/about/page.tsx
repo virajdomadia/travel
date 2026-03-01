@@ -44,21 +44,21 @@ export default function AboutPage() {
           <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '48px 48px' }} />
         </div>
 
-        <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
+        <div className="relative z-10 text-center px-4 max-w-6xl mx-auto pt-24 md:pt-32">
           <ScrollReveal>
-            <div className="inline-flex items-center gap-3 py-2 px-5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md mb-10 group hover:border-secondary/30 transition-colors">
+            <div className="inline-flex items-center gap-3 py-2 px-5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md mb-8 group hover:border-secondary/30 transition-colors">
               <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
               <span className="text-secondary font-bold text-[10px] md:text-xs tracking-[0.3em] uppercase">
                 Legacy Established 2011
               </span>
             </div>
-            <h1 className="text-6xl md:text-9xl font-bold text-white mb-10 tracking-tight leading-[0.95] flex flex-col items-center">
+            <h1 className="text-6xl md:text-[9rem] font-black text-white mb-10 tracking-tight leading-[0.85] flex flex-col items-center">
               <TextReveal>The Art of</TextReveal>
-              <span className="text-secondary italic mt-2">
+              <span className="text-secondary italic -mt-2">
                 <TextReveal>Global Discovery</TextReveal>
               </span>
             </h1>
-            <p className="text-slate-400 text-lg md:text-2xl font-light max-w-3xl mx-auto leading-relaxed tracking-wide">
+            <p className="text-slate-400 text-lg md:text-xl font-light max-w-2xl mx-auto leading-relaxed tracking-wide">
               7FoldWanders is a professionally managed travel house delivering <span className="text-white font-medium">uncompromising excellence</span> in hospitality and planning.
             </p>
           </ScrollReveal>
