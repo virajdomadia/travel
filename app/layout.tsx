@@ -48,7 +48,7 @@ export default async function RootLayout({
       <head>
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
       </head>
-      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans`}>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
         <ThemeProvider initialSettings={siteSettings}>
           <PersonalizationProvider>
             <ClientLayout>
