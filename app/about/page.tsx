@@ -242,6 +242,85 @@ export default function AboutPage() {
         </div>
       </Section>
 
+      {/* Our Tour Segments */}
+      <Section className="bg-slate-950 py-32 border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-8 w-full">
+          <ScrollReveal>
+            <div className="text-center mb-20">
+              <span className="text-secondary font-bold tracking-[0.3em] uppercase text-xs mb-4 block">Specialized Travel</span>
+              <h2 className="text-5xl md:text-7xl font-bold text-white tracking-tight">Our Tour Segments</h2>
+            </div>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            {[
+              {
+                title: "International Group Departures",
+                desc: "Professionally planned fixed group departures featuring curated packages with structured itineraries.",
+                destinations: "Europe | UK | Italy | Spain | Japan | South Korea | Switzerland | Northern Lights | Turkey | Dubai | Singapore | Malaysia | Bali | Sri Lanka | Almaty | Baku | Bhutan",
+                accent: "Global",
+                icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              },
+              {
+                title: "Domestic Group Tours",
+                desc: "Explore India with well-organized tours covering scenic landscapes, hill stations, and spiritual circuits.",
+                destinations: "Kashmir | Leh–Ladakh | Shimla–Manali | Sikkim & Darjeeling | Kerala | Uttarakhand | Dalhousie | Dharamshala",
+                accent: "Incredible India",
+                icon: "M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+              },
+              {
+                title: "College & Educational Tours",
+                desc: "Safe, supervised, and academically enriching tours designed to combine learning with travel.",
+                offerings: ["Industrial Visits", "Educational Study Tours", "Cultural Exchange Programs", "Domestic & International Study Trips", "Graduation Celebration Trips", "Management & Engineering Exposure Tours"],
+                accent: "Academic",
+                icon: "M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"
+              }
+            ].map((segment, i) => (
+              <ScrollReveal key={i} delay={i * 0.1}>
+                <div className="h-full p-10 rounded-[3rem] bg-slate-900 border border-white/5 hover:border-secondary/20 transition-all duration-500 group relative flex flex-col">
+                  <div className="flex justify-between items-start mb-10">
+                    <div className="w-16 h-16 rounded-2xl bg-slate-800 border border-white/10 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
+                      <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={segment.icon} />
+                      </svg>
+                    </div>
+                    <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-white/30 group-hover:text-secondary/50 transition-colors">{segment.accent}</span>
+                  </div>
+                  <h3 className="text-3xl font-bold text-white mb-6 group-hover:text-secondary transition-colors leading-tight">
+                    {segment.title}
+                  </h3>
+                  <p className="text-slate-400 mb-10 leading-relaxed">
+                    {segment.desc}
+                  </p>
+
+                  <div className="mt-auto pt-8 border-t border-white/5">
+                    {segment.destinations ? (
+                      <div className="space-y-4">
+                        <span className="text-[10px] font-bold tracking-widest text-secondary uppercase block">Destinations</span>
+                        <p className="text-xs text-slate-500 leading-loose tracking-wide">
+                          {segment.destinations}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        <span className="text-[10px] font-bold tracking-widest text-secondary uppercase block">Specializations</span>
+                        <div className="flex flex-wrap gap-2">
+                          {segment.offerings?.map((offering, idx) => (
+                            <span key={idx} className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] text-slate-400">
+                              {offering}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </Section>
+
       {/* Leadership Team */}
       <Section className="bg-slate-900 border-t border-white/5">
         <div className="max-w-6xl mx-auto px-8">
