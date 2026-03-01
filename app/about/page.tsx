@@ -11,7 +11,7 @@ import { motion } from "framer-motion";
 
 const Section = ({ children, className }: { children: React.ReactNode; className?: string }) => {
   return (
-    <section className={`py-24 relative overflow-hidden ${className}`}>
+    <section className={`py-16 md:py-24 relative overflow-hidden ${className}`}>
       {children}
     </section>
   );
@@ -43,7 +43,7 @@ export default function AboutPage() {
 
         <div className="relative z-10 text-center px-4">
           <ScrollReveal>
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
+            <h1 className="text-4xl md:text-7xl font-bold text-white mb-6">
               <TextReveal>About 7FoldWanders</TextReveal>
             </h1>
             <p className="text-secondary font-bold tracking-[0.3em] uppercase text-sm md:text-lg">
@@ -128,7 +128,7 @@ export default function AboutPage() {
           <div className="text-center mb-20">
             <ScrollReveal>
               <span className="text-secondary font-bold tracking-widest uppercase mb-4 block">Our Visionaries</span>
-              <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Leadership Team</h2>
+              <h2 className="text-3xl md:text-6xl font-bold text-white mb-6">Leadership Team</h2>
               <p className="text-slate-400 text-xl max-w-3xl mx-auto">
                 Together, our leadership team combines strategy, structure, and integrity to deliver professional travel solutions.
               </p>
@@ -154,7 +154,7 @@ export default function AboutPage() {
               }
             ].map((member, i) => (
               <ScrollReveal key={i} delay={i * 0.2}>
-                <div className="h-full p-10 rounded-[2.5rem] bg-slate-800/40 backdrop-blur-xl border border-white/10 hover:border-secondary/30 transition-all duration-500 group relative overflow-hidden">
+                <div className="h-full p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] bg-slate-800/40 backdrop-blur-xl border border-white/10 hover:border-secondary/30 transition-all duration-500 group relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/5 blur-3xl rounded-full translate-x-16 -translate-y-16 group-hover:bg-secondary/10 transition-colors" />
 
                   <div className="relative z-10">
@@ -180,7 +180,7 @@ export default function AboutPage() {
       {/* Focus Points */}
       <Section className="bg-slate-900">
         <div className="max-w-7xl mx-auto px-8">
-          <div className="bg-gradient-to-br from-slate-800 to-slate-900 p-12 md:p-20 rounded-[3rem] border border-white/10 relative overflow-hidden">
+          <div className="bg-gradient-to-br from-slate-800 to-slate-900 p-8 md:p-20 rounded-2xl md:rounded-[3rem] border border-white/10 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2" />
 
             <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
