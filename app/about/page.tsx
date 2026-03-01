@@ -53,7 +53,7 @@ export default function AboutPage() {
               </span>
             </div>
             <h1 className="text-6xl md:text-9xl font-bold text-white mb-10 tracking-tighter leading-[0.9]">
-              <TextReveal>The Art of <br /><span className="text-secondary italic">Global Discovery</span></TextReveal>
+              <TextReveal>The Art of</TextReveal> <br /><span className="text-secondary italic"><TextReveal>Global Discovery</TextReveal></span>
             </h1>
             <p className="text-slate-400 text-lg md:text-2xl font-light max-w-3xl mx-auto leading-relaxed tracking-wide">
               7FoldWanders is a professionally managed travel house delivering <span className="text-white font-medium">uncompromising excellence</span> in hospitality and planning.
