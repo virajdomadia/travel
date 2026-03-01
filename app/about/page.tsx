@@ -261,6 +261,7 @@ export default function AboutPage() {
             {[
               {
                 title: "International Group Departures",
+                label: "Destinations Include",
                 desc: "We offer professionally planned fixed group departures across the world, featuring curated international tour packages with structured itineraries and seamless travel management. Our international holidays are designed for comfort, cultural immersion, and hassle-free global travel experiences.",
                 items: ["Europe", "UK", "Italy", "Spain", "Japan", "South Korea", "Switzerland", "Northern Lights", "Turkey", "Dubai", "Singapore", "Malaysia", "Bali", "Sri Lanka", "Almaty", "Baku", "Bhutan"],
                 icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
@@ -268,6 +269,7 @@ export default function AboutPage() {
               },
               {
                 title: "Domestic Group Tours",
+                label: "Popular Destinations",
                 desc: "Explore India with our well-organized domestic group tours, covering scenic landscapes, hill stations, spiritual circuits, and adventure destinations. We ensure structured planning, comfortable stays, and professionally managed travel experiences across India.",
                 items: ["Kashmir", "Leh–Ladakh", "Shimla–Manali", "Sikkim & Darjeeling", "Kerala", "Uttarakhand", "Dalhousie", "Dharamshala"],
                 icon: "M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z",
@@ -275,6 +277,7 @@ export default function AboutPage() {
               },
               {
                 title: "College & Educational Tours",
+                label: "Our Educational Tour Offerings Include",
                 desc: "We specialize in safe, supervised, and academically enriching college and educational tours designed to combine learning with travel. With detailed itineraries, faculty coordination, strict safety compliance, and experienced tour managers, we deliver secure, well-organized, and meaningful student travel experiences.",
                 items: ["Industrial Visits", "Educational Study Tours", "Cultural Exchange Programs", "Domestic & International Study Trips", "Graduation Celebration Trips", "Management & Engineering Exposure Tours"],
                 icon: "M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222",
@@ -300,12 +303,17 @@ export default function AboutPage() {
                         {segment.desc}
                       </p>
                     </div>
-                    <div className="flex flex-wrap gap-2 pt-6 border-t border-white/5">
-                      {segment.items.map((item, idx) => (
-                        <span key={idx} className="text-[9px] font-bold tracking-widest uppercase py-2 px-3 rounded-xl bg-slate-800 text-slate-400 group-hover:bg-secondary/10 group-hover:text-secondary transition-all">
-                          {item}
-                        </span>
-                      ))}
+                    <div className="space-y-6 pt-6 border-t border-white/5">
+                      <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-secondary/60">
+                        {segment.label}
+                      </span>
+                      <div className="flex flex-wrap gap-2">
+                        {segment.items.map((item, idx) => (
+                          <span key={idx} className="text-[9px] font-bold tracking-widest uppercase py-2 px-3 rounded-xl bg-slate-800 text-slate-400 group-hover:bg-secondary/10 group-hover:text-secondary transition-all">
+                            {item}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                   <div className="h-2 bg-gradient-to-r from-transparent via-secondary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
