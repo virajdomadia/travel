@@ -330,8 +330,8 @@ export default function AboutPage() {
           <ScrollReveal className="text-center mb-24">
             <span className="text-secondary font-bold tracking-[0.4em] uppercase text-[10px] mb-6 block">Our Visionaries</span>
             <h2 className="text-4xl md:text-7xl font-bold text-white tracking-tighter mb-8 leading-none">The Leadership</h2>
-            <p className="text-slate-400 text-xl font-light max-w-3xl mx-auto leading-relaxed">
-              Combining institutional strategy with entrepreneurship to redefine travel management standards.
+            <p className="text-slate-400 text-xl font-light max-w-4xl mx-auto leading-relaxed">
+              Together, our leadership team combines strategy, structure, and integrity to deliver professional travel solutions across India and international destinations.
             </p>
           </ScrollReveal>
 
@@ -341,19 +341,19 @@ export default function AboutPage() {
                 name: "SALONI BORADE",
                 title: "Chief Executive Officer (CEO)",
                 role: "Strategic Growth & Innovation",
-                desc: "Saloni leads the company’s business expansion and operational excellence, focusing on building a reliable brand known for quality service and long-term success."
+                desc: "Saloni Borade is the driving force behind 7FoldWanders. With a clear vision for growth and innovation, she leads the company’s business expansion, strategic planning, and operational excellence. Her leadership focuses on building a reliable travel brand known for customer satisfaction, quality service, and long-term success in the Indian travel industry."
               },
               {
                 name: "REKHA SHAJI",
                 title: "Managing Director (MD)",
                 role: "Operational Governance",
-                desc: "Rekha ensures structured operations and service quality, bringing strong administrative leadership to maintain high professional standards across all services."
+                desc: "Rekha Shaji brings strong administrative leadership and strategic direction to the organization. She ensures structured operations, service quality, team management, and sustainable growth. Her expertise supports smooth execution of domestic and international travel services while maintaining high professional standards."
               },
               {
                 name: "SNEHA SHAJI",
-                title: "Chairman & Legal Head",
+                title: "Chairman & Head – Legal Department",
                 role: "Compliance & Ethics",
-                desc: "Sneha oversees legal compliance and ethical practices, ensuring transparent operations and strong legal frameworks that strengthen credibility."
+                desc: "Sneha Shaji oversees corporate governance, legal compliance, risk management, and ethical business practices. She ensures transparent operations, secure partnerships, and strong legal frameworks across all travel and tourism activities, strengthening the company’s credibility and trust."
               }
             ].map((member, i) => (
               <ScrollReveal key={i} delay={i * 0.1}>
