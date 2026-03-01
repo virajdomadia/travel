@@ -52,8 +52,11 @@ export default function AboutPage() {
                 Legacy Established 2011
               </span>
             </div>
-            <h1 className="text-6xl md:text-9xl font-bold text-white mb-10 tracking-tighter leading-[0.9]">
-              <TextReveal>The Art of</TextReveal> <br /><span className="text-secondary italic"><TextReveal>Global Discovery</TextReveal></span>
+            <h1 className="text-6xl md:text-9xl font-bold text-white mb-10 tracking-tight leading-[0.95] flex flex-col items-center">
+              <TextReveal>The Art of</TextReveal>
+              <span className="text-secondary italic mt-2">
+                <TextReveal>Global Discovery</TextReveal>
+              </span>
             </h1>
             <p className="text-slate-400 text-lg md:text-2xl font-light max-w-3xl mx-auto leading-relaxed tracking-wide">
               7FoldWanders is a professionally managed travel house delivering <span className="text-white font-medium">uncompromising excellence</span> in hospitality and planning.
