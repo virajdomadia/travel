@@ -7,9 +7,9 @@ const SiteContentSchema = new mongoose.Schema({
         bgImage: { type: String, default: "/hero.png" },
     },
     about: {
-        title: { type: String, default: "Your Trusted Travel Partner" },
-        description: { type: String, default: "At TravelDCT, we believe that travel is more than just visiting a place—it's about the experience, the memories, and the transformation that happens along the way." },
-        image: { type: String, default: "/swiss-alps.png" }
+        title: { type: String, default: "15 Years of Corporate Excellence" },
+        description: { type: String, default: "At 7FoldWanders, we blend the fresh energy of a new-age travel company with the solid backing of a 15-year corporate legacy. Our foundation is built on business credibility, structured systems, and customer-first values." },
+        image: { type: String, default: "/hero.png" }
     },
     contact: {
         email: { type: String, default: "contact@traveldct.com" },
@@ -32,7 +32,7 @@ const SiteContentSchema = new mongoose.Schema({
         radius: { type: String, default: "0.5rem" }
     },
     branding: {
-        siteName: { type: String, default: "TravelDCT" },
+        siteName: { type: String, default: "7FoldWanders" },
         logoUrl: { type: String, default: "/logo.png" },
         faviconUrl: { type: String, default: "/favicon.ico" }
     }

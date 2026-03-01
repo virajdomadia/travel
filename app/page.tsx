@@ -224,24 +224,50 @@ export default function Home() {
 
       {/* 2. ABOUT US: Company Info */}
       <div id="about">
-        <Section className="bg-slate-950">
+        <Section className="bg-slate-950 py-32 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none" />
           <div className="relative z-10 max-w-7xl mx-auto px-8 w-full">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
               <ScrollReveal>
-                <div>
-                  <span className="text-secondary font-bold tracking-widest uppercase mb-2 block">Who We Are</span>
-                  <h2 className="text-4xl md:text-6xl font-bold text-white mb-8">
-                    <TextReveal>{siteContent?.about?.title || "Your Trusted Travel Partner"}</TextReveal>
+                <div className="space-y-8">
+                  <div className="inline-flex items-center gap-4">
+                    <div className="w-12 h-[2px] bg-secondary rounded-full" />
+                    <span className="text-secondary font-bold tracking-[0.3em] uppercase text-xs">Our Heritage</span>
+                  </div>
+                  <h2 className="text-5xl md:text-7xl font-bold text-white tracking-tight leading-[1.1]">
+                    <TextReveal>{siteContent?.about?.title || "15 Years of Corporate Excellence"}</TextReveal>
                   </h2>
-                  <div className="prose prose-invert prose-lg text-slate-300 leading-relaxed whitespace-pre-wrap">
-                    {siteContent?.about?.description || "At TravelDCT, we believe that travel is more than just visiting a place—it's about the experience, the memories, and the transformation that happens along the way.\n\nWith years of expertise in curating bespoke itineraries, we specialize in both domestic and international holidays that cater to your unique preferences. From serene beach getaways to adrenaline-pumping adventures, we handle every detail so you can focus on making memories."}
+                  <div className="prose prose-invert prose-xl text-slate-300 leading-relaxed font-light">
+                    {siteContent?.about?.description || "At 7FoldWanders, we blend the fresh energy of a new-age travel company with the solid backing of a 15-year corporate legacy. Our foundation is built on business credibility, structured systems, and customer-first values."}
+                  </div>
+                  <div className="pt-8 flex flex-wrap gap-6">
+                    <button
+                      onClick={() => window.location.href = '/about'}
+                      className="px-8 py-4 bg-white/5 border border-white/10 text-white font-bold rounded-2xl hover:bg-white hover:text-slate-950 transition-all duration-300"
+                    >
+                      Learn Our Story
+                    </button>
+                    <div className="flex items-center gap-4 text-slate-500">
+                      <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center">
+                        <svg className="w-5 h-5 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                      </div>
+                      <span className="text-sm font-semibold tracking-widest uppercase italic">The 7Fold Way</span>
+                    </div>
                   </div>
                 </div>
               </ScrollReveal>
               <ScrollReveal delay={0.3}>
-                <div className="relative h-[500px] w-full rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl">
-                  <ParallaxImage src={siteContent?.about?.image || "/swiss-alps.png"} alt="About Us" className="h-[600px]" speed={50} />
-                  <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent mix-blend-overlay pointer-events-none" />
+                <div className="relative group p-4">
+                  <div className="absolute -inset-2 bg-gradient-to-tr from-secondary/20 to-primary/20 blur-2xl opacity-50 group-hover:opacity-100 transition-opacity duration-700" />
+                  <div className="relative h-[600px] w-full rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl">
+                    <ParallaxImage src={siteContent?.about?.image || "/hero.png"} alt="About Us" className="h-[700px]" speed={30} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+                    <div className="absolute bottom-10 left-10 right-10 p-8 rounded-3xl bg-slate-900/60 backdrop-blur-xl border border-white/10 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                      <p className="text-white text-lg font-medium leading-relaxed italic">
+                        "Redefining travel through corporate integrity and personalized boutique service."
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </ScrollReveal>
             </div>
