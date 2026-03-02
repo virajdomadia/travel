@@ -20,7 +20,7 @@ export default function TextReveal({ children, className = "", delay = 0 }: Text
             className={`inline-block ${className}`}
         >
             {words.map((word, i) => (
-                <span key={i} className="inline-block overflow-hidden mr-[0.2em] -mb-[0.2em] pb-[0.2em]">
+                <span key={i} className="inline-block overflow-hidden px-[0.5em] -mx-[0.5em] mr-[0.2em] -mb-[0.2em] pb-[0.2em]">
                     <motion.span
                         variants={{
                             hidden: { y: "100%" },

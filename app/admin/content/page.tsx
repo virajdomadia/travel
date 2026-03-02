@@ -11,11 +11,6 @@ const TABS = [
     { id: 'branding', label: 'Branding', icon: Globe },
 ];
 
-const COMMON_FONTS = [
-    "Inter", "Roboto", "Open Sans", "Lato", "Poppins",
-    "Montserrat", "Oswald", "Raleway", "Nunito", "Dancing Script"
-];
-
 export default function AdminContentPage() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -124,8 +119,8 @@ export default function AdminContentPage() {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={`flex items-center gap-2 px-6 py-3 rounded-t-xl transition-all whitespace-nowrap ${activeTab === tab.id
-                                    ? "bg-slate-800 text-primary border-b-2 border-primary font-medium"
-                                    : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                                ? "bg-slate-800 text-primary border-b-2 border-primary font-medium"
+                                : "text-slate-400 hover:text-white hover:bg-slate-800/50"
                                 }`}
                         >
                             <tab.icon size={18} />
@@ -304,37 +299,25 @@ export default function AdminContentPage() {
                             <section className="bg-slate-800 p-6 rounded-2xl border border-white/10">
                                 <h2 className="text-xl font-bold mb-6 text-primary flex items-center gap-2">
                                     <Type size={20} /> Typography
-                                    <span className="text-xs font-normal text-slate-400 ml-2 bg-slate-700 px-2 py-1 rounded-full">Google Fonts</span>
+                                    <span className="text-xs font-normal text-slate-400 ml-2 bg-slate-700 px-2 py-1 rounded-full">Standardized</span>
                                 </h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-400 mb-2">Heading Font</label>
-                                        <select
-                                            value={content.theme?.fontHeading}
-                                            onChange={(e) => handleChange("theme", "fontHeading", e.target.value)}
-                                            className="w-full bg-slate-900 border border-white/10 rounded-lg p-3 text-white focus:border-primary focus:outline-none"
-                                        >
-                                            {COMMON_FONTS.map(font => (
-                                                <option key={font} value={font}>{font}</option>
-                                            ))}
-                                        </select>
-                                        <p className="mt-2 text-2xl" style={{ fontFamily: content.theme?.fontHeading }}>
+                                        <label className="block text-sm font-medium text-slate-400 mb-2">Heading & Body Font</label>
+                                        <div className="w-full bg-slate-900 border border-white/10 rounded-lg p-3 text-white/50 cursor-not-allowed">
+                                            Inter (Global Standard)
+                                        </div>
+                                        <p className="mt-4 text-2xl font-sans">
                                             The quick brown fox jumps over the lazy dog.
                                         </p>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-400 mb-2">Body Font</label>
-                                        <select
-                                            value={content.theme?.fontBody}
-                                            onChange={(e) => handleChange("theme", "fontBody", e.target.value)}
-                                            className="w-full bg-slate-900 border border-white/10 rounded-lg p-3 text-white focus:border-primary focus:outline-none"
-                                        >
-                                            {COMMON_FONTS.map(font => (
-                                                <option key={font} value={font}>{font}</option>
-                                            ))}
-                                        </select>
-                                        <p className="mt-2 text-base text-slate-400" style={{ fontFamily: content.theme?.fontBody }}>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                        <label className="block text-sm font-medium text-slate-400 mb-2">Monospace Font</label>
+                                        <div className="w-full bg-slate-900 border border-white/10 rounded-lg p-3 text-white/50 cursor-not-allowed">
+                                            JetBrains Mono (System Standard)
+                                        </div>
+                                        <p className="mt-4 text-sm font-mono text-slate-400">
+                                            const discovery = "7FoldWanders";
                                         </p>
                                     </div>
                                 </div>

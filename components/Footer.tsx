@@ -23,14 +23,15 @@ export default function Footer() {
                                 className="h-24 w-auto object-contain"
                             />
                         </Link>
-                        <p className="text-slate-400 text-sm leading-relaxed mt-4">
-                            Discover the world&apos;s most breathtaking destinations with premium service and unforgettable experiences. Your journey begins here.
+                        <p className="text-slate-400 text-sm font-semibold leading-relaxed mt-4">
+                            7foldwanders – A Travel Venture by Sevenfold Infratech Pvt Ltd (15 Years of Corporate Excellence)
                         </p>
                     </div>
 
                     <div>
                         <h4 className="text-lg font-bold mb-4 text-white">Quick Links</h4>
                         <ul className="space-y-2">
+                            <li><Link href="/about" className="text-slate-400 text-sm hover:text-secondary transition-colors">About Us</Link></li>
                             <li><Link href="/destinations" className="text-slate-400 text-sm hover:text-secondary transition-colors">Destinations</Link></li>
                             <li><Link href="/packages" className="text-slate-400 text-sm hover:text-secondary transition-colors">Packages</Link></li>
                             <li><Link href="/deals" className="text-slate-400 text-sm hover:text-secondary transition-colors">Flights</Link></li>

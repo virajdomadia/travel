@@ -29,9 +29,9 @@ const config: Config = {
                 },
             },
             fontFamily: {
-                sans: ["var(--font-body)", "var(--font-inter)", "sans-serif"],
+                sans: ["var(--font-inter)", "sans-serif"],
+                heading: ["var(--font-inter)", "sans-serif"],
                 mono: ["var(--font-mono)", "monospace"],
-                heading: ["var(--font-heading)", "var(--font-inter)", "sans-serif"],
             },
             borderRadius: {
                 DEFAULT: "var(--radius)",
