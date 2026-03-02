@@ -184,7 +184,7 @@ export default function Home() {
         <motion.div style={{ y: yText }} className="relative z-10 text-center px-4 max-w-5xl mx-auto mt-[-50px]">
           <ScrollReveal delay={0.2} duration={1}>
             <motion.h2
-              className="text-secondary font-bold uppercase text-xs md:text-xl mb-4 md:mb-6 tracking-[0.2em]"
+              className="text-secondary font-bold uppercase text-xs md:text-xl mb-4 md:mb-6 tracking-[0.2em] mt-40"
             >
               {preferences ? "Curated Just For You" : "The Journey Begins Here"}
             </motion.h2>
@@ -218,7 +218,7 @@ export default function Home() {
           className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/50 z-20"
         >
           <span className="text-xs tracking-widest uppercase text-secondary">Start Exploring</span>
-          <div className="w-[1px] h-16 bg-gradient-to-b from-white to-transparent" />
+          <div className="w-[1px] h-8 bg-gradient-to-b from-white to-transparent" />
         </motion.div>
       </section>
 
